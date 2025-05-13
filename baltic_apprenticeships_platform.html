@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baltic Apprenticeships Community</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0a0e40;
+            padding: 10px 40px;
+            color: white;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 40px;
+        }
+        
+        .nav-icons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .icon {
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .user-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #ccc;
+            cursor: pointer;
+        }
+        
+        .menu {
+            display: flex;
+            justify-content: center;
+            border-bottom: 1px solid #ddd;
+            background-color: white;
+        }
+        
+        .menu-items {
+            display: flex;
+            list-style: none;
+        }
+        
+        .menu-items li {
+            padding: 15px 20px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .menu-items li.active {
+            border-bottom: 3px solid #0a0e40;
+            font-weight: bold;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+        
+        .welcome-heading {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid #0a0e40;
+            font-weight: bold;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .feed {
+            flex: 2;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .post-input {
+            display: flex;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ccc;
+            margin-right: 10px;
+        }
+        
+        .post-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+            cursor: pointer;
+        }
+        
+        .filter-bar {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .filter-dropdown {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        .post {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .post-author {
+            display: flex;
+        }
+        
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #673ab7;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .author-info h4 {
+            margin-bottom: 5px;
+        }
+        
+        .post-time {
+            color: #65676b;
+            font-size: 12px;
+        }
+        
+        .post-options {
+            cursor: pointer;
+        }
+        
+        .post-content {
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .post-actions {
+            text-align: right;
+        }
+        
+        .read-more {
+            color: #0a0e40;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .sidebar {
+            flex: 1;
+        }
+        
+        .sidebar-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .user-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .user-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: calc(33.33% - 10px);
+            margin-bottom: 10px;
+        }
+        
+        .user-avatar-small {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #ccc;
+            margin-bottom: 5px;
+        }
+        
+        .user-name {
+            text-align: center;
+            font-size: 12px;
+            word-break: break-word;
+        }
+        
+        .event-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .event-item {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .event-date {
+            background-color: #f0f2f5;
+            border-radius: 4px;
+            padding: 5px;
+            text-align: center;
+            min-width: 50px;
+        }
+        
+        .event-month {
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        
+        .event-day {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .event-info {
+            flex: 1;
+        }
+        
+        .event-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .event-link {
+            color: #0a0e40;
+            font-size: 14px;
+            text-decoration: none;
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .login-logo img {
+            height: 60px;
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .form-group label {
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .form-group input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        .form-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: #0a0e40;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: #eee;
+            color: #333;
+        }
+        
+        .signup-link {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        .signup-link a {
+            color: #0a0e40;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="login-page" class="hidden">
+        <div class="login-container">
+            <div class="login-logo">
+                <h2>BALTIC</h2>
+                <p>APPRENTICESHIPS</p>
+            </div>
+            <form class="login-form" id="login-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Log In</button>
+                    <button type="button" class="btn btn-secondary" id="signup-btn">Create New Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="signup-page" class="hidden">
+        <div class="login-container">
+            <div class="login-logo">
+                <h2>BALTIC</h2>
+                <p>APPRENTICESHIPS</p>
+            </div>
+            <form class="login-form" id="signup-form">
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="fullname" name="fullname" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" name="password" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                    <button type="button" class="btn btn-secondary" id="back-to-login-btn">Back to Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="main-app" class="hidden">
+        <nav class="navbar">
+            <div class="logo">
+                <h2>BALTIC</h2>
+            </div>
+            <div class="nav-icons">
+                <div class="icon">🔍</div>
+                <div class="icon">➕</div>
+                <div class="icon">🔔</div>
+                <div class="icon">💬</div>
+                <div class="user-icon" id="profile-icon"></div>
+            </div>
+        </nav>
+        
+        <div class="menu">
+            <ul class="menu-items">
+                <li>Home</li>
+                <li class="active">Live feed</li>
+                <li>Baltic Live Events</li>
+                <li>Groups</li>
+                <li>Resource Hub</li>
+                <li>Connect</li>
+                <li>Your EPA Guidance</li>
+            </ul>
+        </div>
+        
+        <div class="container">
+            <h1 class="welcome-heading">Welcome, <span id="user-name">User</span>! Here's what's new</h1>
+            
+            <div class="tabs">
+                <div class="tab active">General</div>
+                <div class="tab">My Groups</div>
+            </div>
+            
+            <div class="main-content">
+                <div class="feed">
+                    <div class="post-input">
+                        <div class="user-avatar" id="post-user-avatar"></div>
+                        <input type="text" placeholder="Write a post" id="post-input">
+                    </div>
+                    
+                    <div class="filter-bar">
+                        <span>Filter by: </span>
+                        <select class="filter-dropdown">
+                            <option>All</option>
+                            <option>My Posts</option>
+                            <option>Latest</option>
+                        </select>
+                    </div>
+                    
+                    <div class="posts-container" id="posts-container">
+                        <!-- Posts will be inserted here dynamically -->
+                    </div>
+                </div>
+                
+                <div class="sidebar">
+                    <div class="sidebar-card">
+                        <h3 class="sidebar-title">Recently active users</h3>
+                        <div class="user-list" id="active-users">
+                            <!-- Users will be inserted here dynamically -->
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-card">
+                        <h3 class="sidebar-title">Upcoming Events</h3>
+                        <div class="event-list" id="event-list">
+                            <!-- Events will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store users data
+        let users = [
+            { id: 1, name: "Danny Broome", avatar: null },
+            { id: 2, name: "Mia Harkins", avatar: null },
+            { id: 3, name: "The Baltic Community", avatar: null },
+            { id: 4, name: "Marjan Hussain", avatar: null },
+            { id: 5, name: "Ruairi Orr", avatar: null },
+            { id: 6, name: "Ellie Kenny", avatar: null }
+        ];
+        
+        // Store posts data
+        let posts = [
+            {
+                id: 1,
+                authorId: 7,
+                authorName: "Grace Wharton",
+                avatar: null,
+                content: "Hello, I am going to be running Race4Life Pretty Muddy 5k next month with my 14-year-old Sister and my boyfriend. We've each suffered the loss of someone to cancer, making this even more motivating for each of us. I myself am a keen runner and recently ran the London Landmarks Half Marathon in April 2025 for the charity Tommy's, where I alone raised £550, and the Great Eastern Half in 2023, which I ran to help my mental wellbeing. I am again raising money, but for Cancer Research UK this time. If anyone can support, we would be more than grateful. I have attached our team page, but it shows our pages. My sister's for some reason, shows her as John, but that is hers. Once again, we would be grateful for any support for any of our pages or even words of encouragement.",
+                time: "3 hours ago"
+            }
+        ];
+        
+        // Store events data
+        let events = [
+            {
+                id: 1,
+                title: "All Things EPA: Level 3 Multi-Channel Retailer",
+                month: "MAY",
+                day: "15",
+                image: null
+            },
+            {
+                id: 2,
+                title: "Supporting Your Community Through Local Charity",
+                month: "MAY",
+                day: "27",
+                image: null
+            },
+            {
+                id: 3,
+                title: "The Dangers of Radicalisation",
+                month: "MAY",
+                day: "30",
+                image: null
+            }
+        ];
+        
+        // Current logged in user
+        let currentUser = null;
+        
+        // DOM Elements
+        const loginPage = document.getElementById('login-page');
+        const signupPage = document.getElementById('signup-page');
+        const mainApp = document.getElementById('main-app');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const signupBtn = document.getElementById('signup-btn');
+        const backToLoginBtn = document.getElementById('back-to-login-btn');
+        const userNameSpan = document.getElementById('user-name');
+        const postInput = document.getElementById('post-input');
+        const postsContainer = document.getElementById('posts-container');
+        const activeUsers = document.getElementById('active-users');
+        const eventList = document.getElementById('event-list');
+        const profileIcon = document.getElementById('profile-icon');
+        const postUserAvatar = document.getElementById('post-user-avatar');
+        
+        // Show login page by default
+        loginPage.classList.remove('hidden');
+        
+        // Handle signup button click
+        signupBtn.addEventListener('click', () => {
+            loginPage.classList.add('hidden');
+            signupPage.classList.remove('hidden');
+        });
+        
+        // Handle back to login button click
+        backToLoginBtn.addEventListener('click', () => {
+            signupPage.classList.add('hidden');
+            loginPage.classList.remove('hidden');
+        });
+        
+        // Handle login form submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Simple validation
+            if (email && password) {
+                // Find user by email (in a real app, you'd verify credentials server-side)
+                // For demo, just log in with any credentials
+                loginUser({
+                    id: Date.now(),  // Generate a random ID
+                    name: email.split('@')[0],  // Use part of email as name
+                    email: email
+                });
+            }
+        });
+        
+        // Handle signup form submission
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const fullname = document.getElementById('fullname').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            
+            // Simple validation
+            if (fullname && email && password) {
+                // Create new user
+                const newUser = {
+                    id: Date.now(),  // Generate a random ID
+                    name: fullname,
+                    email: email
+                };
+                
+                // Add to users array
+                users.push(newUser);
+                
+                // Log in the new user
+                loginUser(newUser);
+            }
+        });
+        
+        // Handle post input
+        postInput.addEventListener('click', () => {
+            const content = prompt("What's on your mind?");
+            if (content && content.trim() !== '') {
+                // Create new post
+                const newPost = {
+                    id: Date.now(),
+                    authorId: currentUser.id,
+                    authorName: currentUser.name,
+                    avatar: null,
+                    content: content,
+                    time: "Just now"
+                };
+                
+                // Add to posts array
+                posts.unshift(newPost);
+                
+                // Refresh posts
+                renderPosts();
+            }
+        });
+        
+        // Login user function
+        function loginUser(user) {
+            currentUser = user;
+            
+            // Add user to active users if not already there
+            if (!users.find(u => u.id === user.id)) {
+                users.push(user);
+            }
+            
+            // Update UI
+            userNameSpan.textContent = user.name;
+            
+            // Hide login/signup pages, show main app
+            loginPage.classList.add('hidden');
+            signupPage.classList.add('hidden');
+            mainApp.classList.remove('hidden');
+            
+            // Initialize app
+            initApp();
+        }
+        
+        // Initialize app
+        function initApp() {
+            renderPosts();
+            renderActiveUsers();
+            renderEvents();
+        }
+        
+        // Render posts
+        function renderPosts() {
+            postsContainer.innerHTML = '';
+            
+            if (posts.length === 0) {
+                postsContainer.innerHTML = '<div class="post"><p>No posts yet. Be the first to post!</p></div>';
+                return;
+            }
+            
+            posts.forEach(post => {
+                // Get first letter of author's name for avatar
+                const firstLetter = post.authorName.charAt(0);
+                
+                const postElement = document.createElement('div');
+                postElement.className = 'post';
+                postElement.innerHTML = `
+                    <div class="post-header">
+                        <div class="post-author">
+                            <div class="author-avatar">${firstLetter}</div>
+                            <div class="author-info">
+                                <h4>${post.authorName}</h4>
+                                <span class="post-time">${post.time}</span>
+                            </div>
+                        </div>
+                        <div class="post-options">⋮</div>
+                    </div>
+                    <div class="post-content">
+                        <p>${post.content}</p>
+                    </div>
+                    <div class="post-actions">
+                        <a href="#" class="read-more">Read more</a>
+                    </div>
+                `;
+                
+                postsContainer.appendChild(postElement);
+            });
+        }
+        
+        // Render active users
+        function renderActiveUsers() {
+            activeUsers.innerHTML = '';
+            
+            users.forEach(user => {
+                // Get first letter of user's name for avatar
+                const firstLetter = user.name.charAt(0);
+                
+                const userElement = document.createElement('div');
+                userElement.className = 'user-item';
+                userElement.innerHTML = `
+                    <div class="user-avatar-small" style="display: flex; align-items: center; justify-content: center; background-color: #673ab7; color: white;">${firstLetter}</div>
+                    <div class="user-name">${user.name}</div>
+                `;
+                
+                activeUsers.appendChild(userElement);
+            });
+        }
+        
+        // Render events
+        function renderEvents() {
+            eventList.innerHTML = '';
+            
+            if (events.length === 0) {
+                eventList.innerHTML = '<p>No upcoming events</p>';
+                return;
+            }
+            
+            events.forEach(event => {
+                const eventElement = document.createElement('div');
+                eventElement.className = 'event-item';
+                eventElement.innerHTML = `
+                    <div class="event-date">
+                        <div class="event-month">${event.month}</div>
+                        <div class="event-day">${event.day}</div>
+                    </div>
+                    <div class="event-info">
+                        <div class="event-title">${event.title}</div>
+                        <a href="#" class="event-link">Find out more</a>
+                    </div>
+                `;
+                
+                eventList.appendChild(eventElement);
+            });
+        }
+        
+        // Initialize app
+        window.onload = function() {
+            // For demo purposes, show the login page
+            loginPage.classList.remove('hidden');
+        };
+    </script>
+</body>
+</html>
