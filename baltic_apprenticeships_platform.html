@@ -308,16 +308,20 @@
         // Render posts
         function renderPosts() {
             postsContainer.innerHTML = '';
-            
+
             if (posts.length === 0) {
                 postsContainer.innerHTML = '<div class="post"><p>No posts yet. Be the first to post!</p></div>';
                 return;
             }
-            
-            posts.forEach(post => {
-                // Get first letter of author's name for avatar
+
+            posts.forEach((post, index) => {
                 const firstLetter = post.authorName.charAt(0);
-                
+                const maxLength = 350; // Maximum length for truncation
+                const showReadMore = post.content.length > maxLength; 
+                const truncatedContent = showReadMore
+                    ? post.content.slice(0, maxLength) + '...'
+                    : post.content;
+
                 const postElement = document.createElement('div');
                 postElement.className = 'post';
                 postElement.innerHTML = `
@@ -332,14 +336,26 @@
                         <div class="post-options">⋮</div>
                     </div>
                     <div class="post-content">
-                        <p>${post.content}</p>
-                    </div>
-                    <div class="post-actions">
-                        <a href="#" class="read-more">Read more</a>
+                        <p>
+                            <span class="post-text">${truncatedContent}</span>
+                            ${showReadMore ? '<a href="#" class="read-more" data-index="' + index + '">Read more</a>' : ''}
+                        </p>
                     </div>
                 `;
-                
+
                 postsContainer.appendChild(postElement);
+            });
+
+            // Add event listeners for "Read more" links
+            const readMoreLinks = postsContainer.querySelectorAll('.read-more');
+            readMoreLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const idx = this.getAttribute('data-index');
+                    const postText = this.parentElement.querySelector('.post-text');
+                    postText.textContent = posts[idx].content;
+                    this.style.display = 'none';
+                });
             });
         }
         
