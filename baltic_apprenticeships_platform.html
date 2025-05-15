@@ -7,64 +7,85 @@
     <link rel="stylesheet" href="./styles.css"/>
 </head>
 <body>
+
     <div id="login-page" class="hidden">
+		
         <div class="login-container">
+				
             <div class="login-logo">
-                <h2>BALTIC APPRENTICESHIPS</h2>
+                <h2>Have an account? Log-in</h2>
+                <p>*</em>Required fields are marked with an asterisk</em></p>
             </div>
+						
             <form class="login-form" id="login-form">
+						
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" required>
                 </div>
+								
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required>
                 </div>
+								
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Log In</button>
                     <button type="button" class="btn btn-secondary" id="signup-btn">Create New Account</button>
                 </div>
+								
             </form>
         </div>
     </div>
 
     <div id="signup-page" class="hidden">
+		
         <div class="login-container">
+				
             <div class="login-logo">
                 <h2>BALTIC</h2>
                 <p>APPRENTICESHIPS</p>
             </div>
+						
             <form class="login-form" id="signup-form">
+						
                 <div class="form-group">
                     <label for="fullname">Full Name</label>
                     <input type="text" id="fullname" name="fullname" required>
                 </div>
+								
                 <div class="form-group">
                     <label for="signup-email">Email</label>
                     <input type="email" id="signup-email" name="email" required>
                 </div>
+								
                 <div class="form-group">
                     <label for="signup-password">Password</label>
                     <input type="password" id="signup-password" name="password" required>
                 </div>
+								
                 <div class="form-group">
                     <label for="profile-picture">Profile Picture</label>
                     <input type="file" id="profile-picture" name="profile-picture" accept="image/*">
                 </div>
+
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Sign Up</button>
                     <button type="button" class="btn btn-secondary" id="back-to-login-btn">Back to Login</button>
                 </div>
+								
             </form>
         </div>
     </div>
 
     <div id="main-app" class="hidden">
+		
         <nav class="navbar">
+				
             <div class="logo">
                 <h2>BALTIC</h2>
             </div>
+						
             <div class="nav-icons">
                 <div class="icon">🔍</div>
                 <div class="icon">➕</div>
@@ -72,6 +93,7 @@
                 <div class="icon">💬</div>
                 <div class="user-icon" id="profile-icon"></div>
             </div>
+						
         </nav>
 
         <div class="menu">
@@ -90,16 +112,24 @@
             <h1 class="welcome-heading">Welcome, <span id="user-name">User</span>! Here's what's new</h1>
 
             <div class="tabs">
+						
                 <div class="tab active">General</div>
                 <div class="tab">My Groups</div>
+								
             </div>
 
             <div class="main-content">
+						
                 <div class="feed">
+								
                     <div class="post-input">
+										
                         <div class="user-avatar" id="post-user-avatar"></div>
                         <input type="text" placeholder="Write a post" id="post-input">
+												
+
                         <button id="submit-post-btn" class="btn btn-primary" style="margin-left: 8px;">Post</button>
+
                     </div>
 
                     <div class="filter-bar">
@@ -114,27 +144,33 @@
                     <div class="posts-container" id="posts-container">
                         <!-- Posts will be inserted here dynamically -->
                     </div>
+										
                 </div>
 
                 <div class="sidebar">
+								
                     <div class="sidebar-card">
                         <h3 class="sidebar-title">Recently active users</h3>
+												
                         <div class="user-list" id="active-users">
                             <!-- Users will be inserted here dynamically -->
                         </div>
+												
                     </div>
 
                     <div class="sidebar-card">
                         <h3 class="sidebar-title">Upcoming Events</h3>
+												
                         <div class="event-list" id="event-list">
                             <!-- Events will be loaded here -->
                         </div>
+												
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="./script.js"></script>
 </body>
 </html>

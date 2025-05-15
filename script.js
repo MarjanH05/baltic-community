@@ -1,50 +1,48 @@
-
 // Store users data
 let users = [
-    { id: 1, name: "Danny Broome", avatar: "https://d102smnvqbot52.cloudfront.net/shrine_store/uploads/networks/2202/users/7767355/medium-6d715d13bd181a8cf360bde79c52f467.webp?Expires=1747322069&Signature=m2e47aebXQJzFyIMLGwaKwKCqkRuZitz9rIutf5TiCNMDV21zG6nJJwb7SHQ7Wcy-OVD~ftNbRRqNEW2qw8UakS7-2Wf1uoeMy0MoQdz362kqIaAzf-gVhDh-6GMJz2voFpReJ8b9mddgA0TJ-sNwJt~nGCacbZ4nscA2CrNXigTiPIXBpaTUMQVegcbs-CEKRhahIEOcKDOkoqRrw2ez-cXNTUFw5Nw7KLxUyQYvl81Cmw2-sNeM1kATgePuEDtvh7G9vO9Cke6vOiksQvG~~66f7T9zf3eJJIWRqQrq~2Oi9XmE~9NFBEtMTvRBrubvnF338b468An7Jj6glj9wg__&Key-Pair-Id=K2FGAUSZJ303Q5" },
-    { id: 2, name: "Mia Harkins", avatar: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMWpwOTk3am4xcDdnZTJteWxtcmZpcHhxZGhkYWszdmFpenVzY3l1MyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Kcu1uvmPfxAuabisnw/giphy.gif" },
-    { id: 3, name: "The Baltic Community", avatar: "https://media.licdn.com/dms/image/v2/C4D0BAQFERN9z7JBnFA/company-logo_200_200/company-logo_200_200/0/1646302752002/baltic_apprenticeships_logo?e=2147483647&v=beta&t=9rTRI1w7C7Kkjmyv55s3KLmLqM43Rsyp7SJDtClfelQ" },
-    { id: 4, name: "Marjan Hussain", avatar: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZmN0cWViZWZzODdyYmp2d2xxdzl1cmZocWRhc2hnZGVhamtwdTR2YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RTffR1LO6tWCWN8wtr/giphy.gif" },
-    { id: 5, name: "Ruairi Orr", avatar: "https://d102smnvqbot52.cloudfront.net/shrine_store/uploads/networks/2202/users/7646496/medium-12c2878fd977f1549d420180de3612e5.webp?Expires=1747321935&Signature=SliVtWCazkuy4eSbVXRtW9GfBOjQPFCPNthGht00azBaUV63DIkrT5kmgBBpePUG-A4ZkGKY4ZfbJGRDzfaAoGAmHZKPwJvoG90Jbb0bMqMUbo~snwW~MtHGnA7PiFdTsyBz~IZ7ollYUikC4SCaiZyEfCVbL0555YR2RqGfBEonB1ipdcyxlohK7bpqoma~K3GjbAz7zvxR01t1yu-y5dyeSZH8tc~P7PIy1r39w5oKTAAJ9GPlqgnEThpzXS80rMbjEs2dJXCG2MuVwzBGxlmO9qz5em9hMR-M6bJXmS~Wm4TKoV~rdVk3OYI4hMz8GJQrmu~OtMhgBkB16bzeAw__&Key-Pair-Id=K2FGAUSZJ303Q5" },
-    { id: 6, name: "Ellie Kenny", avatar: "https://randomuser.me/api/portraits/women/23.jpg" },
-    { id: 7, name: "Bailey S", avatar: "https://d102smnvqbot52.cloudfront.net/shrine_store/uploads/networks/2202/users/7969556/medium-7dfe69508ddb3c1924a338287f3d2657.webp?Expires=1747322092&Signature=OgCBAB0T5rojqzOgrZQLpWooPbkEVfDS7brqyyYBN~RrdiazmOask~uUObGrn3F1gxjp945kGT-E~eBNdoBPkBX2uhIBQLaUic0HxNhkJAEZS6V1-YAbXqdiE1~8rKW7RC8x7nBn3P7kI6JSsbasyBM~PhNXvn4MkErooK4MIMn~QObPMAUMHMhBcXmnHnpyCFgSeg0-dSY3sDNq25lExUSgHKYmPTwAphYk1aaFVQ9JrxKwIVM5YGbaMESxczSQAXMmrGcm7p4yn3GDwFI4r7K0FvGYTbZ-UjvkaERcwqe9FnPXgM11gnOA98wfn5zKBDKFKSoYGLxWiEl33uqGTw__&Key-Pair-Id=K2FGAUSZJ303Q5" }
+		{ id: 1, name: "Danny Broome", avatar: null },
+		{ id: 2, name: "Mia Harkins", avatar: null },
+		{ id: 3, name: "The Baltic Community", avatar: null },
+		{ id: 4, name: "Marjan Hussain", avatar: null },
+		{ id: 5, name: "Ruairi Orr", avatar: null },
+		{ id: 6, name: "Bailey S", avatar: null }
 ];
 
 // Store posts data
 let posts = [
-    {
-        id: 1,
-        authorId: 7,
-        authorName: "Grace Wharton",
-        avatar: null,
-        content: "Hello, I am going to be running Race4Life Pretty Muddy 5k next month with my 14-year-old Sister and my boyfriend. We've each suffered the loss of someone to cancer, making this even more motivating for each of us. I myself am a keen runner and recently ran the London Landmarks Half Marathon in April 2025 for the charity Tommy's, where I alone raised £550, and the Great Eastern Half in 2023, which I ran to help my mental wellbeing. I am again raising money, but for Cancer Research UK this time. If anyone can support, we would be more than grateful. I have attached our team page, but it shows our pages. My sister's for some reason, shows her as John, but that is hers. Once again, we would be grateful for any support for any of our pages or even words of encouragement.",
-        time: "3 hours ago"
-    }
+		{
+				id: 1,
+				authorId: 1,
+				authorName: "Danny Broome",
+				avatar: null,
+				content: "Happy Friday! How are you? How has your week been? Up to anything this weekend? As per usual, I'll leave mine in the comments. Happy days!",
+				time: "3 hours ago"
+		}
 ];
 
 // Store events data
 let events = [
-    {
-        id: 1,
-        title: "All Things EPA: Level 3 Multi-Channel Retailer",
-        month: "MAY",
-        day: "15",
-        image: null
-    },
-    {
-        id: 2,
-        title: "Supporting Your Community Through Local Charity",
-        month: "MAY",
-        day: "27",
-        image: null
-    },
-    {
-        id: 3,
-        title: "The Dangers of Radicalisation",
-        month: "MAY",
-        day: "30",
-        image: null
-    }
+		{
+				id: 1,
+				title: "Creating Replicas: How to re-imagine a website",
+				month: "JUNE",
+				day: "15",
+				image: null
+		},
+		{
+				id: 2,
+				title: "How to upgrade the UI/UX of a community platform",
+				month: "JULY",
+				day: "27",
+				image: null
+		},
+		{
+				id: 3,
+				title: "The Dangers of Bad UI",
+				month: "AUGUST",
+				day: "30",
+				image: null
+		}
 ];
 
 // Current logged in user
@@ -73,14 +71,8 @@ loginPage.classList.remove('hidden');
 
 // Handle signup button click
 signupBtn.addEventListener('click', () => {
-    loginPage.classList.add('hidden');
-    signupPage.classList.remove('hidden');
-});
-
-// Handle back to login button click
-backToLoginBtn.addEventListener('click', () => {
-    signupPage.classList.add('hidden');
-    loginPage.classList.remove('hidden');
+		loginPage.classList.add('hidden');
+		signupPage.classList.remove('hidden');
 });
 
 // Handle login form submission
@@ -88,44 +80,92 @@ loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-
-    if (email && password) {
-        // Find user by email (in a real app, you'd verify credentials server-side))
-        const user = users.find(u => u.email === email) || {
-            id: Date.now(), // Generate a random ID
-            name: email.split('@')[0], // Use part of email as name
-            email: email,
-            avatar: null
-        };
-
-        loginUser(user);
+    
+    // Email regex validation - requires letters before and after @, followed by . and domain extension
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    
+    // Password regex validation - at least 8 chars, 1 uppercase letter, and 1 number
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+    
+    // Validation
+    let isValid = true;
+    let errorMessage = "";
+    
+    // Make sure email is a string and validate format
+    if (!email || typeof email !== 'string' || !emailRegex.test(email.toString())) {
+        isValid = false;
+        errorMessage += "Invalid email format. Email must have format like 'name@example.com'\n";
+    }
+    
+    // Make sure password is a string and validate format
+    if (!password || typeof password !== 'string' || !passwordRegex.test(password.toString())) {
+        isValid = false;
+        errorMessage += "Password must be at least 8 characters and include at least 1 uppercase letter and 1 number";
+    }
+    
+    if (isValid) {
+        // Find user by email (in a real app, you'd verify credentials server-side)
+        // For demo, just log in with any credentials
+        loginUser({
+            id: Date.now(),  // Generate a random ID
+            name: email.split('@')[0],  // Use part of email as name
+            email: email
+        });
+    } else {
+        // Display error message
+        alert(errorMessage);
     }
 });
 
 // Handle signup form submission
-signupForm.addEventListener('submit', async (e) => {
+signupForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const fullname = document.getElementById('fullname').value;
     const email = document.getElementById('signup-email').value;
     const password = document.getElementById('signup-password').value;
-    const profilePicture = profilePictureInput.files[0];
-
-    if (fullname && email && password) {
-        let avatarData = null;
-
-        if (profilePicture) {
-            avatarData = await convertImageToBase64(profilePicture);
-        }
-
+    
+    // Email regex validation - requires letters before and after @, followed by . and domain extension
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    
+    // Password regex validation - at least 8 chars, 1 uppercase letter, and 1 number
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+    
+    // Validation
+    let isValid = true;
+    let errorMessage = "";
+    
+    // Make sure fullname is a string and not empty
+    if (!fullname || typeof fullname !== 'string' || fullname.toString().trim() === '') {
+        isValid = false;
+        errorMessage += "Full name is required\n";
+    }
+    
+    if (!emailRegex.test(email)) {
+        isValid = false;
+        errorMessage += "Invalid email format. Email must have format like 'name@example.com'\n";
+    }
+    
+    if (!passwordRegex.test(password)) {
+        isValid = false;
+        errorMessage += "Password must be at least 8 characters and include at least 1 uppercase letter and 1 number";
+    }
+    
+    if (isValid) {
+        // Create new user
         const newUser = {
             id: Date.now(),  // Generate a random ID
             name: fullname,
-            email: email,
-            avatar: avatarData
+            email: email
         };
-
+        
+        // Add to users array
         users.push(newUser);
+        
+        // Log in the new user
         loginUser(newUser);
+    } else {
+        // Display error message
+        alert(errorMessage);
     }
 });
 
@@ -179,24 +219,29 @@ postInput.addEventListener('click', () => {
     }
 }
 
+
 // Login user function
 function loginUser(user) {
-    currentUser = user;
-
-    if (!users.find(u => u.id === user.id)) {
-        users.push(user);
-    }
-
-    userNameSpan.textContent = user.name;
-
-    loginPage.classList.add('hidden');
-    signupPage.classList.add('hidden');
-    mainApp.classList.remove('hidden');
-
+		currentUser = user;
+		
+		// Add user to active users if not already there
+		if (!users.find(u => u.id === user.id)) {
+				users.push(user);
+		}
+		
+		// Update UI
+		userNameSpan.textContent = user.name;
+		
+		// Hide login/signup pages, show main app
+		loginPage.classList.add('hidden');
+		signupPage.classList.add('hidden');
+		mainApp.classList.remove('hidden');
+		
+		// Initialize app
     updateCurrentUserAvatar();
-    initApp();
+		initApp();
 }
-
+  
 // Update user avatar in UI
 function updateCurrentUserAvatar() {
     if (currentUser) {
@@ -216,32 +261,34 @@ function updateCurrentUserAvatar() {
     }
 }
 
+
 // Initialize app
 function initApp() {
-    renderPosts();
-    renderActiveUsers();
-    renderEvents();
+		renderPosts();
+		renderActiveUsers();
+		renderEvents();
 }
 
 // Render posts
 function renderPosts() {
-    postsContainer.innerHTML = '';
+		postsContainer.innerHTML = '';
 
-    if (posts.length === 0) {
-        postsContainer.innerHTML = '<div class="post"><p>No posts yet. Be the first to post!</p></div>';
-        return;
-    }
+		if (posts.length === 0) {
+				postsContainer.innerHTML = '<div class="post"><p>No posts yet. Be the first to post!</p></div>';
+				return;
+		}
 
-    posts.forEach((post, index) => {
-        const maxLength = 350;
-        const showReadMore = post.content.length > maxLength;
-        const truncatedContent = showReadMore
-            ? post.content.slice(0, maxLength) + '...'
-            : post.content;
+		posts.forEach((post, index) => {
+				const firstLetter = post.authorName.charAt(0);
+				const maxLength = 350; // Maximum length for truncation
+				const showReadMore = post.content.length > maxLength; 
+				const truncatedContent = showReadMore
+						? post.content.slice(0, maxLength) + '...'
+						: post.content;
 
-        const postElement = document.createElement('div');
-        postElement.className = 'post';
-        postElement.innerHTML = `
+				const postElement = document.createElement('div');
+				postElement.className = 'post';
+				postElement.innerHTML = `
                 <div class="post-header">
                     <div class="post-author">
                         <div class="author-avatar">
@@ -264,27 +311,27 @@ function renderPosts() {
                 </div>
             `;
 
-        postsContainer.appendChild(postElement);
-    });
+				postsContainer.appendChild(postElement);
+		});
 
-    // Add event listeners for "Read more" links
-    const readMoreLinks = postsContainer.querySelectorAll('.read-more');
-    readMoreLinks.forEach(link => {
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
-            const idx = this.getAttribute('data-index');
-            const postText = this.parentElement.querySelector('.post-text');
-            postText.textContent = posts[idx].content;
-            this.style.display = 'none';
-        });
-    });
+		// Add event listeners for "Read more" links
+		const readMoreLinks = postsContainer.querySelectorAll('.read-more');
+		readMoreLinks.forEach(link => {
+				link.addEventListener('click', function(e) {
+						e.preventDefault();
+						const idx = this.getAttribute('data-index');
+						const postText = this.parentElement.querySelector('.post-text');
+						postText.textContent = posts[idx].content;
+						this.style.display = 'none';
+				});
+		});
 }
 
 // Render active users
 function renderActiveUsers() {
-    activeUsers.innerHTML = '';
-
-    users.forEach(user => {
+		activeUsers.innerHTML = '';
+		
+		users.forEach(user => {
         const userElement = document.createElement('div');
         userElement.className = 'user-item';
         userElement.innerHTML = `
@@ -295,40 +342,40 @@ function renderActiveUsers() {
                 </div>
                 <div class="user-name">${user.name}</div>
             `;
-
-        activeUsers.appendChild(userElement);
-    });
+				
+				activeUsers.appendChild(userElement);
+		});
 }
 
 // Render events
 function renderEvents() {
-    eventList.innerHTML = '';
-
-    if (events.length === 0) {
-        eventList.innerHTML = '<p>No upcoming events</p>';
-        return;
-    }
-
-    events.forEach(event => {
-        const eventElement = document.createElement('div');
-        eventElement.className = 'event-item';
-        eventElement.innerHTML = `
-                <div class="event-date">
-                    <div class="event-month">${event.month}</div>
-                    <div class="event-day">${event.day}</div>
-                </div>
-                <div class="event-info">
-                    <div class="event-title">${event.title}</div>
-                    <a href="#" class="event-link">Find out more</a>
-                </div>
-            `;
-
-        eventList.appendChild(eventElement);
-    });
+		eventList.innerHTML = '';
+		
+		if (events.length === 0) {
+				eventList.innerHTML = '<p>No upcoming events</p>';
+				return;
+		}
+		
+		events.forEach(event => {
+				const eventElement = document.createElement('div');
+				eventElement.className = 'event-item';
+				eventElement.innerHTML = `
+						<div class="event-date">
+								<div class="event-month">${event.month}</div>
+								<div class="event-day">${event.day}</div>
+						</div>
+						<div class="event-info">
+								<div class="event-title">${event.title}</div>
+								<a href="#" class="event-link">Find out more</a>
+						</div>
+				`;
+				
+				eventList.appendChild(eventElement);
+		});
 }
 
 // Initialize app
-window.onload = function () {
-    // For demo purposes, show the login page
-    loginPage.classList.remove('hidden');
+window.onload = function() {
+		// For demo purposes, show the login page
+		loginPage.classList.remove('hidden');
 };
