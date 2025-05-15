@@ -217,7 +217,7 @@ postInput.addEventListener('click', () => {
         // Clear input
         postInput.value = '';
     }
-}
+});
 
 
 // Login user function
@@ -379,3 +379,5 @@ window.onload = function() {
 		// For demo purposes, show the login page
 		loginPage.classList.remove('hidden');
 };
+
+}
