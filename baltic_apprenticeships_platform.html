@@ -95,6 +95,7 @@
                     <div class="post-input">
                         <div class="user-avatar" id="post-user-avatar"></div>
                         <input type="text" placeholder="Write a post" id="post-input">
+                        <button id="submit-post-btn" class="btn btn-primary" style="margin-left: 8px;">Post</button>
                     </div>
                     
                     <div class="filter-bar">
@@ -197,6 +198,7 @@
         const eventList = document.getElementById('event-list');
         const profileIcon = document.getElementById('profile-icon');
         const postUserAvatar = document.getElementById('post-user-avatar');
+        const submitPostBtn = document.getElementById('submit-post-btn');
         
         // Show login page by default
         loginPage.classList.remove('hidden');
@@ -255,9 +257,19 @@
             }
         });
         
-        // Handle post input
-        postInput.addEventListener('click', () => {
-            const content = prompt("What's on your mind?");
+        // Post when button is clicked
+        submitPostBtn.addEventListener('click', handlePostSubmit);
+
+
+        postInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handlePostSubmit();
+            }
+        });
+
+        function handlePostSubmit() {
+            const content = postInput.value;
             if (content && content.trim() !== '') {
                 // Create new post
                 const newPost = {
@@ -268,14 +280,17 @@
                     content: content,
                     time: "Just now"
                 };
-                
+
                 // Add to posts array
                 posts.unshift(newPost);
-                
+
                 // Refresh posts
                 renderPosts();
+
+                // Clear input
+                postInput.value = '';
             }
-        });
+        }
         
         // Login user function
         function loginUser(user) {
