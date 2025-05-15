@@ -41,11 +41,17 @@
 	}
 
 	.user-icon {
-			width: 32px;
-			height: 32px;
-			border-radius: 50%;
-			background-color: #ccc;
-			cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #673ab7;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    cursor: pointer;
+    overflow: hidden;
 	}
 	
 /* MENU UNDER NAV */
@@ -61,16 +67,16 @@
 			list-style: none;
 	}
 
-	.menu-items li {
-			padding: 15px 20px;
-			cursor: pointer;
-			position: relative;
-	}
+    .menu-items li {
+        padding: 15px 20px;
+        cursor: pointer;
+        position: relative;
+    }
 
-	.menu-items li.active {
-			border-bottom: 3px solid #0a0e40;
-			font-weight: bold;
-	}
+      .menu-items li.active {
+          border-bottom: 3px solid #0a0e40;
+          font-weight: bold;
+      }
 
 	.container {
 			max-width: 1200px;
@@ -97,10 +103,10 @@
 			margin-right: 10px;
 	}
 
-	.tab.active {
-			border-bottom: 3px solid #0a0e40;
-			font-weight: bold;
-	}
+    .tab.active {
+        border-bottom: 3px solid #0a0e40;
+        font-weight: bold;
+    }
 	
 /* FEED */
 	.main-content {
@@ -124,11 +130,17 @@
 	}
 
 	.user-avatar {
-			width: 40px;
-			height: 40px;
-			border-radius: 50%;
-			background-color: #ccc;
-			margin-right: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #673ab7;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 10px;
+    overflow: hidden;
 	}
 
 	.post-input input {
@@ -170,17 +182,18 @@
 	}
 
 	.author-avatar {
-			width: 40px;
-			height: 40px;
-			border-radius: 50%;
-			background-color: #673ab7;
-			color: white;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			font-weight: bold;
-			margin-right: 10px;
-	}
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #673ab7;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 10px;
+    overflow: hidden;
+}
 
 	.author-info h4 {
 			margin-bottom: 5px;
@@ -243,12 +256,18 @@
 	}
 
 	.user-avatar-small {
-			width: 50px;
-			height: 50px;
-			border-radius: 50%;
-			background-color: #ccc;
-			margin-bottom: 5px;
-	}
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #673ab7;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 5px;
+    overflow: hidden;
+}
 
 	.user-name {
 			text-align: center;
@@ -399,3 +418,9 @@
 	.hidden {
 			display: none;
 	}
+
+.avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

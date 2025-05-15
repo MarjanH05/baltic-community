@@ -63,6 +63,8 @@ const activeUsers = document.getElementById('active-users');
 const eventList = document.getElementById('event-list');
 const profileIcon = document.getElementById('profile-icon');
 const postUserAvatar = document.getElementById('post-user-avatar');
+const submitPostBtn = document.getElementById('submit-post-btn');
+const profilePictureInput = document.getElementById('profile-picture');
 
 // Show login page by default
 loginPage.classList.remove('hidden');
@@ -167,27 +169,56 @@ signupForm.addEventListener('submit', (e) => {
     }
 });
 
+// Post when button is clicked
+submitPostBtn.addEventListener('click', handlePostSubmit);
+
+
+postInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handlePostSubmit();
+    }
+});
+
+function handlePostSubmit() {
+    const content = postInput.value;
+
+// Convert image to base64
+function convertImageToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+}
+
 // Handle post input
 postInput.addEventListener('click', () => {
-		const content = prompt("What's on your mind?");
-		if (content && content.trim() !== '') {
-				// Create new post
-				const newPost = {
-						id: Date.now(),
-						authorId: currentUser.id,
-						authorName: currentUser.name,
-						avatar: null,
-						content: content,
-						time: "Just now"
-				};
-				
-				// Add to posts array
-				posts.unshift(newPost);
-				
-				// Refresh posts
-				renderPosts();
-		}
-});
+    const content = prompt("What's on your mind?");
+  
+    if (content && content.trim() !== '') {
+        const newPost = {
+            id: Date.now(),
+            authorId: currentUser.id,
+            authorName: currentUser.name,
+            avatar: currentUser.avatar,
+            content: content,
+            time: "Just now"
+        };
+
+        // Add to posts array
+        posts.unshift(newPost);
+
+        // Refresh posts
+        posts.unshift(newPost);
+        renderPosts();
+
+        // Clear input
+        postInput.value = '';
+    }
+}
+
 
 // Login user function
 function loginUser(user) {
@@ -207,8 +238,29 @@ function loginUser(user) {
 		mainApp.classList.remove('hidden');
 		
 		// Initialize app
+    updateCurrentUserAvatar();
 		initApp();
 }
+  
+// Update user avatar in UI
+function updateCurrentUserAvatar() {
+    if (currentUser) {
+        // Profile icon in navbar
+        if (currentUser.avatar) {
+            profileIcon.innerHTML = `<img src="${currentUser.avatar}" alt="${currentUser.name}" class="avatar-image">`;
+        } else {
+            profileIcon.textContent = currentUser.name.charAt(0);
+        }
+
+        // Post input avatar
+        if (currentUser.avatar) {
+            postUserAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="${currentUser.name}" class="avatar-image">`;
+        } else {
+            postUserAvatar.textContent = currentUser.name.charAt(0);
+        }
+    }
+}
+
 
 // Initialize app
 function initApp() {
@@ -237,23 +289,27 @@ function renderPosts() {
 				const postElement = document.createElement('div');
 				postElement.className = 'post';
 				postElement.innerHTML = `
-						<div class="post-header">
-								<div class="post-author">
-										<div class="author-avatar">${firstLetter}</div>
-										<div class="author-info">
-												<h4>${post.authorName}</h4>
-												<span class="post-time">${post.time}</span>
-										</div>
-								</div>
-								<div class="post-options">⋮</div>
-						</div>
-						<div class="post-content">
-								<p>
-										<span class="post-text">${truncatedContent}</span>
-										${showReadMore ? '<a href="#" class="read-more" data-index="' + index + '">Read more</a>' : ''}
-								</p>
-						</div>
-				`;
+                <div class="post-header">
+                    <div class="post-author">
+                        <div class="author-avatar">
+                            ${post.avatar
+                ? `<img src="${post.avatar}" alt="${post.authorName}" class="avatar-image">`
+                : post.authorName.charAt(0)}
+                        </div>
+                        <div class="author-info">
+                            <h4>${post.authorName}</h4>
+                            <span class="post-time">${post.time}</span>
+                        </div>
+                    </div>
+                    <div class="post-options">⋮</div>
+                </div>
+                <div class="post-content">
+                    <p>
+                        <span class="post-text">${truncatedContent}</span>
+                        ${showReadMore ? '<a href="#" class="read-more" data-index="' + index + '">Read more</a>' : ''}
+                    </p>
+                </div>
+            `;
 
 				postsContainer.appendChild(postElement);
 		});
@@ -276,15 +332,16 @@ function renderActiveUsers() {
 		activeUsers.innerHTML = '';
 		
 		users.forEach(user => {
-				// Get first letter of user's name for avatar
-				const firstLetter = user.name.charAt(0);
-				
-				const userElement = document.createElement('div');
-				userElement.className = 'user-item';
-				userElement.innerHTML = `
-						<div class="user-avatar-small" style="display: flex; align-items: center; justify-content: center; background-color: #673ab7; color: white;">${firstLetter}</div>
-						<div class="user-name">${user.name}</div>
-				`;
+        const userElement = document.createElement('div');
+        userElement.className = 'user-item';
+        userElement.innerHTML = `
+                <div class="user-avatar-small">
+                    ${user.avatar
+                ? `<img src="${user.avatar}" alt="${user.name}" class="avatar-image">`
+                : user.name.charAt(0)}
+                </div>
+                <div class="user-name">${user.name}</div>
+            `;
 				
 				activeUsers.appendChild(userElement);
 		});

@@ -64,6 +64,11 @@
                     <input type="password" id="signup-password" name="password" required>
                 </div>
 								
+                <div class="form-group">
+                    <label for="profile-picture">Profile Picture</label>
+                    <input type="file" id="profile-picture" name="profile-picture" accept="image/*">
+                </div>
+
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Sign Up</button>
                     <button type="button" class="btn btn-secondary" id="back-to-login-btn">Back to Login</button>
@@ -90,7 +95,7 @@
             </div>
 						
         </nav>
-        
+
         <div class="menu">
             <ul class="menu-items">
                 <li>Home</li>
@@ -102,17 +107,17 @@
                 <li>Your EPA Guidance</li>
             </ul>
         </div>
-        
+
         <div class="container">
             <h1 class="welcome-heading">Welcome, <span id="user-name">User</span>! Here's what's new</h1>
-            
+
             <div class="tabs">
 						
                 <div class="tab active">General</div>
                 <div class="tab">My Groups</div>
 								
             </div>
-            
+
             <div class="main-content">
 						
                 <div class="feed">
@@ -122,8 +127,11 @@
                         <div class="user-avatar" id="post-user-avatar"></div>
                         <input type="text" placeholder="Write a post" id="post-input">
 												
+
+                        <button id="submit-post-btn" class="btn btn-primary" style="margin-left: 8px;">Post</button>
+
                     </div>
-                    
+
                     <div class="filter-bar">
                         <span>Filter by: </span>
                         <select class="filter-dropdown">
@@ -132,13 +140,13 @@
                             <option>Latest</option>
                         </select>
                     </div>
-                    
+
                     <div class="posts-container" id="posts-container">
                         <!-- Posts will be inserted here dynamically -->
                     </div>
 										
                 </div>
-                
+
                 <div class="sidebar">
 								
                     <div class="sidebar-card">
@@ -149,7 +157,7 @@
                         </div>
 												
                     </div>
-                    
+
                     <div class="sidebar-card">
                         <h3 class="sidebar-title">Upcoming Events</h3>
 												
