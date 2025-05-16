@@ -172,8 +172,8 @@ signupForm.addEventListener('submit', async (e) => {
 
         // Create new user
         const newUser = {
-            id: Date.now(),  // Generate a random ID
-            name: fullname,
+            id: users.length + 1,
+            name: fullname.split(' ')[0],
             email: email,
             avatar: avatarUrl
         };
