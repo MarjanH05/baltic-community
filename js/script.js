@@ -109,7 +109,7 @@ loginForm.addEventListener('submit', (e) => {
             loginUser({
                 id: foundUser.id,
                 avatar: foundUser.avatar,
-                name: foundUser.name,
+                name: foundUser.name.split(' ')[0],
                 email: foundUser.email
             });
         }
