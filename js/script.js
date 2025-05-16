@@ -48,7 +48,7 @@ let events = [
 // Current logged in user
 let currentUser = null;
 
-// --- SESSION MANAGEMENT ---
+// Session Manager
 // Check for existing session on page load
 function checkSession() {
     const userData = localStorage.getItem('balticUser');
@@ -72,7 +72,6 @@ function clearSession() {
     localStorage.removeItem('balticUser');
 }
 
-// --- END SESSION MANAGEMENT ---
 
 // DOM Elements
 const loginPage = document.getElementById('login-page');
@@ -251,6 +250,7 @@ postInput.addEventListener('click', () => {
     postInput.focus();
 });
 
+// Navbar profile management dropdown
 if (profileIcon) {
     profileIcon.addEventListener('click', function(e) {
         e.stopPropagation();
