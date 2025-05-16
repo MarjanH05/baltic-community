@@ -169,6 +169,9 @@ body {
 .post {
 	padding: 15px;
 	border-bottom: 1px solid #ddd;
+	width: 100%;
+	max-width: 100%;
+	overflow: hidden;
 }
 
 .submit-post-btn {
@@ -215,6 +218,10 @@ body {
 .post-content {
 	margin-bottom: 15px;
 	line-height: 1.5;
+	word-break: break-word;
+	overflow-wrap: anywhere;
+	width: 100%;
+	max-width: 100%;
 }
 
 
