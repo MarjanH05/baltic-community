@@ -1,11 +1,11 @@
 // Store users data
 let users = [
-		{ id: 1, name: "Danny Broome", avatar: null },
-		{ id: 2, name: "Mia Harkins", avatar: null },
-		{ id: 3, name: "The Baltic Community", avatar: null },
-		{ id: 4, name: "Marjan Hussain", avatar: null },
-		{ id: 5, name: "Ruairi Orr", avatar: null },
-		{ id: 6, name: "Bailey S", avatar: null }
+    { id: 1, name: "Danny Broome", avatar: "https://randomuser.me/api/portraits/men/22.jpg" },
+    { id: 2, name: "Mia Harkins", avatar: "https://media1.tenor.com/m/-y5S_3eSnkIAAAAd/lana-del-rey-lana-del-rey-concert.gif" },
+    { id: 3, name: "The Baltic Community", avatar: "https://cdn.brandfetch.io/idf8ZReMDl/w/400/h/400/theme/dark/icon.jpeg?c=1dxbfHSJFAPEGdCLU4o5B" },
+    { id: 4, name: "Marjan Hussain", avatar: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOG9wbjMwMHdtMHN2dWg4eXVzc2h2eWF3ZTRqc251bG5pNmxpemJpayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VBZ6EWbfnLXKoRoSDv/giphy.gif" },
+    { id: 5, name: "Ruairi Orr", avatar: "https://t4.ftcdn.net/jpg/13/76/74/77/240_F_1376747702_xFXUDsz4hnes0pIZgxjPBLMVB6cytJQx.jpg" },
+    { id: 6, name: "Bailey S", avatar: "https://randomuser.me/api/portraits/men/1.jpg" }
 ];
 
 // Store posts data
