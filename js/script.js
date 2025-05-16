@@ -182,6 +182,27 @@ postInput.addEventListener('keydown', function(e) {
 
 function handlePostSubmit() {
     const content = postInput.value;
+    
+    if (content && content.trim() !== '') {
+        const newPost = {
+            id: Date.now(),
+            authorId: currentUser.id,
+            authorName: currentUser.name,
+            avatar: currentUser.avatar,
+            content: content,
+            time: "Just now"
+        };
+        
+        // Add to posts array
+        posts.unshift(newPost);
+        
+        // Refresh posts
+        renderPosts();
+        
+        // Clear input
+        postInput.value = '';
+    }
+}
 
 // Convert image to base64
 function convertImageToBase64(file) {
@@ -193,30 +214,10 @@ function convertImageToBase64(file) {
     });
 }
 
-// Handle post input
+// Handle post input focus
 postInput.addEventListener('click', () => {
-    const content = prompt("What's on your mind?");
-  
-    if (content && content.trim() !== '') {
-        const newPost = {
-            id: Date.now(),
-            authorId: currentUser.id,
-            authorName: currentUser.name,
-            avatar: currentUser.avatar,
-            content: content,
-            time: "Just now"
-        };
-
-        // Add to posts array
-        posts.unshift(newPost);
-
-        // Refresh posts
-        posts.unshift(newPost);
-        renderPosts();
-
-        // Clear input
-        postInput.value = '';
-    }
+    // Focus on the input field when clicked
+    postInput.focus();
 });
 
 
@@ -380,4 +381,3 @@ window.onload = function() {
 		loginPage.classList.remove('hidden');
 };
 
-}

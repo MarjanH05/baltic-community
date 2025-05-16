@@ -170,6 +170,10 @@
 			padding: 15px;
 			border-bottom: 1px solid #ddd;
 	}
+	
+	.submit-post-btn {
+		width: 30px;
+	}
 
 	.post-header {
 			display: flex;
@@ -340,6 +344,12 @@
 			flex-direction: column;
 			gap: 20px;
 	}
+	#login-btn{
+		width: 500px;
+	}
+	#signup-btn{
+		width: 500px;
+	}
 
 	.form-group {
 			display: flex;
@@ -375,7 +385,6 @@
 			font-weight: bold;
 			text-align: center;
 			font-size: 16px;
-			width: 500px;
 	}
 
 	.btn-primary {
