@@ -48,6 +48,32 @@ let events = [
 // Current logged in user
 let currentUser = null;
 
+// --- SESSION MANAGEMENT ---
+// Check for existing session on page load
+function checkSession() {
+    const userData = localStorage.getItem('balticUser');
+    if (userData) {
+        try {
+            const user = JSON.parse(userData);
+            loginUser(user, true); // true = from session
+        } catch (e) {
+            localStorage.removeItem('balticUser');
+        }
+    }
+}
+
+// Save session to localStorage
+function saveSession(user) {
+    localStorage.setItem('balticUser', JSON.stringify(user));
+}
+
+// Clear session from localStorage
+function clearSession() {
+    localStorage.removeItem('balticUser');
+}
+
+// --- END SESSION MANAGEMENT ---
+
 // DOM Elements
 const loginPage = document.getElementById('login-page');
 const signupPage = document.getElementById('signup-page');
@@ -65,6 +91,11 @@ const profileIcon = document.getElementById('profile-icon');
 const postUserAvatar = document.getElementById('post-user-avatar');
 const submitPostBtn = document.getElementById('submit-post-btn');
 const profilePictureInput = document.getElementById('profile-picture');
+// Dropdown elements
+const profileDropdown = document.getElementById('profile-dropdown');
+const dropdownAvatar = document.getElementById('dropdown-avatar');
+const dropdownUsername = document.getElementById('dropdown-username');
+const logoutLink = document.getElementById('logout-link');
 
 // Show login page by default
 loginPage.classList.remove('hidden');
@@ -220,9 +251,48 @@ postInput.addEventListener('click', () => {
     postInput.focus();
 });
 
+if (profileIcon) {
+    profileIcon.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (profileDropdown.classList.contains('hidden')) {
+            updateDropdownProfile();
+            profileDropdown.classList.remove('hidden');
+        } else {
+            profileDropdown.classList.add('hidden');
+        }
+    });
+}
+
+document.addEventListener('click', function(e) {
+    if (!profileDropdown.classList.contains('hidden')) {
+        if (!profileDropdown.contains(e.target) && e.target !== profileIcon) {
+            profileDropdown.classList.add('hidden');
+        }
+    }
+});
+
+function updateDropdownProfile() {
+    if (!currentUser) return;
+    dropdownUsername.textContent = currentUser.name;
+    if (currentUser.avatar) {
+        dropdownAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="${currentUser.name}">`;
+    } else {
+        dropdownAvatar.textContent = currentUser.name.charAt(0);
+    }
+}
+
+if (logoutLink) {
+    logoutLink.addEventListener('click', function() {
+        clearSession(); // Remove session from localStorage
+        currentUser = null;
+        mainApp.classList.add('hidden');
+        loginPage.classList.remove('hidden');
+        profileDropdown.classList.add('hidden');
+    });
+}
 
 // Login user function
-function loginUser(user) {
+function loginUser(user, fromSession = false) {
 		currentUser = user;
 		
 		// Add user to active users if not already there
@@ -237,6 +307,11 @@ function loginUser(user) {
 		loginPage.classList.add('hidden');
 		signupPage.classList.add('hidden');
 		mainApp.classList.remove('hidden');
+		
+		 // Save session if not from session
+    if (!fromSession) {
+        saveSession(user);
+    }
 		
 		// Initialize app
     updateCurrentUserAvatar();
@@ -261,7 +336,6 @@ function updateCurrentUserAvatar() {
         }
     }
 }
-
 
 // Initialize app
 function initApp() {
@@ -377,7 +451,10 @@ function renderEvents() {
 
 // Initialize app
 window.onload = function() {
-		// For demo purposes, show the login page
-		loginPage.classList.remove('hidden');
+		checkSession(); // Try to restore session
+		// If no session, show login page
+		if (!currentUser) {
+				loginPage.classList.remove('hidden');
+				}
 };
 
