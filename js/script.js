@@ -1,20 +1,20 @@
 // Store users data
 let users = [
-    { id: 1, name: "Danny Broome", email: "danny@baltic.com", password: "!Password1", avatar: "https://media.giphy.com/media/84CRvhy2DJlwA/giphy.gif" },
-    { id: 2, name: "Ace Cochez", email: "ace@baltic.com", password: "!Password2", avatar: "https://t3.ftcdn.net/jpg/01/18/50/58/360_F_118505846_PZCicmZZdCNIHS7HUrkUqiUpJMaoJZFZ.jpg" },
-    { id: 3, name: "The Baltic Community", email: "baltic@baltic.com", password: "!Password3", avatar: "https://cdn.brandfetch.io/idf8ZReMDl/w/400/h/400/theme/dark/icon.jpeg?c=1dxbfHSJFAPEGdCLU4o5B" },
-    { id: 4, name: "Marjan Hussain", email: "marjan@baltic.com", password: "!Password4", avatar: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOG9wbjMwMHdtMHN2dWg4eXVzc2h2eWF3ZTRqc251bG5pNmxpemJpayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VBZ6EWbfnLXKoRoSDv/giphy.gif" },
-    { id: 5, name: "Ruairi Orr", email: "ruairi@baltic.com", password: "!Password5", avatar: "https://t4.ftcdn.net/jpg/13/76/74/77/240_F_1376747702_xFXUDsz4hnes0pIZgxjPBLMVB6cytJQx.jpg" },
-    { id: 6, name: "Bailey S", email: "bailey@baltic.com", password: "!Password6", avatar: "https://randomuser.me/api/portraits/men/1.jpg" }
+    { id: 1, name: "Danny Broome", avatar: "https://randomuser.me/api/portraits/men/22.jpg" },
+    { id: 2, name: "Mia Harkins", avatar: "https://media1.tenor.com/m/-y5S_3eSnkIAAAAd/lana-del-rey-lana-del-rey-concert.gif" },
+    { id: 3, name: "The Baltic Community", avatar: "https://cdn.brandfetch.io/idf8ZReMDl/w/400/h/400/theme/dark/icon.jpeg?c=1dxbfHSJFAPEGdCLU4o5B" },
+    { id: 4, name: "Marjan Hussain", avatar: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOG9wbjMwMHdtMHN2dWg4eXVzc2h2eWF3ZTRqc251bG5pNmxpemJpayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VBZ6EWbfnLXKoRoSDv/giphy.gif" },
+    { id: 5, name: "Ruairi Orr", avatar: "https://t4.ftcdn.net/jpg/13/76/74/77/240_F_1376747702_xFXUDsz4hnes0pIZgxjPBLMVB6cytJQx.jpg" },
+    { id: 6, name: "Bailey S", avatar: "https://randomuser.me/api/portraits/men/1.jpg" }
 ];
 
 // Store posts data
 let posts = [
 		{
-				id: users[0].id,
-				authorId: users[0].id,
-				authorName: users[0].name,
-                avatar: users[0].avatar,
+				id: 1,
+				authorId: 1,
+				authorName: "Danny Broome",
+				avatar: null,
 				content: "Happy Friday! How are you? How has your week been? Up to anything this weekend? As per usual, I'll leave mine in the comments. Happy days!",
 				time: "3 hours ago"
 		}
@@ -48,31 +48,6 @@ let events = [
 // Current logged in user
 let currentUser = null;
 
-// Session Manager
-// Check for existing session on page load
-function checkSession() {
-    const userData = localStorage.getItem('balticUser');
-    if (userData) {
-        try {
-            const user = JSON.parse(userData);
-            loginUser(user, true); // true = from session
-        } catch (e) {
-            localStorage.removeItem('balticUser');
-        }
-    }
-}
-
-// Save session to localStorage
-function saveSession(user) {
-    localStorage.setItem('balticUser', JSON.stringify(user));
-}
-
-// Clear session from localStorage
-function clearSession() {
-    localStorage.removeItem('balticUser');
-}
-
-
 // DOM Elements
 const loginPage = document.getElementById('login-page');
 const signupPage = document.getElementById('signup-page');
@@ -90,11 +65,6 @@ const profileIcon = document.getElementById('profile-icon');
 const postUserAvatar = document.getElementById('post-user-avatar');
 const submitPostBtn = document.getElementById('submit-post-btn');
 const profilePictureInput = document.getElementById('profile-picture');
-// Dropdown elements
-const profileDropdown = document.getElementById('profile-dropdown');
-const dropdownAvatar = document.getElementById('dropdown-avatar');
-const dropdownUsername = document.getElementById('dropdown-username');
-const logoutLink = document.getElementById('logout-link');
 
 // Show login page by default
 loginPage.classList.remove('hidden');
@@ -134,23 +104,13 @@ loginForm.addEventListener('submit', (e) => {
     }
     
     if (isValid) {
-        const foundUser = users.find(user => user.email === email && user.password === password);
-        if(foundUser) {
-            loginUser({
-                id: foundUser.id,
-                avatar: foundUser.avatar,
-                name: foundUser.name.split(' ')[0],
-                email: foundUser.email
-            });
-        }
-        else {
-            loginUser({
-                id: users.length + 1,
-                name: email.split('@')[0],
-                avatar: null,
-                email: email
-            });
-        }
+        // Find user by email (in future verify credentials server-side)
+        // For demo, just log in with any credentials
+        loginUser({
+            id: Date.now(),  // Generate a random ID
+            name: email.split('@')[0],  // Use part of email as name
+            email: email
+        });
     } else {
         // Display error message
         alert(errorMessage);
@@ -158,13 +118,11 @@ loginForm.addEventListener('submit', (e) => {
 });
 
 // Handle signup form submission
-signupForm.addEventListener('submit', async (e) => {
+signupForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const fullname = document.getElementById('fullname').value;
     const email = document.getElementById('signup-email').value;
     const password = document.getElementById('signup-password').value;
-    const profilePicture = profilePictureInput.files[0];
-
     
     // Email regex validation - requires letters before and after @, followed by . and domain extension
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -193,19 +151,11 @@ signupForm.addEventListener('submit', async (e) => {
     }
     
     if (isValid) {
-        let avatarUrl = null;
-
-        // If profile picture was selected, convert to base64
-        if (profilePicture) {
-            avatarUrl = await convertImageToBase64(profilePicture);
-        }
-
         // Create new user
         const newUser = {
-            id: users.length + 1,
-            name: fullname.split(' ')[0],
-            email: email,
-            avatar: avatarUrl
+            id: Date.now(),  // Generate a random ID
+            name: fullname,
+            email: email
         };
         
         // Add to users array
@@ -222,6 +172,43 @@ signupForm.addEventListener('submit', async (e) => {
 // Post when button is clicked
 submitPostBtn.addEventListener('click', handlePostSubmit);
 
+// Text box behavior
+
+// Auto-expanding input field
+const hiddenText = document.getElementById('hidden-text');
+
+// Text box behavior
+
+// Auto-resizing textarea functionality
+function autoResizeTextarea() {
+    postInput.style.height = 'auto';
+    postInput.style.height = postInput.scrollHeight + 'px';
+    
+    if (postInput.value.trim().length > 0) {
+        submitPostBtn.style.display = 'inline-block';
+    } else {
+        submitPostBtn.style.display = 'none';
+    }
+}
+
+// Initialize once DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    
+    postInput.style.resize = 'none'; 
+    postInput.style.overflow = 'hidden';
+    postInput.style.boxSizing = 'border-box';
+    postInput.style.minHeight = '36px';
+ 
+    postInput.style.width = '100%'; 
+    
+    // Hide submit button initially
+    submitPostBtn.style.display = 'none';
+    
+    postInput.addEventListener('input', autoResizeTextarea);
+    
+    // Initialize
+    autoResizeTextarea();
+});
 
 postInput.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -231,6 +218,8 @@ postInput.addEventListener('keydown', function(e) {
 });
 
 function handlePostSubmit() {
+		const spinner = document.getElementById('spinner')
+		spinner.style.visibility = 'visible'
     const content = postInput.value;
     
     if (content && content.trim() !== '') {
@@ -270,49 +259,9 @@ postInput.addEventListener('click', () => {
     postInput.focus();
 });
 
-// Navbar profile management dropdown
-if (profileIcon) {
-    profileIcon.addEventListener('click', function(e) {
-        e.stopPropagation();
-        if (profileDropdown.classList.contains('hidden')) {
-            updateDropdownProfile();
-            profileDropdown.classList.remove('hidden');
-        } else {
-            profileDropdown.classList.add('hidden');
-        }
-    });
-}
-
-document.addEventListener('click', function(e) {
-    if (!profileDropdown.classList.contains('hidden')) {
-        if (!profileDropdown.contains(e.target) && e.target !== profileIcon) {
-            profileDropdown.classList.add('hidden');
-        }
-    }
-});
-
-function updateDropdownProfile() {
-    if (!currentUser) return;
-    dropdownUsername.textContent = currentUser.name;
-    if (currentUser.avatar) {
-        dropdownAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="${currentUser.name}">`;
-    } else {
-        dropdownAvatar.textContent = currentUser.name.charAt(0);
-    }
-}
-
-if (logoutLink) {
-    logoutLink.addEventListener('click', function() {
-        clearSession(); // Remove session from localStorage
-        currentUser = null;
-        mainApp.classList.add('hidden');
-        loginPage.classList.remove('hidden');
-        profileDropdown.classList.add('hidden');
-    });
-}
 
 // Login user function
-function loginUser(user, fromSession = false) {
+function loginUser(user) {
 		currentUser = user;
 		
 		// Add user to active users if not already there
@@ -327,11 +276,6 @@ function loginUser(user, fromSession = false) {
 		loginPage.classList.add('hidden');
 		signupPage.classList.add('hidden');
 		mainApp.classList.remove('hidden');
-		
-		 // Save session if not from session
-    if (!fromSession) {
-        saveSession(user);
-    }
 		
 		// Initialize app
     updateCurrentUserAvatar();
@@ -356,6 +300,7 @@ function updateCurrentUserAvatar() {
         }
     }
 }
+
 
 // Initialize app
 function initApp() {
@@ -471,10 +416,7 @@ function renderEvents() {
 
 // Initialize app
 window.onload = function() {
-		checkSession(); // Try to restore session
-		// If no session, show login page
-		if (!currentUser) {
-				loginPage.classList.remove('hidden');
-				}
+		// For demo purposes, show the login page
+		loginPage.classList.remove('hidden');
 };
 
