@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Baltic Community</title>
     <link rel="stylesheet" href="css/styles.css"/>
+		<!-- FontAwesome Icon Library -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 
@@ -20,12 +22,12 @@
             <form class="login-form" id="login-form">
 						
                 <div class="form-group">
-                    <label for="email">*Email</label>
+                    <label for="email">Email</label>
                     <input type="email" id="email" name="email" required>
                 </div>
 								
                 <div class="form-group">
-                    <label for="password">*Password</label>
+                    <label for="password">Password</label>
                     <input type="password" id="password" name="password" required>
                 </div>
 								
@@ -143,23 +145,12 @@
 								
                     <div class="post-input">
 										
-                        <div class="user-avatar" id="post-user-avatar"></div>
-                        <input type="text" placeholder="Write a post" id="post-input">
-												
-
-                        <button id="submit-post-btn" class="btn btn-primary" style="margin-left: 8px;">Post</button>
-
-                    </div>
-
-                    <div class="filter-bar">
-                        <span>Filter by: </span>
-                        <select class="filter-dropdown">
-                            <option>All</option>
-                            <option>My Posts</option>
-                            <option>Latest</option>
-                        </select>
-                    </div>
-
+											<div class="user-avatar" id="post-user-avatar"></div>
+											<textarea placeholder="Write a post" id="post-input" rows="1"></textarea>
+											<button id="submit-post-btn" class="btn btn-primary" style="margin-left: 8px; display: none;"><i id="spinner" class="fa fa-spinner fa-spin" style="visibility: hidden;"></i>Post</button>
+											
+									</div>
+									
                     <div class="posts-container" id="posts-container">
                         <!-- Posts will be inserted here dynamically -->
                     </div>

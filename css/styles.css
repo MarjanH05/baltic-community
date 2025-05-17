@@ -461,9 +461,15 @@ body {
 	font-weight: bold;
 }
 
-.hidden {
-	display: none;
-}
+		.signup-link a {
+			color: #0a0e40;
+			text-decoration: none;
+			font-weight: bold;
+		}
+
+	.hidden {
+		display: none;
+	}
 
 .avatar-image {
 	width: 100%;
