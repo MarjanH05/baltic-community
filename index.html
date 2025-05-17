@@ -22,12 +22,12 @@
             <form class="login-form" id="login-form">
 						
                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email">*Email</label>
                     <input type="email" id="email" name="email" required>
                 </div>
 								
                 <div class="form-group">
-                    <label for="password">Password</label>
+                    <label for="password">*Password</label>
                     <input type="password" id="password" name="password" required>
                 </div>
 								
@@ -99,7 +99,7 @@
                         <div class="dropdown-avatar" id="dropdown-avatar"></div>
                         <div class="dropdown-username" id="dropdown-username">User</div>
                     </div>
-                    <button class="dropdown-btn active">My profile</button>
+                    <button class="dropdown-btn active" id="myprofile-link">My Profile</button>
                     <hr>
                     <div class="dropdown-links">
                         <div class="dropdown-link"><span>📝</span> My Recent Posts</div>
@@ -109,7 +109,7 @@
                     </div>
                     <hr>
                     <div class="dropdown-link dropdown-settings"><span>⚙️</span> My settings <span style="float:right">▾</span></div>
-                    <div class="dropdown-link dropdown-settings"><span>✉️</span> Contact us</div>
+                    <div class="dropdown-link dropdown-settings" onclick="window.location.href='mailto:community@balticapprenticeships.com'"><span>✉️</span> Contact us</div>
                     <hr>
                     <div class="dropdown-link logout-link" id="logout-link"><span>↩️</span> Logout</div>
                 </div>

@@ -1,20 +1,20 @@
 // Store users data
 let users = [
-    { id: 1, name: "Danny Broome", avatar: "https://randomuser.me/api/portraits/men/22.jpg" },
-    { id: 2, name: "Mia Harkins", avatar: "https://media1.tenor.com/m/-y5S_3eSnkIAAAAd/lana-del-rey-lana-del-rey-concert.gif" },
-    { id: 3, name: "The Baltic Community", avatar: "https://cdn.brandfetch.io/idf8ZReMDl/w/400/h/400/theme/dark/icon.jpeg?c=1dxbfHSJFAPEGdCLU4o5B" },
-    { id: 4, name: "Marjan Hussain", avatar: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOG9wbjMwMHdtMHN2dWg4eXVzc2h2eWF3ZTRqc251bG5pNmxpemJpayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VBZ6EWbfnLXKoRoSDv/giphy.gif" },
-    { id: 5, name: "Ruairi Orr", avatar: "https://t4.ftcdn.net/jpg/13/76/74/77/240_F_1376747702_xFXUDsz4hnes0pIZgxjPBLMVB6cytJQx.jpg" },
-    { id: 6, name: "Bailey S", avatar: "https://randomuser.me/api/portraits/men/1.jpg" }
+    { id: 1, name: "Danny Broome", email: "danny@baltic.com", password: "!Password1", avatar: "https://media.giphy.com/media/84CRvhy2DJlwA/giphy.gif" },
+    { id: 2, name: "Ace Cochez", email: "ace@baltic.com", password: "!Password2", avatar: "https://t3.ftcdn.net/jpg/01/18/50/58/360_F_118505846_PZCicmZZdCNIHS7HUrkUqiUpJMaoJZFZ.jpg" },
+    { id: 3, name: "The Baltic Community", email: "baltic@baltic.com", password: "!Password3", avatar: "https://cdn.brandfetch.io/idf8ZReMDl/w/400/h/400/theme/dark/icon.jpeg?c=1dxbfHSJFAPEGdCLU4o5B" },
+    { id: 4, name: "Marjan Hussain", email: "marjan@baltic.com", password: "!Password4", avatar: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOG9wbjMwMHdtMHN2dWg4eXVzc2h2eWF3ZTRqc251bG5pNmxpemJpayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VBZ6EWbfnLXKoRoSDv/giphy.gif" },
+    { id: 5, name: "Ruairi Orr", email: "ruairi@baltic.com", password: "!Password5", avatar: "https://t4.ftcdn.net/jpg/13/76/74/77/240_F_1376747702_xFXUDsz4hnes0pIZgxjPBLMVB6cytJQx.jpg" },
+    { id: 6, name: "Bailey S", email: "bailey@baltic.com", password: "!Password6", avatar: "https://randomuser.me/api/portraits/men/1.jpg" }
 ];
 
 // Store posts data
 let posts = [
 		{
-				id: 1,
-				authorId: 1,
-				authorName: "Danny Broome",
-				avatar: null,
+				id: users[0].id,
+				authorId: users[0].id,
+				authorName: users[0].name,
+                avatar: users[0].avatar,
 				content: "Happy Friday! How are you? How has your week been? Up to anything this weekend? As per usual, I'll leave mine in the comments. Happy days!",
 				time: "3 hours ago"
 		}
@@ -134,13 +134,23 @@ loginForm.addEventListener('submit', (e) => {
     }
     
     if (isValid) {
-        // Find user by email (in future verify credentials server-side)
-        // For demo, just log in with any credentials
-        loginUser({
-            id: Date.now(),  // Generate a random ID
-            name: email.split('@')[0],  // Use part of email as name
-            email: email
-        });
+        const foundUser = users.find(user => user.email === email.toLowerCase() && user.password === password);
+        if(foundUser) {
+            loginUser({
+                id: foundUser.id,
+                avatar: foundUser.avatar,
+                name: foundUser.name.split(' ')[0],
+                email: foundUser.email
+            });
+        }
+        else {
+            loginUser({
+                id: users.length + 1,
+                name: email.split('@')[0],
+                avatar: null,
+                email: email
+            });
+        }
     } else {
         // Display error message
         alert(errorMessage);
@@ -183,9 +193,10 @@ signupForm.addEventListener('submit', (e) => {
     if (isValid) {
         // Create new user
         const newUser = {
-            id: Date.now(),  // Generate a random ID
-            name: fullname,
-            email: email
+            id: users.length + 1,
+            name: fullname.split(' ')[0],
+            email: email,
+            avatar: avatarUrl
         };
         
         // Add to users array
@@ -209,7 +220,7 @@ const hiddenText = document.getElementById('hidden-text');
 
 // Text box behavior
 
-// Auto-resizing textarea functionality
+// Auto-resizing text area functionality
 function autoResizeTextarea() {
     postInput.style.height = 'auto';
     postInput.style.height = postInput.scrollHeight + 'px';
