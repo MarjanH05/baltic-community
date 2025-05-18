@@ -281,6 +281,10 @@ function handlePostSubmit() {
         
         // Clear input
         postInput.value = '';
+            
+        setTimeout(() => {
+            spinner.style.visibility = 'hidden';
+        }, 250);
     }
 }
 
