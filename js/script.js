@@ -105,6 +105,12 @@ signupBtn.addEventListener('click', () => {
 		signupPage.classList.remove('hidden');
 });
 
+// Handle back to login button
+backToLoginBtn.addEventListener('click', () => {
+		signupPage.classList.add('hidden');
+		loginPage.classList.remove('hidden');
+});
+
 // Handle login form submission
 loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
