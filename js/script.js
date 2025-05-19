@@ -164,11 +164,12 @@ loginForm.addEventListener('submit', (e) => {
 });
 
 // Handle signup form submission
-signupForm.addEventListener('submit', (e) => {
+signupForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const fullname = document.getElementById('fullname').value;
     const email = document.getElementById('signup-email').value;
     const password = document.getElementById('signup-password').value;
+    const profilePictureInput = document.getElementById('profile-picture').files[0];
     
     // Email regex validation - requires letters before and after @, followed by . and domain extension
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -197,6 +198,10 @@ signupForm.addEventListener('submit', (e) => {
     }
     
     if (isValid) {
+        let avatarUrl = null;
+        if (profilePictureInput) {
+            avatarUrl = await convertImageToBase64(profilePictureInput);
+        }
         // Create new user
         const newUser = {
             id: users.length + 1,
