@@ -16,7 +16,7 @@ let posts = [
 				authorName: users[0].name,
                 avatar: users[0].avatar,
 				content: "Happy Friday! How are you? How has your week been? Up to anything this weekend? As per usual, I'll leave mine in the comments. Happy days!",
-				time: "3 hours ago"
+                timestamp: Date.now() - (300000) //Roughly 5 mins 
 		}
 ];
 
@@ -222,9 +222,16 @@ const hiddenText = document.getElementById('hidden-text');
 
 // Auto-resizing text area functionality
 function autoResizeTextarea() {
-    postInput.style.height = 'auto';
-    postInput.style.height = postInput.scrollHeight + 'px';
-    
+    postInput.style.height = '36px'; 
+    postInput.style.height = Math.max(36, postInput.scrollHeight) + 'px'; 
+
+    if (postInput.scrollHeight > 300) {
+        postInput.style.overflowY = 'auto';
+    } 
+    else {
+        postInput.style.overflowY = 'hidden';
+    }
+
     if (postInput.value.trim().length > 0) {
         submitPostBtn.style.display = 'inline-block';
     } else {
@@ -239,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
     postInput.style.overflow = 'hidden';
     postInput.style.boxSizing = 'border-box';
     postInput.style.minHeight = '36px';
- 
+    postInput.style.maxHeight = '300px';
     postInput.style.width = '100%'; 
     
     // Hide submit button initially
@@ -270,7 +277,7 @@ function handlePostSubmit() {
             authorName: currentUser.name,
             avatar: currentUser.avatar,
             content: content,
-            time: "Just now"
+            timestamp: Date.now()
         };
         
         // Add to posts array
@@ -278,9 +285,12 @@ function handlePostSubmit() {
         
         // Refresh posts
         renderPosts();
-        
-        // Clear input
-        postInput.value = '';
+
+        setTimeout(() => {
+            spinner.style.visibility = 'hidden';
+            postInput.value = '';
+            autoResizeTextarea();
+        }, 250);
     }
 }
 
@@ -423,7 +433,7 @@ function renderPosts() {
                         </div>
                         <div class="author-info">
                             <h4>${post.authorName}</h4>
-                            <span class="post-time">${post.time}</span>
+                            <span class="post-time">${formatTimeAgo(post.timestamp || Date.now())}</span>
                         </div>
                     </div>
                     <div class="post-options">⋮</div>
@@ -437,6 +447,7 @@ function renderPosts() {
             `;
 
 				postsContainer.appendChild(postElement);
+                setupPostOptionsMenu();
 		});
 
 		// Add event listeners for "Read more" links
@@ -450,6 +461,123 @@ function renderPosts() {
 						this.style.display = 'none';
 				});
 		});
+}
+
+function formatTimeAgo(timestamp) {
+    const sec = Math.floor((Date.now() - timestamp) / 1000);
+    const mins = sec / 60;
+    const hrs = mins / 60;
+    const days = hrs / 24;
+    
+    if (days >= 1) return `${Math.floor(days)} day${days >= 2 ? 's' : ''} ago`;
+    if (hrs >= 1) return `${Math.floor(hrs)} hour${hrs >= 2 ? 's' : ''} ago`;
+    if (mins >= 1) return `${Math.floor(mins)} minute${mins >= 2 ? 's' : ''} ago`;
+    return 'Just now';
+}
+
+// Handle post options menu
+function setupPostOptionsMenu() {
+    const postOptions = document.querySelectorAll('.post-options');
+    
+    postOptions.forEach((optionsButton, index) => {
+        optionsButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            // Remove any existing options menus
+            const existingMenus = document.querySelectorAll('.post-options-menu');
+            existingMenus.forEach(menu => menu.remove());
+            
+            const post = posts[index];
+            
+            // Only show edit/delete for the current user's posts
+            if (post.authorId === currentUser.id) {
+                const optionsMenu = document.createElement('div');
+                optionsMenu.className = 'post-options-menu';
+                optionsMenu.innerHTML = `
+                    <div class="option-item edit-post" data-index="${index}">Edit post</div>
+                    <div class="option-item delete-post" data-index="${index}">Delete post</div>
+                `;
+                
+                // Position the menu
+                optionsButton.appendChild(optionsMenu);
+                
+                // Add event listeners
+                const editOption = optionsMenu.querySelector('.edit-post');
+                const deleteOption = optionsMenu.querySelector('.delete-post');
+                
+                editOption.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const postIndex = this.getAttribute('data-index');
+                    optionsMenu.remove();
+                    editPost(postIndex);
+                });
+                
+                deleteOption.addEventListener('click', function() {
+                    const postIndex = this.getAttribute('data-index');
+                    deletePost(postIndex);
+                    optionsMenu.remove();
+                });
+            }
+        });
+    });
+    
+    // Close menu if user clicks elsewhere
+    document.addEventListener('click', function() {
+        const existingMenus = document.querySelectorAll('.post-options-menu');
+        existingMenus.forEach(menu => menu.remove());
+    });
+}
+
+function editPost(index) {
+    const post = posts[index];
+    const postContent = document.querySelectorAll('.post-content')[index];
+    const originalText = post.content;
+    
+    postContent.innerHTML = `
+        <div class="edit-container">
+            <textarea class="edit-textarea">${originalText}</textarea>
+            <div class="edit-actions">
+                <button class="btn btn-primary save-edit">Save</button>
+                <button class="btn btn-secondary cancel-edit">Cancel</button>
+            </div>
+        </div>
+    `;
+    
+    const textarea = postContent.querySelector('.edit-textarea');
+    textarea.focus();
+    
+    // Set initial height based on content
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 300) + 'px';
+    
+    // Add event listener for textarea resizing as user types
+    textarea.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 300) + 'px';
+    });
+    
+    // Add event listeners for save and cancel
+    const saveButton = postContent.querySelector('.save-edit');
+    const cancelButton = postContent.querySelector('.cancel-edit');
+    
+    saveButton.addEventListener('click', function() {
+        const newContent = textarea.value.trim();
+        if (newContent) {
+            post.content = newContent;
+            renderPosts();
+        }
+    });
+    
+    cancelButton.addEventListener('click', function() {
+        renderPosts();
+    });
+}
+
+function deletePost(index) {
+    if (confirm('Are you sure you want to delete this post?')) {
+        posts.splice(index, 1);
+        renderPosts();
+    }
 }
 
 // Render active users
@@ -507,4 +635,3 @@ window.onload = function() {
 				loginPage.classList.remove('hidden');
 				}
 };
-
