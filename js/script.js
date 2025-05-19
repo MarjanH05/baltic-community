@@ -16,7 +16,7 @@ let posts = [
 				authorName: users[0].name,
                 avatar: users[0].avatar,
 				content: "Happy Friday! How are you? How has your week been? Up to anything this weekend? As per usual, I'll leave mine in the comments. Happy days!",
-                timestamp: Date.now() - (300000) //Roughly 5 mins 
+                timestamp: Date.now() - (300000) //Roughly 5 mins
 		}
 ];
 
@@ -89,7 +89,6 @@ const eventList = document.getElementById('event-list');
 const profileIcon = document.getElementById('profile-icon');
 const postUserAvatar = document.getElementById('post-user-avatar');
 const submitPostBtn = document.getElementById('submit-post-btn');
-const profilePictureInput = document.getElementById('profile-picture');
 // Dropdown elements
 const profileDropdown = document.getElementById('profile-dropdown');
 const dropdownAvatar = document.getElementById('dropdown-avatar');
@@ -105,7 +104,7 @@ signupBtn.addEventListener('click', () => {
 		signupPage.classList.remove('hidden');
 });
 
-// Handle back to login button
+// Handle back to log in button
 backToLoginBtn.addEventListener('click', () => {
 		signupPage.classList.add('hidden');
 		loginPage.classList.remove('hidden');
@@ -166,7 +165,7 @@ loginForm.addEventListener('submit', (e) => {
 // Handle signup form submission
 signupForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const fullname = document.getElementById('fullname').value;
+    const fullName = document.getElementById('full-name').value;
     const email = document.getElementById('signup-email').value;
     const password = document.getElementById('signup-password').value;
     const profilePictureInput = document.getElementById('profile-picture').files[0];
@@ -174,15 +173,15 @@ signupForm.addEventListener('submit', async (e) => {
     // Email regex validation - requires letters before and after @, followed by . and domain extension
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     
-    // Password regex validation - at least 8 chars, 1 uppercase letter, and 1 number
+    // Password regex validation - at least 8 chars, 1 uppercase letter and 1 number
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
     
     // Validation
     let isValid = true;
     let errorMessage = "";
     
-    // Make sure fullname is a string and not empty
-    if (!fullname || typeof fullname !== 'string' || fullname.toString().trim() === '') {
+    // Make sure fullName is a string and not empty
+    if (!fullName || typeof fullName !== 'string' || fullName.toString().trim() === '') {
         isValid = false;
         errorMessage += "Full name is required\n";
     }
@@ -205,13 +204,13 @@ signupForm.addEventListener('submit', async (e) => {
         // Create new user
         const newUser = {
             id: users.length + 1,
-            name: fullname.split(' ')[0],
+            name: fullName.split(' ')[0],
             email: email,
             avatar: avatarUrl
         };
         
         // Add to users array
-        users.push(newUser);
+        users?.push(newUser);
         
         // Log in the new user
         loginUser(newUser);
@@ -226,11 +225,6 @@ submitPostBtn.addEventListener('click', handlePostSubmit);
 
 // Text box behavior
 
-// Auto-expanding input field
-const hiddenText = document.getElementById('hidden-text');
-
-// Text box behavior
-
 // Auto-resizing text area functionality
 function autoResizeTextarea() {
     postInput.style.height = '36px'; 
@@ -238,30 +232,19 @@ function autoResizeTextarea() {
 
     if (postInput.scrollHeight > 300) {
         postInput.style.overflowY = 'auto';
-    } 
-    else {
-        postInput.style.overflowY = 'hidden';
-    }
-
-    if (postInput.value.trim().length > 0) {
-        submitPostBtn.style.display = 'inline-block';
     } else {
-        submitPostBtn.style.display = 'none';
+        postInput.style.overflowY = 'hidden';
     }
 }
 
 // Initialize once DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    
     postInput.style.resize = 'none'; 
     postInput.style.overflow = 'hidden';
     postInput.style.boxSizing = 'border-box';
     postInput.style.minHeight = '36px';
     postInput.style.maxHeight = '300px';
-    postInput.style.width = '100%'; 
-    
-    // Hide submit button initially
-    submitPostBtn.style.display = 'none';
+    postInput.style.width = '100%';
     
     postInput.addEventListener('input', autoResizeTextarea);
     
@@ -277,8 +260,6 @@ postInput.addEventListener('keydown', function(e) {
 });
 
 function handlePostSubmit() {
-		const spinner = document.getElementById('spinner')
-		spinner.style.visibility = 'visible'
     const content = postInput.value;
     
     if (content && content.trim() !== '') {
@@ -298,7 +279,6 @@ function handlePostSubmit() {
         renderPosts();
 
         setTimeout(() => {
-            spinner.style.visibility = 'hidden';
             postInput.value = '';
             autoResizeTextarea();
         }, 250);
@@ -425,7 +405,6 @@ function renderPosts() {
 		}
 
 		posts.forEach((post, index) => {
-				const firstLetter = post.authorName.charAt(0);
 				const maxLength = 350; // Maximum length for truncation
 				const showReadMore = post.content.length > maxLength; 
 				const truncatedContent = showReadMore
