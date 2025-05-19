@@ -1,123 +1,270 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Baltic Community</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="css/styles.css"/>
-		<!-- FontAwesome Icon Library -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
+
 <body>
+    <!-- Login Page -->
+    <section id="login-page" class="hero is-fullheight hidden">
 
-    <div id="login-page" class="hidden">
-		
-        <div class="login-container">
-				
-            <div class="login-logo">
-                <h2>Have an account? Log-in</h2>
-                <p>*</em>Required fields are marked with an asterisk</em></p>
+        <div class="hero-body">
+
+            <div class="container">
+
+                <div class="box login-container">
+
+                    <div class="login-logo has-text-centered">
+
+                        <h2 class="title is-4">Have an account? Log-in</h2>
+                        <p class="subtitle is-6 has-text-grey">*<em>Required fields are marked with an asterisk</em></p>
+
+                    </div>
+                    
+                    <form id="login-form" class="login-form">
+
+                        <div class="field form-group">
+
+                            <label class="label" for="email">*Email</label>
+
+                            <div class="control">
+
+                                <input class="input" type="email" id="email" name="email" required>
+
+                            </div>
+
+                        </div>
+                        
+                        <div class="field form-group">
+
+                            <label class="label" for="password">*Password</label>
+
+                            <div class="control">
+
+                                <input class="input" type="password" id="password" name="password" required>
+
+                            </div>
+
+                        </div>
+                        
+                        <div class="field form-actions">
+
+                            <div class="control">
+
+                                <button type="submit" id="login-btn" class="button is-baltic btn-primary">Log In</button>
+
+                            </div>
+
+                            <div class="control">
+
+                                <button type="button" id="signup-btn" class="button is-light btn-secondary">Create New Account</button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
             </div>
-						
-            <form class="login-form" id="login-form">
-						
-                <div class="form-group">
-                    <label for="email">*Email</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-								
-                <div class="form-group">
-                    <label for="password">*Password</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-								
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary" id="login-btn">Log In</button>
-                    <button type="button" class="btn btn-secondary" id="signup-btn">Create New Account</button>
-                </div>
-								
-            </form>
-        </div>
-    </div>
 
-    <div id="signup-page" class="hidden">
-		
-        <div class="login-container">
-				
-            <div class="login-logo">
-                <h2>BALTIC</h2>
-                <p>APPRENTICESHIPS</p>
+        </div>
+
+    </section>
+
+    <!-- Signup Page -->
+    <section id="signup-page" class="hero is-fullheight hidden">
+
+        <div class="hero-body">
+
+            <div class="container">
+
+                <div class="box login-container">
+
+                    <div class="login-logo has-text-centered">
+
+                        <h2 class="title is-4">BALTIC</h2>
+                        <p class="subtitle is-6">APPRENTICESHIPS</p>
+
+                    </div>
+                    
+                    <form id="signup-form" class="login-form">
+
+                        <div class="field form-group">
+
+                            <label class="label" for="full-name">Full Name</label>
+
+                            <div class="control">
+
+                                <input class="input" type="text" id="full-name" name="full-name" required>
+
+                            </div>
+
+                        </div>
+                        
+                        <div class="field form-group">
+
+                            <label class="label" for="signup-email">Email</label>
+
+                            <div class="control">
+
+                                <input class="input" type="email" id="signup-email" name="email" required>
+
+                            </div>
+
+                        </div>
+                        
+                        <div class="field form-group">
+
+                            <label class="label" for="signup-password">Password</label>
+
+                            <div class="control">
+
+                                <input class="input" type="password" id="signup-password" name="password" required>
+
+                            </div>
+
+                        </div>
+                        
+                        <div class="field form-group">
+
+                            <label class="label" for="profile-picture">Profile Picture</label>
+
+                            <div class="control">
+
+                                <div class="file">
+
+                                    <label class="file-label">
+                                        <input class="file-input" type="file" id="profile-picture" name="profile-picture" accept="image/*">
+
+                                        <span class="file-cta">
+
+                                            <span class="file-icon">
+
+                                                <i class="fa fa-upload"></i>
+
+                                            </span>
+
+                                            <span class="file-label">Choose a file…</span>
+
+                                        </span>
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                        
+                        <div class="field form-actions">
+
+                            <div class="control">
+
+                                <button type="submit" class="button is-baltic btn-primary">Sign Up</button>
+
+                            </div>
+
+                            <div class="control">
+
+                                <button type="button" id="back-to-login-btn" class="button is-light btn-secondary">Back to Login</button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
             </div>
-						
-            <form class="login-form" id="signup-form">
-						
-                <div class="form-group">
-                    <label for="fullname">Full Name</label>
-                    <input type="text" id="fullname" name="fullname" required>
-                </div>
-								
-                <div class="form-group">
-                    <label for="signup-email">Email</label>
-                    <input type="email" id="signup-email" name="email" required>
-                </div>
-								
-                <div class="form-group">
-                    <label for="signup-password">Password</label>
-                    <input type="password" id="signup-password" name="password" required>
-                </div>
-								
-                <div class="form-group">
-                    <label for="profile-picture">Profile Picture</label>
-                    <input type="file" id="profile-picture" name="profile-picture" accept="image/*">
-                </div>
 
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Sign Up</button>
-                    <button type="button" class="btn btn-secondary" id="back-to-login-btn">Back to Login</button>
-                </div>
-								
-            </form>
         </div>
-    </div>
 
+    </section>
+
+    <!-- Main App -->
     <div id="main-app" class="hidden">
-		
+
+        <!-- Navbar -->
         <nav class="navbar">
-				
-            <div class="logo">
-                <h2>BALTIC</h2>
+
+            <div class="navbar-brand">
+
+                <h2 class="navbar-item title is-4">BALTIC</h2>
+
             </div>
-						
-            <div class="nav-icons">
-                <div class="icon">🔍</div>
-                <div class="icon">➕</div>
-                <div class="icon">🔔</div>
-                <div class="icon">💬</div>
-                <div class="user-icon" id="profile-icon"></div>
-                <div class="profile-dropdown hidden" id="profile-dropdown">
-                    <div class="dropdown-header">
-                        <div class="dropdown-avatar" id="dropdown-avatar"></div>
-                        <div class="dropdown-username" id="dropdown-username">User</div>
-                    </div>
-                    <button class="dropdown-btn active" id="myprofile-link">My Profile</button>
-                    <hr>
-                    <div class="dropdown-links">
-                        <div class="dropdown-link"><span>📝</span> My Recent Posts</div>
-                        <div class="dropdown-link"><span>⭐</span> Favourite users</div>
-                        <div class="dropdown-link"><span>📅</span> My Events</div>
-                        <div class="dropdown-link"><span>👤</span> Refer a contact</div>
-                    </div>
-                    <hr>
-                    <div class="dropdown-link dropdown-settings"><span>⚙️</span> My settings <span style="float:right">▾</span></div>
-                    <div class="dropdown-link dropdown-settings" onclick="window.location.href='mailto:community@balticapprenticeships.com'"><span>✉️</span> Contact us</div>
-                    <hr>
-                    <div class="dropdown-link logout-link" id="logout-link"><span>↩️</span> Logout</div>
+            
+            <div class="navbar-end">
+
+                <div class="navbar-item nav-icons">
+
+                    <span class="icon">🔍</span>
+                    <span class="icon">➕</span>
+                    <span class="icon">🔔</span>
+                    <span class="icon">💬</span>
+
+                    <div class="user-icon" id="profile-icon"></div>
+
                 </div>
+
             </div>
-						
+            
+            <!-- Replace your current profile dropdown section -->
+            <div class="dropdown profile-dropdown hidden" id="profile-dropdown">
+
+                <div class="dropdown-menu" role="menu">
+
+                    <div class="dropdown-content">
+
+                        <div class="dropdown-header">
+
+                            <div class="dropdown-avatar" id="dropdown-avatar"></div>
+
+                            <div class="dropdown-username" id="dropdown-username">User</div>
+
+                        </div>
+
+                        <button class="dropdown-btn active" id="my-profile-link">My Profile</button>
+                        <hr class="dropdown-divider">
+
+                        <div class="dropdown-links">
+
+                            <a class="dropdown-item dropdown-link"><span>📝</span> My Recent Posts</a>
+                            <a class="dropdown-item dropdown-link"><span>⭐</span> Favourite users</a>
+                            <a class="dropdown-item dropdown-link"><span>📅</span> My Events</a>
+                            <a class="dropdown-item dropdown-link"><span>👤</span> Refer a contact</a>
+
+                        </div>
+
+                        <hr class="dropdown-divider">
+                        <a class="dropdown-item dropdown-link dropdown-settings"><span>⚙️</span> My settings <span style="float:right">▾</span></a>
+                        <a class="dropdown-item dropdown-link dropdown-settings" onclick="window.location.href='mailto:community@balticapprenticeships.com'">
+                            <span>✉️</span> Contact us
+                        </a>
+                        <hr class="dropdown-divider">
+                        <a class="dropdown-item dropdown-link logout-link" id="logout-link"><span>↩️</span> Logout</a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </nav>
 
+        <!-- Menu -->
         <div class="menu">
+
             <ul class="menu-items">
                 <li>Home</li>
                 <li class="active">Live feed</li>
@@ -127,60 +274,94 @@
                 <li>Connect</li>
                 <li>Your EPA Guidance</li>
             </ul>
+
         </div>
 
+        <!-- Main Content -->
         <div class="container">
-            <h1 class="welcome-heading">Welcome, <span id="user-name">User</span>! Here's what's new</h1>
+
+            <h1 class="title is-4 welcome-heading">Welcome, <span id="user-name">User</span>! Here's what's new</h1>
 
             <div class="tabs">
-						
-                <div class="tab active">General</div>
-                <div class="tab">My Groups</div>
-								
+
+                <ul>
+                    <li class="is-active"><a>General</a></li>
+                    <li><a>My Groups</a></li>
+                </ul>
+
             </div>
 
-            <div class="main-content">
-						
-                <div class="feed">
-								
-                    <div class="post-input">
-										
-											<div class="user-avatar" id="post-user-avatar"></div>
-											<textarea placeholder="Write a post" id="post-input" rows="1"></textarea>
-											<button id="submit-post-btn" class="btn btn-primary" style="margin-left: 8px; display: none;"><i id="spinner" class="fa fa-spinner fa-spin" style="visibility: hidden;"></i>Post</button>
-											
-									</div>
-									
-                    <div class="posts-container" id="posts-container">
-                        <!-- Posts will be inserted here dynamically -->
+            <div class="columns main-content">
+
+                <div class="column is-8">
+
+                    <div class="box feed">
+
+                        <div class="post-input">
+
+                            <div class="user-avatar" id="post-user-avatar"></div>
+
+                            <div class="field is-flex-grow-1">
+
+                                <div class="control">
+
+                                    <label for="post-input"></label>
+                                    <textarea class="textarea" placeholder="Write a post" id="post-input" rows="1"></textarea>
+
+                                </div>
+
+                            </div>
+
+                            <button id="submit-post-btn" class="button is-baltic ml-2">
+                                <span>Post</span>
+                            </button>
+
+                        </div>
+
+                        <div id="posts-container" class="posts-container">
+
+                            <!-- Posts will be inserted here dynamically -->
+
+                        </div>
+
                     </div>
-										
+
                 </div>
 
-                <div class="sidebar">
-								
-                    <div class="sidebar-card">
-                        <h3 class="sidebar-title">Recently active users</h3>
-												
-                        <div class="user-list" id="active-users">
+                <div class="column is-4">
+
+                    <div class="box sidebar-card">
+
+                        <h3 class="title is-5 sidebar-title">Recently active users</h3>
+
+                        <div id="active-users" class="user-list">
+
                             <!-- Users will be inserted here dynamically -->
+
                         </div>
-												
+
                     </div>
 
-                    <div class="sidebar-card">
-                        <h3 class="sidebar-title">Upcoming Events</h3>
-												
-                        <div class="event-list" id="event-list">
-                            <!-- Events will be loaded here -->
+                    <div class="box sidebar-card">
+
+                        <h3 class="title is-5 sidebar-title">Upcoming Events</h3>
+
+                        <div id="event-list" class="event-list">
+
+                            <!-- Events will be loaded here dynamically -->
+
                         </div>
-												
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
-</body>
     <script src="js/script.js"></script>
+</body>
 </html>
