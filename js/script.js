@@ -63,6 +63,12 @@ const notifications = [
 	},
 	{
 		id: 2,
+		title: "New post from Marjan Hussain",
+		time: Date.now() - 600000,
+		unread: true
+	},
+	{
+		id: 2,
 		title: "New event added: Creating Replicas",
 		time: Date.now() - 86400000,
 		unread: false
