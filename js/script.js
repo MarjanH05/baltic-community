@@ -45,6 +45,23 @@ let events = [
 		}
 ];
 
+// Notifications System
+const notifications = [
+	{
+		id: 1,
+		title: "New post from Danny Broome",
+		time: Date.now() - 300000,
+		unread: true
+	},
+	{
+		id: 2,
+		title: "New event added: Creating Replicas",
+		time: Date.now() - 86400000,
+		unread: false
+	}
+];
+
+
 // Current logged in user
 let currentUser = null;
 
@@ -220,6 +237,73 @@ signupForm.addEventListener('submit', async (e) => {
     }
 });
 
+// Initialize notifications after login
+function initNotifications() {
+	const notificationsIcon = document.getElementById('notifications-icon');
+	const notificationsDropdown = document.getElementById('notifications-dropdown');
+
+	if (notificationsIcon && notificationsDropdown) {
+		notificationsIcon.addEventListener('click', function(e) {
+			e.stopPropagation();
+			if (notificationsDropdown.classList.contains('hidden')) {
+				renderNotifications();
+				notificationsDropdown.classList.remove('hidden');
+			} else {
+				notificationsDropdown.classList.add('hidden');
+			}
+		});
+
+		// Close dropdown when clicking outside
+		document.addEventListener('click', function(e) {
+			if (!notificationsDropdown.contains(e.target) && e.target !== notificationsIcon) {
+				notificationsDropdown.classList.add('hidden');
+			}
+		});
+	}
+}
+
+function renderNotifications() {
+	const notificationsList = document.getElementById('notifications-list');
+	if (!notificationsList) return;
+
+	notificationsList.innerHTML = '';
+
+	if (notifications.length === 0) {
+		notificationsList.innerHTML = '<div class="notification-item">No notifications</div>';
+		return;
+	}
+
+	notifications.forEach(notification => {
+		const notificationElement = document.createElement('div');
+		notificationElement.className = `notification-item${notification.unread ? ' notification-unread' : ''}`;
+		notificationElement.innerHTML = `
+            <div class="notification-content">
+                <div class="notification-title">${notification.title}</div>
+                <div class="notification-time">${formatTimeAgo(notification.time)}</div>
+            </div>
+            ${notification.unread ? '<div class="notification-dot"></div>' : ''}
+        `;
+
+		notificationElement.addEventListener('click', () => {
+			notification.unread = false;
+			notificationElement.classList.remove('notification-unread');
+			const dot = notificationElement.querySelector('.notification-dot');
+			if (dot) dot.remove();
+		});
+
+		document.getElementById('clear-notifications').addEventListener('click', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			notifications.length = 0;
+			renderNotifications();
+		});
+
+
+		notificationsList.appendChild(notificationElement);
+	});
+}
+
+
 // Post when button is clicked
 submitPostBtn.addEventListener('click', handlePostSubmit);
 
@@ -352,9 +436,12 @@ function loginUser(user, fromSession = false) {
 		}
 		
 		// Update UI
-		userNameSpan.textContent = user.name;
-		
-		// Hide login/signup pages, show main app
+		userNameSpan.textContent = user.name
+		.split('.')
+		.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(' ');
+
+	// Hide login/signup pages, show main app
 		loginPage.classList.add('hidden');
 		signupPage.classList.add('hidden');
 		mainApp.classList.remove('hidden');
@@ -366,7 +453,8 @@ function loginUser(user, fromSession = false) {
 		
 		// Initialize app
     updateCurrentUserAvatar();
-		initApp();
+	initNotifications();
+	initApp();
 }
   
 // Update user avatar in UI
@@ -583,7 +671,10 @@ function renderActiveUsers() {
                 ? `<img src="${user.avatar}" alt="${user.name}" class="avatar-image">`
                 : user.name.charAt(0)}
                 </div>
-                <div class="user-name">${user.name}</div>
+                <div class="user-name">${user.name
+			        .split('.')
+			        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+			        .join(' ')}</div>
             `;
 				
 				activeUsers.appendChild(userElement);
@@ -603,19 +694,49 @@ function renderEvents() {
 				const eventElement = document.createElement('div');
 				eventElement.className = 'event-item';
 				eventElement.innerHTML = `
-						<div class="event-date">
-								<div class="event-month">${event.month}</div>
+
+						<div class="event-date" style="
+						    display: flex;
+						    flex-direction: column;
+						    background-color: #f0f2f5;
+						    border-radius: 4px;
+						    text-align: center;
+						    min-width: 50px;
+						    padding: 0;
+						    overflow: hidden;
+						    height: 60px;
+						    color: grey;">
+						    
+								<div id="top" style="margin: -1px -1px 0 -1px;
+								    padding: 5px;
+								    background-color: var(--baltic-blue);
+								    color: white;"></div>
+								    
+								<div class="event-month">${event.month.substring(0, 3)}</div>
+								
 								<div class="event-day">${event.day}</div>
+								
 						</div>
+						
 						<div class="event-info">
+						
 								<div class="event-title">${event.title}</div>
-								<a href="#" class="event-link">Find out more</a>
+								
+								<a href="#" class="event-link" style="color: cornflowerblue;">Find out more</a>
+								
 						</div>
 				`;
 				
 				eventList.appendChild(eventElement);
 		});
 }
+
+	document.getElementById('settings-trigger').addEventListener('click', function(e) {
+		e.preventDefault();
+		const nestedMenu = this.nextElementSibling;
+		nestedMenu.style.display = nestedMenu.style.display === 'none' ? 'block' : 'none';
+	});
+
 
 // Initialize app
 window.onload = function() {

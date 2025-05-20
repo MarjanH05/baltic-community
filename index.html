@@ -9,7 +9,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="css/styles.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
@@ -23,7 +23,7 @@
                 <div class="box login-container">
 
                     <div class="login-logo has-text-centered">
-
+                        <i class="fa-solid fa-right-to-bracket fa-3x" style="color: #0a0a0a;"></i>
                         <h2 class="title is-4">Have an account? Log-in</h2>
                         <p class="subtitle is-6 has-text-grey">*<em>Required fields are marked with an asterisk</em></p>
 
@@ -59,7 +59,10 @@
 
                             <div class="control">
 
-                                <button type="submit" id="login-btn" class="button is-baltic btn-primary">Log In</button>
+                                <button type="submit" id="login-btn" class="button is-baltic btn-primary">
+                                    <i class="fa-solid fa-right-to-bracket fa-xs" style="color: white;"></i>
+                                    <span class="login-text">Log In</span>
+                                </button>
 
                             </div>
 
@@ -208,18 +211,42 @@
 
                 <div class="navbar-item nav-icons">
 
-                    <span class="icon">🔍</span>
-                    <span class="icon">➕</span>
-                    <span class="icon">🔔</span>
-                    <span class="icon">💬</span>
+                    <i class="fas fa-search fa-s nav-icon"></i>
+                    <i class="fa-regular fa-square-plus nav-icon"></i>
+
+                    <span class="icon">
+                        <i class="fa-solid fa-bell" id="notifications-icon"></i>
+                    </span>
+
+                    <div class="notifications-dropdown hidden" id="notifications-dropdown">
+
+                        <div class="notifications-header">
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: -7.5%;">
+
+                                <h3 class="subtitle">Notifications</h3>
+                                <a href="#" id="clear-notifications" style="color: var(--baltic-blue); font-size: 14px; margin-top: -7.5%;">Clear all</a>
+
+                            </div>
+
+                        </div>
+
+                        <div class="notifications-list" id="notifications-list">
+
+                            <!-- Notifications will be inserted here dynamically -->
+
+                        </div>
+
+                    </div>
+
+                    <i class="fa-solid fa-comments nav-icon"></i>
 
                     <div class="user-icon" id="profile-icon"></div>
 
                 </div>
 
             </div>
-            
-            <!-- Replace your current profile dropdown section -->
+
             <div class="dropdown profile-dropdown hidden" id="profile-dropdown">
 
                 <div class="dropdown-menu" role="menu">
@@ -247,7 +274,26 @@
                         </div>
 
                         <hr class="dropdown-divider">
-                        <a class="dropdown-item dropdown-link dropdown-settings"><span>⚙️</span> My settings <span style="float:right">▾</span></a>
+
+                        <div id="inner-dropdown">
+                            <div class="nested-dropdown">
+                                <a class="dropdown-item dropdown-link dropdown-settings" id="settings-trigger">
+                                    <span>⚙️</span> My settings <span style="float:right">▾</span>
+                                </a>
+                                <div class="nested-menu" style="margin-left: 16px; display: none;">
+                                    <a class="dropdown-item dropdown-link">
+                                        Password
+                                    </a>
+                                    <a class="dropdown-item dropdown-link">
+                                        Privacy
+                                    </a>
+                                    <a class="dropdown-item dropdown-link">
+                                        Notifications
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
                         <a class="dropdown-item dropdown-link dropdown-settings" onclick="window.location.href='mailto:community@balticapprenticeships.com'">
                             <span>✉️</span> Contact us
                         </a>

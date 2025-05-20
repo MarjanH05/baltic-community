@@ -21,6 +21,10 @@
 		color: white !important;
 	}
 
+	.nav-icon:hover {
+		cursor: pointer;
+	}
+
 	.menu-items {
 		display: flex;
 		list-style: none;
@@ -170,6 +174,7 @@
 	.input:focus, .textarea:focus {
 		border-color: var(--baltic-blue) !important;
 		box-shadow: 0 0 0 0.125em rgba(10, 14, 64, 0.25) !important;
+		background-color: #d0dbf5 !important;
 	}
 
 /* Dark text */
@@ -594,11 +599,19 @@
 			border-radius: 8px;
 			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 			padding: 30px;
+			/* Prevent text selection */
+			-webkit-user-select: none; /* Safari */
+			-ms-user-select: none; /* IE 10 and IE 11 */
+			user-select: none; /* Standard syntax */
 		}
 
 		.login-logo {
 			text-align: center;
 			margin-bottom: 20px;
+		}
+
+		.login-logo:hover {
+			cursor: default;
 		}
 
 		.login-logo .title {
@@ -614,6 +627,29 @@
 
 		#login-btn {
 			width: 550px;
+			position: relative;
+			overflow: hidden;
+		}
+
+		#login-btn i {
+			opacity: 0;
+			margin-right: 8px;
+			transform: translateX(-20px);
+			transition: all 0.3s ease;
+		}
+
+		#login-btn .login-text {
+			display: inline-block;
+			transition: transform 0.3s ease;
+		}
+
+		#login-btn:hover i {
+			opacity: 1;
+			transform: translateX(0);
+		}
+
+		#login-btn:hover .login-text {
+			transform: translateX(4px);
 		}
 
 		#signup-btn {
@@ -860,6 +896,10 @@
 			overflow: hidden;
 		}
 
+		.posts-container {
+			color: black;
+		}
+
 		.option-item {
 			padding: 12px 16px;
 			cursor: pointer;
@@ -964,3 +1004,56 @@
 	.dropdown-settings {
 		font-weight: bold !important;
 	}
+
+	.nested-menu {
+		margin-left: 16px;
+	}
+
+	/* Notifications */
+		.notifications-dropdown {
+			position: absolute;
+			top: 50px;
+			right: 110px;
+			width: 320px;
+			background: white;
+			border-radius: 8px;
+			box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+			z-index: 100;
+			border: 1px solid #eee;
+			color: black;
+		}
+
+		.notifications-header {
+			padding: 16px;
+			border-bottom: 1px solid #eee;
+		}
+
+		.notification-item {
+			padding: 12px 16px;
+			border-bottom: 1px solid #eee;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+		}
+
+		.notification-content {
+			flex: 1;
+		}
+
+		.notification-unread {
+			background-color: #f0f2f5;
+		}
+
+		.notification-unread:hover {
+			cursor: pointer;
+			background-color: lightsteelblue;
+		}
+
+		.notification-dot {
+			width: 8px;
+			height: 8px;
+			background-color: var(--baltic-blue);
+			border-radius: 50%;
+			margin-left: auto;
+		}
+
