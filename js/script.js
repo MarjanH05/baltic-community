@@ -524,11 +524,11 @@ function renderPosts() {
                 : post.authorName.charAt(0)}
                         </div>
                         <div class="author-info">
-                            <h4>${post.authorName}</h4>
+                            <h4 class="subtitle" style="padding-bottom: 0; margin-bottom: 0;">${post.authorName}</h4>
                             <span class="post-time">${formatTimeAgo(post.timestamp || Date.now())}</span>
                         </div>
                     </div>
-                    <div class="post-options">⋮</div>
+                    <div class="post-options"><i class="fa-solid fa-ellipsis-vertical"></i></div>
                 </div>
                 <div class="post-content">
                     <p>
@@ -586,8 +586,8 @@ function setupPostOptionsMenu() {
                 const optionsMenu = document.createElement('div');
                 optionsMenu.className = 'post-options-menu';
                 optionsMenu.innerHTML = `
-                    <div class="option-item edit-post" data-index="${index}">Edit post</div>
-                    <div class="option-item delete-post" data-index="${index}">Delete post</div>
+                    <div class="option-item edit-post" data-index="${index}"><i class="fa-solid fa-wand-magic-sparkles"></i> Edit post</div>
+                    <div class="option-item delete-post" data-index="${index}"><i class="fa-solid fa-trash"></i> Delete post</div>
                 `;
                 
                 // Position the menu
@@ -606,7 +606,7 @@ function setupPostOptionsMenu() {
                 
                 deleteOption.addEventListener('click', function() {
                     const postIndex = this.getAttribute('data-index');
-                    deletePost(postIndex);
+                    deletePost(postIndex).then(x => {x = null});
                     optionsMenu.remove();
                 });
             }
@@ -665,11 +665,58 @@ function editPost(index) {
     });
 }
 
-function deletePost(index) {
-    if (confirm('Are you sure you want to delete this post?')) {
-        posts.splice(index, 1);
-        renderPosts();
-    }
+function customConfirm(message) {
+	return new Promise((resolve) => {
+		const overlay = document.createElement('div');
+		overlay.className = 'custom-popup-overlay';
+
+		// Create popup content
+		const popup = document.createElement('div');
+		popup.className = 'custom-popup';
+
+		// Add message
+		const title = document.createElement('h3');
+		title.textContent = message;
+		popup.appendChild(title);
+
+		// Add buttons container
+		const buttonsContainer = document.createElement('div');
+		buttonsContainer.className = 'custom-popup-buttons';
+
+		// Add cancel button
+		const cancelButton = document.createElement('button');
+		cancelButton.className = 'custom-popup-button custom-popup-cancel';
+		cancelButton.textContent = 'Cancel';
+		cancelButton.onclick = () => {
+			document.body.removeChild(overlay);
+			resolve(false);
+		};
+
+		// Add confirm button
+		const confirmButton = document.createElement('button');
+		confirmButton.className = 'custom-popup-button custom-popup-confirm';
+		confirmButton.textContent = 'Delete';
+		confirmButton.onclick = () => {
+			document.body.removeChild(overlay);
+			resolve(true);
+		};
+
+		// Assemble the popup
+		buttonsContainer.appendChild(cancelButton);
+		buttonsContainer.appendChild(confirmButton);
+		popup.appendChild(buttonsContainer);
+		overlay.appendChild(popup);
+
+		document.body.appendChild(overlay);
+	});
+}
+
+async function deletePost(index) {
+	const confirmed = await customConfirm('Are you sure you want to delete this post?');
+	if (confirmed) {
+		posts.splice(index, 1);
+		renderPosts();
+	}
 }
 
 // Render active users
