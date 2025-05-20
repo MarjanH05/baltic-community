@@ -19,10 +19,10 @@ let posts = [
                 timestamp: Date.now() - (300000) //Roughly 5 mins
 		},
 		{
-				id: users[4].id,
-				authorId: users[4].id,
-				authorName: users[4].name,
-                avatar: users[4].avatar,
+				id: users[3].id,
+				authorId: users[3].id,
+				authorName: users[3].name,
+                avatar: users[3].avatar,
 				content: "Did you know I have a BMW??",
                 timestamp: Date.now() - (600000) //Roughly 10 mins
 		}
