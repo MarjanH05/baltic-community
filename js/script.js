@@ -17,6 +17,14 @@ let posts = [
                 avatar: users[0].avatar,
 				content: "Happy Friday! How are you? How has your week been? Up to anything this weekend? As per usual, I'll leave mine in the comments. Happy days!",
                 timestamp: Date.now() - (300000) //Roughly 5 mins
+		},
+		{
+				id: users[4].id,
+				authorId: users[4].id,
+				authorName: users[4].name,
+                avatar: users[4].avatar,
+				content: "Did you know I have a BMW??",
+                timestamp: Date.now() - (600000) //Roughly 10 mins
 		}
 ];
 
