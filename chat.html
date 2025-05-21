@@ -9,16 +9,43 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         .chat-container { max-width: 600px; margin: 0 auto; }
-        .chat-messages { background: #f4f8fb; border-radius: 8px; padding: 1rem; min-height: 300px; max-height: 400px; overflow-y: auto; }
+        .chat-messages { background: #f9fbfd; border-radius: 8px; padding: 1rem; min-height: 300px; max-height: 400px; overflow-y: auto; border: 1px solid #e3e8ee; }
         .chat-message { margin-bottom: 1rem; }
         .chat-message .author { font-weight: bold; color: var(--baltic-blue, #1e90ff); }
         .chat-message.self { text-align: right; }
-        .chat-message .bubble { display: inline-block; padding: 0.5em 1em; border-radius: 16px; background: #e3f0ff; margin-top: 0.2em; }
-        .chat-message.self .bubble { background: #b8e0ff; }
-        .system-message { text-align: center; color: #888; font-size: 0.95em; margin: 0.5em 0; }
+        .chat-message .bubble { display: inline-block; padding: 0.5em 1em; border-radius: 16px; background: #eaf4ff; margin-top: 0.2em; border: 1px solid #d6eaff; }
+        .chat-message.self .bubble { background: #d6eaff; border: 1px solid #b8e0ff; }
+        .system-message { text-align: center; color: #b0b0b0; font-size: 0.95em; margin: 0.5em 0; }
+        .navbar { background: #fff; border-bottom: 1px solid #eaeaea; }
+        .nav-icons .nav-icon { margin: 0 0.5em; cursor: pointer; }
+        .nav-icons .is-active { color: var(--baltic-blue, #1e90ff); }
+        .user-icon { width: 32px; height: 32px; border-radius: 50%; background: #eaf4ff; display: inline-block; margin-left: 0.5em; border: 1px solid #d6eaff; }
+        .box#chat-box { background: #fff; border: 1px solid #e3e8ee; box-shadow: 0 2px 8px 0 rgba(30,144,255,0.04); }
+        .hero.is-fullheight { background: #f6fafd; }
+        #chat-header h2 { color: var(--baltic-blue, #1e90ff); }
+        #chat-username, #chat-input { background: #fff; border: 1px solid #e3e8ee; }
+        .button.is-baltic { background: var(--baltic-blue, #1e90ff); color: #fff; border: none; }
+        .button.is-baltic:hover { background: #1877cc; }
     </style>
 </head>
 <body>
+    <!-- Navbar (copied from index.html) -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <h2 class="navbar-item title is-4">BALTIC</h2>
+        </div>
+        <div class="navbar-end">
+            <div class="navbar-item nav-icons">
+                <i class="fas fa-search fa-s nav-icon"></i>
+                <i class="fa-regular fa-square-plus nav-icon"></i>
+                <span class="icon">
+                    <i class="fa-solid fa-bell nav-icon"></i>
+                </span>
+                <i class="fa-solid fa-comments nav-icon is-active"></i>
+                <div class="user-icon" id="profile-icon"></div>
+            </div>
+        </div>
+    </nav>
     <section class="hero is-fullheight">
         <div class="hero-body">
             <div class="container chat-container">

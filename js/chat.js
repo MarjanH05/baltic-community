@@ -38,6 +38,13 @@ joinChatBtn.addEventListener('click', () => {
     chatForm.style.display = '';
     // Always connect to the backend URL
     socket = io(BACKEND_URL);
+    // Show chat history on join
+    socket.on('chat history', (history) => {
+        chatMessages.innerHTML = '';
+        history.forEach(msg => {
+            appendMessage(msg, msg.username === username);
+        });
+    });
     socket.emit('join', username);
     socket.on('chat message', (msg) => {
         appendMessage(msg, msg.username === username);

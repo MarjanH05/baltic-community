@@ -18,13 +18,18 @@ app.get('/', (req, res) => {
     res.send('Chat backend is running.');
 });
 
+let messages = [];
+
 io.on('connection', (socket) => {
     let username = '';
+    // Send all previous messages to the new user
+    socket.emit('chat history', messages);
     socket.on('join', (name) => {
         username = name;
         socket.broadcast.emit('system message', `${username} joined the chat.`);
     });
     socket.on('chat message', (msg) => {
+        messages.push(msg);
         io.emit('chat message', msg);
     });
     socket.on('disconnect', () => {
