@@ -1,5 +1,26 @@
-#chat { max-width: 400px; margin: 40px auto; padding: 10px; border: 1px solid #ccc; }
-#messages { min-height: 200px; max-height: 300px; overflow-y: auto; margin-bottom: 10px; }
-#username, #input { width: 70%; }
-#username-container, #chat-form { display: flex; gap: 5px; }
-button { min-width: 60px; }
+#chat {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+#messages {
+    min-height: 200px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+#username, #input {
+    width: 70%;
+}
+
+#username-container, #chat-form {
+    display: flex;
+    gap: 5px;
+}
+
+button {
+    min-width: 60px;
+}
