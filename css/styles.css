@@ -163,7 +163,38 @@
 		min-width: 50px;
 	}
 
-/* Utility classes */
+/* Chat styling */
+	.system-message {
+		/* System message styling */
+	}
+
+	.connecting-message {
+		text-align: center;
+		font-weight: bold;
+		padding: 10px;
+	}
+
+	.connecting-message .container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.spinner {
+		width: 20px;
+		height: 20px;
+		border: 3px solid rgba(255, 255, 255, 0.3);
+		border-radius: 50%;
+		border-top-color: var(--baltic-blue, #0a0e40);
+		animation: spin 1s linear infinite;
+	}
+
+	@keyframes spin {
+		to { transform: rotate(360deg); }
+	}
+
+	/* Utility classes */
 	.hidden {
 		display: none !important;
 	}
