@@ -54,27 +54,30 @@ let events = [
 ];
 
 // Notifications System
-const notifications = [
-	{
-		id: 1,
-		title: "New post from Danny Broome",
-		time: Date.now() - 300000,
-		unread: true
-	},
-	{
-		id: 2,
-		title: "New post from Marjan Hussain",
-		time: Date.now() - 600000,
-		unread: true
-	},
-	{
-		id: 2,
-		title: "New event added: Creating Replicas",
-		time: Date.now() - 86400000,
-		unread: false
-	}
-];
+const userNotifications = {};
 
+users.forEach(user => {
+    userNotifications[user.id] = [
+        {
+            id: 1,
+            title: "New post from Danny Broome",
+            time: Date.now() - 300000,
+            unread: true
+        },
+        {
+            id: 2,
+            title: "New post from Marjan Hussain",
+            time: Date.now() - 600000,
+            unread: true
+        },
+        {
+            id: 3,
+            title: "New event added: Creating Replicas",
+            time: Date.now() - 86400000,
+            unread: false
+        }
+    ];
+});
 
 // Current logged in user
 let currentUser = null;
@@ -251,12 +254,20 @@ signupForm.addEventListener('submit', async (e) => {
     }
 });
 
-// Initialize notifications after login
+// Initialize notifications after first login
+let notificationsInitialized = false;
+
 function initNotifications() {
 	const notificationsIcon = document.getElementById('notifications-icon');
-	const notificationsDropdown = document.getElementById('notifications-dropdown');
+    const notificationsDropdown = document.getElementById('notifications-dropdown');
 
-	if (notificationsIcon && notificationsDropdown) {
+    // Check if notifications are already initialized
+    if (notificationsInitialized)
+        return;
+
+    notificationsInitialized = true;
+
+    if (notificationsIcon && notificationsDropdown) {
 		notificationsIcon.addEventListener('click', function(e) {
 			e.stopPropagation();
 			if (notificationsDropdown.classList.contains('hidden')) {
@@ -277,20 +288,23 @@ function initNotifications() {
 }
 
 function renderNotifications() {
-	const notificationsList = document.getElementById('notifications-list');
-	if (!notificationsList) return;
+    const notificationsList = document.getElementById('notifications-list');
+    const clearBtn = document.getElementById('clear-notifications');
+    if (!notificationsList) return;
 
-	notificationsList.innerHTML = '';
+    notificationsList.innerHTML = '';
 
-	if (notifications.length === 0) {
-		notificationsList.innerHTML = '<div class="notification-item">No notifications</div>';
-		return;
-	}
+    const currentNotifications = userNotifications[currentUser.id] || [];
 
-	notifications.forEach(notification => {
-		const notificationElement = document.createElement('div');
-		notificationElement.className = `notification-item${notification.unread ? ' notification-unread' : ''}`;
-		notificationElement.innerHTML = `
+    if (currentNotifications.length === 0) {
+        notificationsList.innerHTML = '<div class="notification-item">No notifications</div>';
+        return;
+    }
+
+    currentNotifications.forEach((notification, index) => {
+        const notificationElement = document.createElement('div');
+        notificationElement.className = `notification-item${notification.unread ? ' notification-unread' : ''}`;
+        notificationElement.innerHTML = `
             <div class="notification-content">
                 <div class="notification-title">${notification.title}</div>
                 <div class="notification-time">${formatTimeAgo(notification.time)}</div>
@@ -298,24 +312,25 @@ function renderNotifications() {
             ${notification.unread ? '<div class="notification-dot"></div>' : ''}
         `;
 
-		notificationElement.addEventListener('click', () => {
-			notification.unread = false;
-			notificationElement.classList.remove('notification-unread');
-			const dot = notificationElement.querySelector('.notification-dot');
-			if (dot) dot.remove();
-		});
+        // Mark as read on click
+        notificationElement.addEventListener('click', () => {
+            currentNotifications[index].unread = false;
+            notificationElement.classList.remove('notification-unread');
+            const dot = notificationElement.querySelector('.notification-dot');
+            if (dot) dot.remove();
+        });
 
-		document.getElementById('clear-notifications').addEventListener('click', function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-			notifications.length = 0;
-			renderNotifications();
-		});
+        notificationsList.appendChild(notificationElement);
+    });
 
-
-		notificationsList.appendChild(notificationElement);
-	});
+    clearBtn.onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        userNotifications[currentUser.id] = [];
+        renderNotifications();
+    };
 }
+
 
 
 // Post when button is clicked
@@ -375,12 +390,30 @@ function handlePostSubmit() {
         
         // Refresh posts
         renderPosts();
+        notifyUsersAboutNewPost(currentUser.id, currentUser.name);
 
         setTimeout(() => {
             postInput.value = '';
             autoResizeTextarea();
         }, 250);
     }
+}
+
+function notifyUsersAboutNewPost(postAuthorId, postAuthorName) {
+    users.forEach(user => {
+        if (user.id !== postAuthorId) {
+            // Creates a notification array for this user if it doesn't exist
+            if (!userNotifications[user.id]) userNotifications[user.id] = [];
+
+            // Add new notification at the beginning of the array
+            userNotifications[user.id].unshift({
+                id: Date.now(),
+                title: `New post from ${postAuthorName}`,
+                time: Date.now(),
+                unread: true
+            });
+        }
+    });
 }
 
 // Convert image to base64
@@ -448,7 +481,7 @@ function loginUser(user, fromSession = false) {
 		if (!users.find(u => u.id === user.id)) {
 				users.push(user);
 		}
-		
+
 		// Update UI
 		userNameSpan.textContent = user.name
 		.split('.')
