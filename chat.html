@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baltic Community Chat</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="../css/styles.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .chat-container { max-width: 600px; margin: 0 auto; }
+        .chat-messages { background: #f4f8fb; border-radius: 8px; padding: 1rem; min-height: 300px; max-height: 400px; overflow-y: auto; }
+        .chat-message { margin-bottom: 1rem; }
+        .chat-message .author { font-weight: bold; color: var(--baltic-blue, #1e90ff); }
+        .chat-message.self { text-align: right; }
+        .chat-message .bubble { display: inline-block; padding: 0.5em 1em; border-radius: 16px; background: #e3f0ff; margin-top: 0.2em; }
+        .chat-message.self .bubble { background: #b8e0ff; }
+        .system-message { text-align: center; color: #888; font-size: 0.95em; margin: 0.5em 0; }
+    </style>
+</head>
+<body>
+    <section class="hero is-fullheight">
+        <div class="hero-body">
+            <div class="container chat-container">
+                <div class="box" id="chat-box">
+                    <div id="chat-header" class="has-text-centered">
+                        <h2 class="title is-4">Community Chat Room</h2>
+                    </div>
+                    <div id="chat-messages" class="chat-messages"></div>
+                    <div id="chat-username-container" class="field mt-4">
+                        <label class="label">Enter your name to join the chat:</label>
+                        <div class="control">
+                            <input class="input" type="text" id="chat-username" placeholder="Your name">
+                        </div>
+                        <button class="button is-baltic mt-2" id="join-chat-btn">Join Chat</button>
+                    </div>
+                    <form id="chat-form" class="field is-grouped mt-4" style="display:none;">
+                        <div class="control is-expanded">
+                            <input class="input" type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
+                        </div>
+                        <div class="control">
+                            <button class="button is-baltic" type="submit">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="chat.js"></script>
+</body>
+</html>
