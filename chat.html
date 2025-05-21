@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baltic Chat</title>
+    <link rel="stylesheet" href="css/chat.css">
+</head>
+<body>
+    <div id="chat">
+        <div id="messages"></div>
+        <div id="username-container">
+            <input id="username" type="text" placeholder="Enter your name">
+            <button id="join">Join</button>
+        </div>
+        <form id="chat-form" style="display:none;">
+            <input id="input" autocomplete="off" placeholder="Type a message..." />
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="js/chat.js"></script>
+</body>
+</html>
