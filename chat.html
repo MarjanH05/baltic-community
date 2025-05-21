@@ -1,24 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Baltic Chat</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="css/styles.css"/>
     <link rel="stylesheet" href="css/chat.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
+
 <body>
-    <div id="chat">
-        <div id="messages"></div>
-        <div id="username-container">
-            <input id="username" type="text" placeholder="Enter your name">
-            <button id="join">Join</button>
+
+    <div id="chat-room">
+        <!-- Navbar -->
+        <nav class="navbar">
+
+            <div class="navbar-brand">
+
+                <h2 class="navbar-item title is-4">BALTIC</h2>
+
+            </div>
+
+            <div class="navbar-end">
+
+                <div class="navbar-item nav-icons">
+
+                    <i class="fas fa-search fa-s nav-icon"></i>
+                    <i class="fa-regular fa-square-plus nav-icon"></i>
+
+                    <span class="icon">
+                                <i class="fa-solid fa-bell" id="notifications-icon"></i>
+                            </span>
+
+                    <div class="notifications-dropdown hidden" id="notifications-dropdown">
+
+                        <div class="notifications-header">
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: -7.5%;">
+
+                                <h3 class="subtitle">Notifications</h3>
+                                <a href="#" id="clear-notifications" style="color: var(--baltic-blue); font-size: 14px; margin-top: -7.5%;">Clear all</a>
+
+                            </div>
+
+                        </div>
+
+                        <div class="notifications-list" id="notifications-list">
+
+                            <!-- Notifications will be inserted here dynamically -->
+
+                        </div>
+
+                    </div>
+
+                    <a href="chat.html"><i class="fa-solid fa-comments nav-icon"></i></a>
+
+                    <div class="user-icon" id="profile-icon"></div>
+
+                </div>
+
+            </div>
+
+            <div class="dropdown profile-dropdown hidden" id="profile-dropdown">
+
+                <div class="dropdown-menu" role="menu">
+
+                    <div class="dropdown-content">
+
+                        <div class="dropdown-header">
+
+                            <div class="dropdown-avatar" id="dropdown-avatar"></div>
+
+                            <div class="dropdown-username" id="dropdown-username">User</div>
+
+                        </div>
+
+                        <button class="dropdown-btn active" id="my-profile-link">My Profile</button>
+                        <hr class="dropdown-divider">
+
+                        <div class="dropdown-links">
+
+                            <a class="dropdown-item dropdown-link"><i class="fa-solid fa-pen-to-square"></i> My Recent Posts</a>
+                            <a class="dropdown-item dropdown-link"><i class="fa-solid fa-heart-circle-check"></i> Favourite users</a>
+                            <a class="dropdown-item dropdown-link"><i class="fa-solid fa-calendar-check"></i> My Events</a>
+                            <a class="dropdown-item dropdown-link"><i class="fa-solid fa-user-group"></i> Refer a contact</a>
+
+                        </div>
+
+                        <hr class="dropdown-divider">
+
+                        <div id="inner-dropdown">
+
+                            <div class="nested-dropdown">
+
+                                <a class="dropdown-item dropdown-link dropdown-settings" id="settings-trigger">
+                                    <i class="fa-solid fa-gears"></i> My settings <span style="float:right">▾</span>
+                                </a>
+
+                                <div class="nested-menu" style="margin-left: 16px; display: none;">
+
+                                    <a class="dropdown-item dropdown-link">
+                                        <i class="fa-solid fa-key"></i> Password
+                                    </a>
+                                    <a class="dropdown-item dropdown-link">
+                                        <i class="fa-solid fa-lock"></i> Privacy
+                                    </a>
+                                    <a class="dropdown-item dropdown-link">
+                                        <i class="fa-solid fa-bell"></i> Notifications
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <a class="dropdown-item dropdown-link dropdown-settings" onclick="window.location.href='mailto:community@balticapprenticeships.com'">
+                            <i class="fa-solid fa-envelope-open-text"></i> Contact us
+                        </a>
+
+                        <hr class="dropdown-divider">
+                        <a class="dropdown-item dropdown-link logout-link" id="logout-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+        <!-- Menu -->
+        <div class="menu">
+
+            <ul class="menu-items">
+                <li>Home</li>
+                <li><a href="index.html">Live feed</a></li>
+                <li>Baltic Live Events</li>
+                <li>Groups</li>
+                <li>Resource Hub</li>
+                <li>Connect</li>
+                <li>Your EPA Guidance</li>
+            </ul>
+
         </div>
-        <form id="chat-form" style="display:none;">
-            <input id="input" autocomplete="off" placeholder="Type a message..." />
-            <button type="submit">Send</button>
-        </form>
+
+        <div id="chat">
+            <div id="chat-header">
+                <h1 class="title is-4">Chat Room</h1>
+                <a href="index.html" id="close-link"><i class="fa-solid fa-circle-xmark" id="close-chat"></i></a>
+            </div>
+
+                <div id="messages">
+                </div>
+
+                <div id="username-container">
+
+                    <label for="username"></label>
+                    <input id="username" type="text" placeholder="Enter your name">
+                    <button id="join" class="button is-baltic">Join</button>
+
+                </div>
+
+                <form id="chat-form" style="display:none;">
+                    <label for="input"></label>
+                    <input id="input" autocomplete="off" placeholder="Type a message..." />
+                    <button type="submit" class="button is-baltic">Send</button>
+
+                </form>
+
+        </div>
     </div>
-    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-    <script src="js/chat.js"></script>
 </body>
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/script.js"></script>
+
 </html>

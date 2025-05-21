@@ -10,8 +10,27 @@
 
     function appendMessage(msg, isSelf = false) {
         const div = document.createElement('div');
-        div.textContent = msg.system ? msg.text : `${msg.username}: ${msg.text}`;
+        if (msg.system) {
+            div.textContent = msg.text;
+        } else {
+            // Create a span for the username
+            const usernameSpan = document.createElement('span');
+            usernameSpan.textContent = `${msg.username}: `;
+            usernameSpan.className = 'username'; // Add a class for styling username
+
+            // Create a span for the message text
+            const messageSpan = document.createElement('span');
+            messageSpan.textContent = msg.text;
+            messageSpan.className = 'message-text'; // Add a class for styling message text
+
+            // Append both spans to the div
+            div.appendChild(usernameSpan);
+            div.appendChild(messageSpan);
+        }
+
         if (isSelf) div.style.fontWeight = 'bold';
+        if (isSelf) div.style.fontStyle = 'italic';
+
         messagesDiv.appendChild(div);
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }

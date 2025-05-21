@@ -11,6 +11,10 @@
 		--baltic-danger: #b00020;
 	}
 
+	a {
+		color: inherit;
+	}
+
 /* Custom styles */
 	.navbar {
 		background-color: var(--baltic-blue) !important;
