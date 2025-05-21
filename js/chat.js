@@ -1,6 +1,6 @@
 // Baltic Community Chat Frontend
 // Set your Render backend URL here:
-const BACKEND_URL = "https://your-render-service.onrender.com"; // <-- Set your Render backend URL
+const BACKEND_URL = "https://baltic-community.onrender.com"; // <-- Set your Render backend URL
 
 let socket;
 let username = '';
