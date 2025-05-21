@@ -1,63 +1,45 @@
-// Baltic Community Chat Frontend
-// Set your Render backend URL here:
-const BACKEND_URL = "https://baltic-community.onrender.com"; // <-- Set your Render backend URL
+    const BACKEND_URL = "https://baltic-community.onrender.com"; // Set your backend URL
+    let socket;
+    let username = '';
+    const messagesDiv = document.getElementById('messages');
+    const usernameInput = document.getElementById('username');
+    const joinBtn = document.getElementById('join');
+    const chatForm = document.getElementById('chat-form');
+    const input = document.getElementById('input');
+    const usernameContainer = document.getElementById('username-container');
 
-let socket;
-let username = '';
-
-const chatUsernameContainer = document.getElementById('chat-username-container');
-const chatUsernameInput = document.getElementById('chat-username');
-const joinChatBtn = document.getElementById('join-chat-btn');
-const chatForm = document.getElementById('chat-form');
-const chatInput = document.getElementById('chat-input');
-const chatMessages = document.getElementById('chat-messages');
-
-function appendMessage(msg, isSelf = false) {
-    if (msg.system) {
-        const sysDiv = document.createElement('div');
-        sysDiv.className = 'system-message';
-        sysDiv.textContent = msg.text;
-        chatMessages.appendChild(sysDiv);
-    } else {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = 'chat-message' + (isSelf ? ' self' : '');
-        msgDiv.innerHTML = `<span class="author">${msg.username}</span><div class="bubble">${msg.text}</div>`;
-        chatMessages.appendChild(msgDiv);
+    function appendMessage(msg, isSelf = false) {
+        const div = document.createElement('div');
+        div.textContent = msg.system ? msg.text : `${msg.username}: ${msg.text}`;
+        if (isSelf) div.style.fontWeight = 'bold';
+        messagesDiv.appendChild(div);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
 
-joinChatBtn.addEventListener('click', () => {
-    const name = chatUsernameInput.value.trim();
-    if (!name) {
-        chatUsernameInput.classList.add('is-danger');
-        return;
-    }
-    username = name;
-    chatUsernameContainer.style.display = 'none';
-    chatForm.style.display = '';
-    // Always connect to the backend URL
-    socket = io(BACKEND_URL);
-    // Show chat history on join
-    socket.on('chat history', (history) => {
-        chatMessages.innerHTML = '';
-        history.forEach(msg => {
+    joinBtn.onclick = function() {
+        const name = usernameInput.value.trim();
+        if (!name) return;
+        username = name;
+        usernameContainer.style.display = 'none';
+        chatForm.style.display = '';
+        socket = io(BACKEND_URL);
+        socket.on('chat history', (history) => {
+            messagesDiv.innerHTML = '';
+            history.forEach(msg => appendMessage(msg, msg.username === username));
+        });
+        socket.emit('join', username);
+        socket.on('chat message', (msg) => {
             appendMessage(msg, msg.username === username);
         });
-    });
-    socket.emit('join', username);
-    socket.on('chat message', (msg) => {
-        appendMessage(msg, msg.username === username);
-    });
-    socket.on('system message', (msg) => {
-        appendMessage({text: msg, system: true});
-    });
-});
+        socket.on('system message', (msg) => {
+            appendMessage({text: msg, system: true});
+        });
+    };
 
-chatForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const text = chatInput.value.trim();
-    if (!text) return;
-    socket.emit('chat message', {username, text});
-    chatInput.value = '';
-});
+    chatForm.onsubmit = function(e) {
+        e.preventDefault();
+        const text = input.value.trim();
+        if (!text) return;
+        socket.emit('chat message', {username, text});
+        input.value = '';
+    };

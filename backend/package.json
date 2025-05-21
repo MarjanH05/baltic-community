@@ -1,7 +1,7 @@
 {
-  "name": "baltic-community-chat-backend",
+  "name": "baltic-community-backend",
   "version": "1.0.0",
-  "description": "Chat backend for Baltic Community using Express and Socket.IO, ready for Render.",
+  "description": "Simple chat backend for Baltic Community using Express and Socket.IO, ready for Render.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

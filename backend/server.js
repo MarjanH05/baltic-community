@@ -8,21 +8,20 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: '*', // Allow all origins for GitHub Pages
+        origin: '*',
         methods: ['GET', 'POST']
     }
 });
+
+let messages = [];
 
 app.use(cors());
 app.get('/', (req, res) => {
     res.send('Chat backend is running.');
 });
 
-let messages = [];
-
 io.on('connection', (socket) => {
     let username = '';
-    // Send all previous messages to the new user
     socket.emit('chat history', messages);
     socket.on('join', (name) => {
         username = name;
