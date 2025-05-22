@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Baltic Chat</title>
@@ -10,11 +11,13 @@
     <link rel="stylesheet" href="css/styles.css"/>
     <link rel="stylesheet" href="css/chat.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 </head>
 
 <body>
 
     <div id="chat-room">
+
         <!-- Navbar -->
         <nav class="navbar">
 
@@ -32,8 +35,8 @@
                     <i class="fa-regular fa-square-plus nav-icon"></i>
 
                     <span class="icon">
-                                <i class="fa-solid fa-bell" id="notifications-icon"></i>
-                            </span>
+                        <i class="fa-solid fa-bell" id="notifications-icon"></i>
+                    </span>
 
                     <div class="notifications-dropdown hidden" id="notifications-dropdown">
 
@@ -56,7 +59,7 @@
 
                     </div>
 
-                    <a href="chat.html"><i class="fa-solid fa-comments nav-icon"></i></a>
+                    <a href="chat.html" style="color: white;"><i class="fa-solid fa-comments nav-icon"></i></a>
 
                     <div class="user-icon" id="profile-icon"></div>
 
@@ -93,15 +96,11 @@
                         <hr class="dropdown-divider">
 
                         <div id="inner-dropdown">
-
                             <div class="nested-dropdown">
-
                                 <a class="dropdown-item dropdown-link dropdown-settings" id="settings-trigger">
                                     <i class="fa-solid fa-gears"></i> My settings <span style="float:right">▾</span>
                                 </a>
-
                                 <div class="nested-menu" style="margin-left: 16px; display: none;">
-
                                     <a class="dropdown-item dropdown-link">
                                         <i class="fa-solid fa-key"></i> Password
                                     </a>
@@ -111,11 +110,8 @@
                                     <a class="dropdown-item dropdown-link">
                                         <i class="fa-solid fa-bell"></i> Notifications
                                     </a>
-
                                 </div>
-
                             </div>
-
                         </div>
 
                         <a class="dropdown-item dropdown-link dropdown-settings" onclick="window.location.href='mailto:community@balticapprenticeships.com'">
@@ -138,7 +134,7 @@
 
             <ul class="menu-items">
                 <li>Home</li>
-                <li><a href="index.html">Live feed</a></li>
+                <li><a href="./index.html">Live feed</a></li>
                 <li>Baltic Live Events</li>
                 <li>Groups</li>
                 <li>Resource Hub</li>
@@ -148,6 +144,7 @@
 
         </div>
 
+        <!-- MAIN CONTENT -->
         <div id="chat">
             <div id="chat-header">
                 <h1 class="title is-4"><span id="chat-room-title">Chat Room</span></h1>
@@ -173,7 +170,9 @@
                 </form>
 
         </div>
+
     </div>
+
 </body>
 
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
