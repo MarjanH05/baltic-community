@@ -60,3 +60,45 @@ button {
 .message-text {
     color: #333333;
 }
+
+/* Chat styling */
+.system-message {
+	/* System message styling */
+}
+
+.connecting-message {
+	text-align: center;
+	font-weight: bold;
+	padding: 10px;
+}
+
+.connecting-message .container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+}
+
+.spinner {
+	width: 20px;
+	height: 20px;
+	border: 3px solid rgba(255, 255, 255, 0.3);
+	border-radius: 50%;
+	border-top-color: var(--baltic-blue, #0a0e40);
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	to { transform: rotate(360deg); }
+}
+
+.chat-status-dot {
+  display: inline-block;
+  margin-left: 8px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #39ff14 60%, #0f0 100%);
+  box-shadow: 0 0 8px 2px #39ff14, 0 0 2px 1px #0f0;
+  vertical-align: middle;
+}
