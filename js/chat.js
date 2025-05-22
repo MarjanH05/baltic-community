@@ -72,6 +72,8 @@ const BACKEND_URL = "https://baltic-community.onrender.com"; // Set your backend
         socket.on('chat history', (history) => {
             messagesDiv.innerHTML = '';
             history.forEach(msg => appendMessage(msg, msg.username === username));
+            // Show a join message for the user themselves after chat history loads
+            appendMessage({text: 'You have joined the chat!', system: true});
         });
         socket.emit('join', username);
         socket.on('chat message', (msg) => {
@@ -80,6 +82,14 @@ const BACKEND_URL = "https://baltic-community.onrender.com"; // Set your backend
         socket.on('system message', (msg) => {
             appendMessage({text: msg, system: true});
         });
+
+        const chatRoomTitle = document.getElementById('chat-room-title');
+        if (chatRoomTitle && !document.getElementById('chat-status-dot')) {
+            const dot = document.createElement('span');
+            dot.id = 'chat-status-dot';
+            dot.className = 'chat-status-dot'; // Add class for CSS styling
+            chatRoomTitle.appendChild(dot);
+        }
     };
 
     chatForm.onsubmit = function(e) {

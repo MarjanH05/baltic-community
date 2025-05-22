@@ -129,8 +129,10 @@ const dropdownAvatar = document.getElementById('dropdown-avatar');
 const dropdownUsername = document.getElementById('dropdown-username');
 const logoutLink = document.getElementById('logout-link');
 
-// Show login page by default
-loginPage.classList.remove('hidden');
+// Show login page by default, but only if loginPage exists
+if (loginPage) {
+    loginPage.classList.remove('hidden');
+}
 
 // Handle signup button click
 signupBtn.addEventListener('click', () => {
