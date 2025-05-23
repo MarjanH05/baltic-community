@@ -202,7 +202,7 @@ if (loginForm) {
                 loginUser({
                     id: foundUser.id,
                     avatar: foundUser.avatar,
-                    name: foundUser.name.split(' ')[0],
+                    name: foundUser.name,
                     email: foundUser.email
                 });
             }
@@ -264,7 +264,7 @@ if (signupForm) {
             // Create new user
             const newUser = {
                 id: users.length + 1,
-                name: fullName.split(' ')[0],
+                name: fullName,
                 email: email,
                 avatar: avatarUrl
             };
@@ -430,7 +430,7 @@ function handlePostSubmit() {
         
         // Refresh posts
         renderPosts();
-        UsersAboutNewPost(currentUser.id, currentUser.name);
+        notifyUsersAboutNewPost(currentUser.id, currentUser.name);
 
         setTimeout(() => {
             postInput.value = '';
@@ -534,9 +534,6 @@ function loginUser(user, fromSession = false) {
 		// Update UI only if elements exist
 		if (userNameSpan) {
 		    userNameSpan.textContent = user.name
-		    .split('.')
-		    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-		    .join(' ');
 		}
 
 	    // Hide login/signup pages, show main app (only on index page)
@@ -824,10 +821,7 @@ function renderActiveUsers() {
                 ? `<img src="${user.avatar}" alt="${user.name}" class="avatar-image">`
                 : user.name.charAt(0)}
                 </div>
-                <div class="user-name">${user.name
-			        .split('.')
-			        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-			        .join(' ')}</div>
+                <div class="user-name">${user.name}</div>
             `;
 				
 				activeUsers.appendChild(userElement);
