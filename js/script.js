@@ -54,30 +54,48 @@ let events = [
 ];
 
 // Notifications System
-const userNotifications = {};
+let userNotifications = {};
 
-users.forEach(user => {
-    userNotifications[user.id] = [
-        {
-            id: 1,
-            title: "New post from Danny Broome",
-            time: Date.now() - 300000,
-            unread: true
-        },
-        {
-            id: 2,
-            title: "New post from Marjan Hussain",
-            time: Date.now() - 600000,
-            unread: true
-        },
-        {
-            id: 3,
-            title: "New event added: Creating Replicas",
-            time: Date.now() - 86400000,
-            unread: false
+function initializeNotifications() {
+    try {
+        const savedNotifications = sessionStorage.getItem('balticNotifications');
+        if (savedNotifications) {
+            userNotifications = JSON.parse(savedNotifications);
+            return;
         }
-    ];
-});
+    } catch (e) {
+        console.log('SessionStorage not available, using default notifications');
+    }
+    
+    // Use default notifications if no other data
+    users.forEach(user => {
+        userNotifications[user.id] = [
+            {
+                id: 1,
+                title: "New post from Danny Broome",
+                time: Date.now() - 300000,
+                unread: true
+            },
+            {
+                id: 2,
+                title: "New post from Marjan Hussain",
+                time: Date.now() - 600000,
+                unread: true
+            },
+            {
+                id: 3,
+                title: "New event added: Creating Replicas",
+                time: Date.now() - 86400000,
+                unread: false
+            }
+        ];
+    });
+}
+
+// Save notifications to storage
+function saveNotifications() {
+    sessionStorage.setItem('balticNotifications', JSON.stringify(userNotifications));
+}
 
 // Current logged in user
 let currentUser = null;
@@ -106,8 +124,7 @@ function clearSession() {
     localStorage.removeItem('balticUser');
 }
 
-
-// DOM Elements
+// DOM Elements , these are global so every function should check if they exist otherwise might break the HTML scripts
 const loginPage = document.getElementById('login-page');
 const signupPage = document.getElementById('signup-page');
 const mainApp = document.getElementById('main-app');
@@ -135,126 +152,134 @@ if (loginPage) {
 }
 
 // Handle signup button click
-signupBtn.addEventListener('click', () => {
-		loginPage.classList.add('hidden');
-		signupPage.classList.remove('hidden');
-});
+if (signupBtn) {
+    signupBtn.addEventListener('click', () => {
+            loginPage.classList.add('hidden');
+            signupPage.classList.remove('hidden');
+    });
+}
 
 // Handle back to log in button
-backToLoginBtn.addEventListener('click', () => {
-		signupPage.classList.add('hidden');
-		loginPage.classList.remove('hidden');
-});
+if (backToLoginBtn) {
+    backToLoginBtn.addEventListener('click', () => {
+            signupPage.classList.add('hidden');
+            loginPage.classList.remove('hidden');
+    });
+}
 
 // Handle login form submission
-loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    
-    // Email regex validation - requires letters before and after @, followed by . and domain extension
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    
-    // Password regex validation - at least 8 chars, 1 uppercase letter, and 1 number
-    const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
-    
-    // Validation
-    let isValid = true;
-    let errorMessage = "";
-    
-    // Make sure email is a string and validate format
-    if (!email || typeof email !== 'string' || !emailRegex.test(email.toString())) {
-        isValid = false;
-        errorMessage += "Invalid email format. Email must have format like 'name@example.com'\n";
-    }
-    
-    // Make sure password is a string and validate format
-    if (!password || typeof password !== 'string' || !passwordRegex.test(password.toString())) {
-        isValid = false;
-        errorMessage += "Password must be at least 8 characters and include at least 1 uppercase letter and 1 number";
-    }
-    
-    if (isValid) {
-        const foundUser = users.find(user => user.email === email.toLowerCase() && user.password === password);
-        if(foundUser) {
-            loginUser({
-                id: foundUser.id,
-                avatar: foundUser.avatar,
-                name: foundUser.name.split(' ')[0],
-                email: foundUser.email
-            });
+if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        // Email regex validation - requires letters before and after @, followed by . and domain extension
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        
+        // Password regex validation - at least 8 chars, 1 uppercase letter, and 1 number
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+        
+        // Validation
+        let isValid = true;
+        let errorMessage = "";
+        
+        // Make sure email is a string and validate format
+        if (!email || typeof email !== 'string' || !emailRegex.test(email.toString())) {
+            isValid = false;
+            errorMessage += "Invalid email format. Email must have format like 'name@example.com'\n";
         }
-        else {
-            loginUser({
-                id: users.length + 1,
-                name: email.split('@')[0],
-                avatar: null,
-                email: email
-            });
+        
+        // Make sure password is a string and validate format
+        if (!password || typeof password !== 'string' || !passwordRegex.test(password.toString())) {
+            isValid = false;
+            errorMessage += "Password must be at least 8 characters and include at least 1 uppercase letter and 1 number";
         }
-    } else {
-        // Display error message
-        alert(errorMessage);
-    }
-});
+        
+        if (isValid) {
+            const foundUser = users.find(user => user.email === email.toLowerCase() && user.password === password);
+            if(foundUser) {
+                loginUser({
+                    id: foundUser.id,
+                    avatar: foundUser.avatar,
+                    name: foundUser.name,
+                    email: foundUser.email
+                });
+            }
+            else {
+                loginUser({
+                    id: users.length + 1,
+                    name: email.split('@')[0],
+                    avatar: null,
+                    email: email
+                });
+            }
+        } else {
+            // Display error message
+            alert(errorMessage);
+        }
+    });
+}
 
 // Handle signup form submission
-signupForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const fullName = document.getElementById('full-name').value;
-    const email = document.getElementById('signup-email').value;
-    const password = document.getElementById('signup-password').value;
-    const profilePictureInput = document.getElementById('profile-picture').files[0];
-    
-    // Email regex validation - requires letters before and after @, followed by . and domain extension
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    
-    // Password regex validation - at least 8 chars, 1 uppercase letter and 1 number
-    const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
-    
-    // Validation
-    let isValid = true;
-    let errorMessage = "";
-    
-    // Make sure fullName is a string and not empty
-    if (!fullName || typeof fullName !== 'string' || fullName.toString().trim() === '') {
-        isValid = false;
-        errorMessage += "Full name is required\n";
-    }
-    
-    if (!emailRegex.test(email)) {
-        isValid = false;
-        errorMessage += "Invalid email format. Email must have format like 'name@example.com'\n";
-    }
-    
-    if (!passwordRegex.test(password)) {
-        isValid = false;
-        errorMessage += "Password must be at least 8 characters and include at least 1 uppercase letter and 1 number";
-    }
-    
-    if (isValid) {
-        let avatarUrl = null;
-        if (profilePictureInput) {
-            avatarUrl = await convertImageToBase64(profilePictureInput);
+if (signupForm) {
+    signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fullName = document.getElementById('full-name').value;
+        const email = document.getElementById('signup-email').value;
+        const password = document.getElementById('signup-password').value;
+        const profilePictureInput = document.getElementById('profile-picture').files[0];
+        
+        // Email regex validation - requires letters before and after @, followed by . and domain extension
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        
+        // Password regex validation - at least 8 chars, 1 uppercase letter and 1 number
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+        
+        // Validation
+        let isValid = true;
+        let errorMessage = "";
+        
+        // Make sure fullName is a string and not empty
+        if (!fullName || typeof fullName !== 'string' || fullName.toString().trim() === '') {
+            isValid = false;
+            errorMessage += "Full name is required\n";
         }
-        // Create new user
-        const newUser = {
-            id: users.length + 1,
-            name: fullName.split(' ')[0],
-            email: email,
-            avatar: avatarUrl
-        };
         
-        // Add to users array
-        users?.push(newUser);
+        if (!emailRegex.test(email)) {
+            isValid = false;
+            errorMessage += "Invalid email format. Email must have format like 'name@example.com'\n";
+        }
         
-        // Log in the new user
-        loginUser(newUser);
-    } else {
-        // Display error message
-        alert(errorMessage);
-    }
-});
+        if (!passwordRegex.test(password)) {
+            isValid = false;
+            errorMessage += "Password must be at least 8 characters and include at least 1 uppercase letter and 1 number";
+        }
+        
+        if (isValid) {
+            let avatarUrl = null;
+            if (profilePictureInput) {
+                avatarUrl = await convertImageToBase64(profilePictureInput);
+            }
+            // Create new user
+            const newUser = {
+                id: users.length + 1,
+                name: fullName,
+                email: email,
+                avatar: avatarUrl
+            };
+            
+            // Add to users array
+            users?.push(newUser);
+            
+            // Log in the new user
+            loginUser(newUser);
+        } else {
+            // Display error message
+            alert(errorMessage);
+        }
+    });
+}
 
 // Initialize notifications after first login
 let notificationsInitialized = false;
@@ -264,35 +289,34 @@ function initNotifications() {
     const notificationsDropdown = document.getElementById('notifications-dropdown');
 
     // Check if notifications are already initialized
-    if (notificationsInitialized)
+    if (notificationsInitialized || !notificationsIcon || !notificationsDropdown)
         return;
 
     notificationsInitialized = true;
+    initializeNotifications();
 
-    if (notificationsIcon && notificationsDropdown) {
-		notificationsIcon.addEventListener('click', function(e) {
-			e.stopPropagation();
-			if (notificationsDropdown.classList.contains('hidden')) {
-				renderNotifications();
-				notificationsDropdown.classList.remove('hidden');
-			} else {
-				notificationsDropdown.classList.add('hidden');
-			}
-		});
+    notificationsIcon.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (notificationsDropdown.classList.contains('hidden')) {
+            renderNotifications();
+            notificationsDropdown.classList.remove('hidden');
+        } else {
+            notificationsDropdown.classList.add('hidden');
+        }
+    });
 
-		// Close dropdown when clicking outside
-		document.addEventListener('click', function(e) {
-			if (!notificationsDropdown.contains(e.target) && e.target !== notificationsIcon) {
-				notificationsDropdown.classList.add('hidden');
-			}
-		});
-	}
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!notificationsDropdown.contains(e.target) && e.target !== notificationsIcon) {
+            notificationsDropdown.classList.add('hidden');
+        }
+    });
 }
 
 function renderNotifications() {
     const notificationsList = document.getElementById('notifications-list');
     const clearBtn = document.getElementById('clear-notifications');
-    if (!notificationsList) return;
+    if (!notificationsList || !currentUser) return;
 
     notificationsList.innerHTML = '';
 
@@ -320,61 +344,75 @@ function renderNotifications() {
             notificationElement.classList.remove('notification-unread');
             const dot = notificationElement.querySelector('.notification-dot');
             if (dot) dot.remove();
+            saveNotifications(); 
         });
 
         notificationsList.appendChild(notificationElement);
     });
 
-    clearBtn.onclick = function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        userNotifications[currentUser.id] = [];
-        renderNotifications();
-    };
+    if (clearBtn) {
+        clearBtn.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            userNotifications[currentUser.id] = [];
+            renderNotifications();
+            saveNotifications();
+        };
+    }
 }
-
-
 
 // Post when button is clicked
-submitPostBtn.addEventListener('click', handlePostSubmit);
-
-// Text box behavior
-
-// Auto-resizing text area functionality
-function autoResizeTextarea() {
-    postInput.style.height = '36px'; 
-    postInput.style.height = Math.max(36, postInput.scrollHeight) + 'px'; 
-
-    if (postInput.scrollHeight > 300) {
-        postInput.style.overflowY = 'auto';
-    } else {
-        postInput.style.overflowY = 'hidden';
-    }
+if (submitPostBtn) {
+    submitPostBtn.addEventListener('click', handlePostSubmit);
 }
 
-// Initialize once DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-    postInput.style.resize = 'none'; 
-    postInput.style.overflow = 'hidden';
-    postInput.style.boxSizing = 'border-box';
-    postInput.style.minHeight = '36px';
-    postInput.style.maxHeight = '300px';
-    postInput.style.width = '100%';
-    
-    postInput.addEventListener('input', autoResizeTextarea);
-    
-    // Initialize
-    autoResizeTextarea();
-});
+// Text box behavior - only if postInput exists
+if (postInput) {
+    // Auto-resizing text area functionality
+    function autoResizeTextarea() {
+        postInput.style.height = '36px'; 
+        postInput.style.height = Math.max(36, postInput.scrollHeight) + 'px'; 
 
-postInput.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        handlePostSubmit();
+        if (postInput.scrollHeight > 300) {
+            postInput.style.overflowY = 'auto';
+        } else {
+            postInput.style.overflowY = 'hidden';
+        }
     }
-});
+
+    // Initialize once DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        if (postInput) {
+            postInput.style.resize = 'none'; 
+            postInput.style.overflow = 'hidden';
+            postInput.style.boxSizing = 'border-box';
+            postInput.style.minHeight = '36px';
+            postInput.style.maxHeight = '300px';
+            postInput.style.width = '100%';
+            
+            postInput.addEventListener('input', autoResizeTextarea);
+            postInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handlePostSubmit();
+                }
+            });
+            
+            // Handle post input focus
+            postInput.addEventListener('click', () => {
+                // Focus on the input field when clicked
+                postInput.focus();
+            });
+            
+            // Initialize
+            autoResizeTextarea();
+        }
+    });
+}
 
 function handlePostSubmit() {
+    if (!postInput) return;
+    
     const content = postInput.value;
     
     if (content && content.trim() !== '') {
@@ -396,7 +434,9 @@ function handlePostSubmit() {
 
         setTimeout(() => {
             postInput.value = '';
-            autoResizeTextarea();
+            if (typeof autoResizeTextarea === 'function') {
+                autoResizeTextarea();
+            }
         }, 250);
     }
 }
@@ -416,6 +456,7 @@ function notifyUsersAboutNewPost(postAuthorId, postAuthorName) {
             });
         }
     });
+    saveNotifications(); 
 }
 
 // Convert image to base64
@@ -428,27 +469,21 @@ function convertImageToBase64(file) {
     });
 }
 
-// Handle post input focus
-postInput.addEventListener('click', () => {
-    // Focus on the input field when clicked
-    postInput.focus();
-});
-
 // Navbar profile management dropdown
 if (profileIcon) {
     profileIcon.addEventListener('click', function(e) {
         e.stopPropagation();
-        if (profileDropdown.classList.contains('hidden')) {
+        if (profileDropdown && profileDropdown.classList.contains('hidden')) {
             updateDropdownProfile();
             profileDropdown.classList.remove('hidden');
-        } else {
+        } else if (profileDropdown) {
             profileDropdown.classList.add('hidden');
         }
     });
 }
 
 document.addEventListener('click', function(e) {
-    if (!profileDropdown.classList.contains('hidden')) {
+    if (profileDropdown && !profileDropdown.classList.contains('hidden')) {
         if (!profileDropdown.contains(e.target) && e.target !== profileIcon) {
             profileDropdown.classList.add('hidden');
         }
@@ -456,7 +491,7 @@ document.addEventListener('click', function(e) {
 });
 
 function updateDropdownProfile() {
-    if (!currentUser) return;
+    if (!currentUser || !dropdownUsername || !dropdownAvatar) return;
     dropdownUsername.textContent = currentUser.name;
     if (currentUser.avatar) {
         dropdownAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="${currentUser.name}">`;
@@ -469,9 +504,21 @@ if (logoutLink) {
     logoutLink.addEventListener('click', function() {
         clearSession(); // Remove session from localStorage
         currentUser = null;
-        mainApp.classList.add('hidden');
-        loginPage.classList.remove('hidden');
-        profileDropdown.classList.add('hidden');
+        if (mainApp) {
+            mainApp.classList.add('hidden');
+        }
+        if (loginPage) {
+            loginPage.classList.remove('hidden');
+        }
+        if (profileDropdown) {
+            profileDropdown.classList.add('hidden');
+        }
+        if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+            if (loginPage) loginPage.classList.remove('hidden');
+       } else {
+           // If on chat.html or other pages, redirect to index or login page
+           window.location.href = 'index.html';
+       }
     });
 }
 
@@ -484,39 +531,42 @@ function loginUser(user, fromSession = false) {
 				users.push(user);
 		}
 
-		// Update UI
-		userNameSpan.textContent = user.name
-		.split('.')
-		.map(word => word.charAt(0).toUpperCase() + word.slice(1))
-		.join(' ');
+		// Update UI only if elements exist
+		if (userNameSpan) {
+		    userNameSpan.textContent = user.name
+		}
 
-	// Hide login/signup pages, show main app
-		loginPage.classList.add('hidden');
-		signupPage.classList.add('hidden');
-		mainApp.classList.remove('hidden');
+	    // Hide login/signup pages, show main app (only on index page)
+		    if (loginPage) loginPage.classList.add('hidden');
+		    if (signupPage) signupPage.classList.add('hidden');
+		    if (mainApp) mainApp.classList.remove('hidden');
 		
 		 // Save session if not from session
-    if (!fromSession) {
-        saveSession(user);
-    }
+        if (!fromSession) {
+            saveSession(user);
+        }
 		
 		// Initialize app
-    updateCurrentUserAvatar();
-	initNotifications();
-	initApp();
+        updateCurrentUserAvatar();
+	    initNotifications();
+	    initApp();
 }
   
 // Update user avatar in UI
 function updateCurrentUserAvatar() {
-    if (currentUser) {
-        // Profile icon in navbar
+    if (!currentUser) return;
+    
+    // Profile icon in navbar
+    if (profileIcon) {
         if (currentUser.avatar) {
             profileIcon.innerHTML = `<img src="${currentUser.avatar}" alt="${currentUser.name}" class="avatar-image">`;
         } else {
             profileIcon.textContent = currentUser.name.charAt(0);
         }
-
-        // Post input avatar
+    }
+    
+    // Post input avatar 
+    if (postUserAvatar) {
         if (currentUser.avatar) {
             postUserAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="${currentUser.name}" class="avatar-image">`;
         } else {
@@ -534,6 +584,7 @@ function initApp() {
 
 // Render posts
 function renderPosts() {
+        if (!postsContainer) return;
 		postsContainer.innerHTML = '';
 
 		if (posts.length === 0) {
@@ -572,7 +623,7 @@ function renderPosts() {
                     </p>
                 </div>
             `;
-
+            
 				postsContainer.appendChild(postElement);
                 setupPostOptionsMenu();
 		});
@@ -617,7 +668,7 @@ function setupPostOptionsMenu() {
             const post = posts[index];
             
             // Only show edit/delete for the current user's posts
-            if (post.authorId === currentUser.id) {
+            if (currentUser && post.authorId === currentUser.id) {
                 const optionsMenu = document.createElement('div');
                 optionsMenu.className = 'post-options-menu';
                 optionsMenu.innerHTML = `
@@ -656,6 +707,8 @@ function setupPostOptionsMenu() {
 }
 
 function editPost(index) {
+    if (!postsContainer) return;
+    
     const post = posts[index];
     const postContent = document.querySelectorAll('.post-content')[index];
     const originalText = post.content;
@@ -756,8 +809,9 @@ async function deletePost(index) {
 
 // Render active users
 function renderActiveUsers() {
+        if (!activeUsers) return;
+
 		activeUsers.innerHTML = '';
-		
 		users.forEach(user => {
         const userElement = document.createElement('div');
         userElement.className = 'user-item';
@@ -767,10 +821,7 @@ function renderActiveUsers() {
                 ? `<img src="${user.avatar}" alt="${user.name}" class="avatar-image">`
                 : user.name.charAt(0)}
                 </div>
-                <div class="user-name">${user.name
-			        .split('.')
-			        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-			        .join(' ')}</div>
+                <div class="user-name">${user.name}</div>
             `;
 				
 				activeUsers.appendChild(userElement);
@@ -779,6 +830,7 @@ function renderActiveUsers() {
 
 // Render events
 function renderEvents() {
+    if (!eventList) return; 
 		eventList.innerHTML = '';
 		
 		if (events.length === 0) {
@@ -790,7 +842,6 @@ function renderEvents() {
 				const eventElement = document.createElement('div');
 				eventElement.className = 'event-item';
 				eventElement.innerHTML = `
-
 						<div class="event-date" style="
 						    display: flex;
 						    flex-direction: column;
@@ -819,22 +870,23 @@ function renderEvents() {
 								<div class="event-title">${event.title}</div>
 								
 								<a href="#" class="event-link" style="color: cornflowerblue;">Find out more</a>
-								
-						</div>
-				`;
-				
-				eventList.appendChild(eventElement);
-		});
+							
+            </div>
+        `;
+        eventList.appendChild(eventElement);
+    });
 }
 
-	document.getElementById('settings-trigger').addEventListener('click', function(e) {
+const settingsTrigger = document.getElementById('settings-trigger'); 
+	settingsTrigger.addEventListener('click', function(e) {
 		e.preventDefault();
+        e.stopPropagation();
 		const nestedMenu = this.nextElementSibling;
-		nestedMenu.style.display = nestedMenu.style.display === 'none' ? 'block' : 'none';
+		if (nestedMenu) { 
+		    nestedMenu.style.display = nestedMenu.style.display === 'none' || nestedMenu.style.display === '' ? 'block' : 'none';
+        }
 	});
 
-
-// Initialize app
 window.onload = function() {
 		checkSession(); // Try to restore session
 		// If no session, show login page
