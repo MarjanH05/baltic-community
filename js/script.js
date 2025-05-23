@@ -430,7 +430,7 @@ function handlePostSubmit() {
         
         // Refresh posts
         renderPosts();
-        UsersAboutNewPost(currentUser.id, currentUser.name);
+        NotifyUsersAboutNewPost(currentUser.id, currentUser.name);
 
         setTimeout(() => {
             postInput.value = '';
