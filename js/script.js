@@ -453,10 +453,16 @@ if (postInput) {
 
 function handlePostSubmit() {
     if (!postInput) return;
-    
+
     const content = postInput.value;
-    
+    const submitBtn = document.getElementById('submit-post-btn');
+    const spinner = submitBtn.querySelector('.spinner');
+
     if (content && content.trim() !== '') {
+
+        spinner.classList.remove('hidden');
+        submitBtn.disabled = true;
+
         const newPost = {
             id: Date.now(),
             authorId: currentUser.id,
@@ -465,21 +471,21 @@ function handlePostSubmit() {
             content: content,
             timestamp: Date.now()
         };
-        
-        // Add to posts array
-        posts.unshift(newPost);
-        
-        // Refresh posts
-        renderPosts();
-        savePosts();
-        notifyUsersAboutNewPost(currentUser.id, currentUser.name);
 
+        // Simulate wait so spinner appears
         setTimeout(() => {
+            posts.unshift(newPost);
+            renderPosts();
+            savePosts();
+            notifyUsersAboutNewPost(currentUser.id, currentUser.name);
+
             postInput.value = '';
             if (typeof autoResizeTextarea === 'function') {
                 autoResizeTextarea();
             }
-        }, 250);
+            spinner.classList.add('hidden');
+            submitBtn.disabled = false;
+        }, 500); 
     }
 }
 
