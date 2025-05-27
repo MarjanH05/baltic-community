@@ -1123,3 +1123,7 @@
 		.custom-popup-confirm:hover {
 			background-color: #ff3232;
 		}
+
+	#my-profile-link a:hover {
+		color: white;
+	}
