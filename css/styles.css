@@ -131,6 +131,19 @@
 		border-bottom: 1px solid #eee;
 	}
 
+	.profile-dropdown .dropdown-avatar {
+		width: 60px;
+		height: 60px;
+		border-radius: 50%;
+		background-color: var(--baltic-purple);
+		color: white;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: bold;
+		overflow: hidden;
+	}
+
 	.profile-dropdown .dropdown-btn {
 		width: calc(100% - 32px);
 		margin: 12px 16px 0 16px;

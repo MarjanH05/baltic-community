@@ -1,22 +1,48 @@
 // Store users data
-let users = [
-    { id: 1, name: "Danny Broome", email: "danny@baltic.com", password: "!Password1", avatar: "https://media.giphy.com/media/84CRvhy2DJlwA/giphy.gif" },
-    { id: 2, name: "Ace Cochez", email: "ace@baltic.com", password: "!Password2", avatar: "https://t3.ftcdn.net/jpg/01/18/50/58/360_F_118505846_PZCicmZZdCNIHS7HUrkUqiUpJMaoJZFZ.jpg" },
-    { id: 3, name: "The Baltic Community", email: "baltic@baltic.com", password: "!Password3", avatar: "https://cdn.brandfetch.io/idf8ZReMDl/w/400/h/400/theme/dark/icon.jpeg?c=1dxbfHSJFAPEGdCLU4o5B" },
-    { id: 4, name: "Marjan Hussain", email: "marjan@baltic.com", password: "!Password4", avatar: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOG9wbjMwMHdtMHN2dWg4eXVzc2h2eWF3ZTRqc251bG5pNmxpemJpayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VBZ6EWbfnLXKoRoSDv/giphy.gif" },
-    { id: 5, name: "Ruairi Orr", email: "ruairi@baltic.com", password: "!Password5", avatar: "https://t4.ftcdn.net/jpg/13/76/74/77/240_F_1376747702_xFXUDsz4hnes0pIZgxjPBLMVB6cytJQx.jpg" },
-    { id: 6, name: "Bailey S", email: "bailey@baltic.com", password: "!Password6", avatar: "https://randomuser.me/api/portraits/men/1.jpg" }
-];
+let users = [];
+let posts = [];
+let events = [];
 
-// Store posts data
-let posts = [
+// Notifications System
+let userNotifications = {};
+function saveUsers() {
+    sessionStorage.setItem('balticUsers', JSON.stringify(users));
+}
+
+function loadUsers() {
+    const savedUsers = sessionStorage.getItem('balticUsers');
+    if (savedUsers) {
+        users = JSON.parse(savedUsers);
+    } else {
+        users = [
+            { id: 1, name: "Danny Broome", email: "danny@baltic.com", password: "!Password1", avatar: "https://media.giphy.com/media/84CRvhy2DJlwA/giphy.gif" },
+            { id: 2, name: "Ace Cochez", email: "ace@baltic.com", password: "!Password2", avatar: "https://t3.ftcdn.net/jpg/01/18/50/58/360_F_118505846_PZCicmZZdCNIHS7HUrkUqiUpJMaoJZFZ.jpg" },
+            { id: 3, name: "The Baltic Community", email: "baltic@baltic.com", password: "!Password3", avatar: "https://cdn.brandfetch.io/idf8ZReMDl/w/400/h/400/theme/dark/icon.jpeg?c=1dxbfHSJFAPEGdCLU4o5B" },
+            { id: 4, name: "Marjan Hussain", email: "marjan@baltic.com", password: "!Password4", avatar: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOG9wbjMwMHdtMHN2dWg4eXVzc2h2eWF3ZTRqc251bG5pNmxpemJpayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VBZ6EWbfnLXKoRoSDv/giphy.gif" },
+            { id: 5, name: "Ruairi Orr", email: "ruairi@baltic.com", password: "!Password5", avatar: "https://t4.ftcdn.net/jpg/13/76/74/77/240_F_1376747702_xFXUDsz4hnes0pIZgxjPBLMVB6cytJQx.jpg" },
+            { id: 6, name: "Bailey S", email: "bailey@baltic.com", password: "!Password6", avatar: "https://randomuser.me/api/portraits/men/1.jpg" }
+        ];
+        saveUsers();
+    }
+}
+
+function savePosts() {
+    sessionStorage.setItem('balticPosts', JSON.stringify(posts));
+}
+
+function loadPosts() {
+    const savedPosts = sessionStorage.getItem('balticPosts');
+    if (savedPosts) {
+        posts = JSON.parse(savedPosts);
+    } else {
+        posts = [
 		{
 				id: users[0].id,
 				authorId: users[0].id,
 				authorName: users[0].name,
                 avatar: users[0].avatar,
 				content: "Happy Friday! How are you? How has your week been? Up to anything this weekend? As per usual, I'll leave mine in the comments. Happy days!",
-                timestamp: Date.now() - (300000) //Roughly 5 mins
+                timestamp: Date.now() - (300000) // 5 mins
 		},
 		{
 				id: users[3].id,
@@ -24,12 +50,23 @@ let posts = [
 				authorName: users[3].name,
                 avatar: users[3].avatar,
 				content: "Did you know I have a BMW??",
-                timestamp: Date.now() - (600000) //Roughly 10 mins
+                timestamp: Date.now() - (600000) // 10 mins
 		}
-];
+        ];
+        savePosts();
+    }
+}
 
-// Store events data
-let events = [
+function saveEvents() {
+    sessionStorage.setItem('balticEvents', JSON.stringify(events));
+}
+
+function loadEvents() {
+    const savedEvents = sessionStorage.getItem('balticEvents');
+    if (savedEvents) {
+        events = JSON.parse(savedEvents);
+    } else {
+        events = [
 		{
 				id: 1,
 				title: "Creating Replicas: How to re-imagine a website",
@@ -51,10 +88,14 @@ let events = [
 				day: "30",
 				image: null
 		}
-];
+        ];
+        saveEvents();
+    }
+}
 
-// Notifications System
-let userNotifications = {};
+loadUsers();
+loadPosts();
+loadEvents();
 
 function initializeNotifications() {
     try {
@@ -271,7 +312,7 @@ if (signupForm) {
             
             // Add to users array
             users?.push(newUser);
-            
+            saveUsers();
             // Log in the new user
             loginUser(newUser);
         } else {
@@ -430,6 +471,7 @@ function handlePostSubmit() {
         
         // Refresh posts
         renderPosts();
+        savePosts();
         notifyUsersAboutNewPost(currentUser.id, currentUser.name);
 
         setTimeout(() => {
@@ -496,7 +538,7 @@ function updateDropdownProfile() {
     if (currentUser.avatar) {
         dropdownAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="${currentUser.name}">`;
     } else {
-        dropdownAvatar.textContent = currentUser.name.charAt(0);
+        dropdownAvatar.innerHTML = `<span class="avatar-initial">${currentUser.name.charAt(0)}</span>`;
     }
 }
 
@@ -533,7 +575,10 @@ function loginUser(user, fromSession = false) {
 
 		// Update UI only if elements exist
 		if (userNameSpan) {
-		    userNameSpan.textContent = user.name
+            userNameSpan.textContent = user.name
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
 		}
 
 	    // Hide login/signup pages, show main app (only on index page)
@@ -744,6 +789,7 @@ function editPost(index) {
         const newContent = textarea.value.trim();
         if (newContent) {
             post.content = newContent;
+            savePosts();
             renderPosts();
         }
     });
@@ -802,7 +848,8 @@ function customConfirm(message) {
 async function deletePost(index) {
 	const confirmed = await customConfirm('Are you sure you want to delete this post?');
 	if (confirmed) {
-		posts.splice(index, 1);
+        posts.splice(index, 1);
+        savePosts();
 		renderPosts();
 	}
 }
@@ -821,7 +868,10 @@ function renderActiveUsers() {
                 ? `<img src="${user.avatar}" alt="${user.name}" class="avatar-image">`
                 : user.name.charAt(0)}
                 </div>
-                <div class="user-name">${user.name}</div>
+                <div class="user-name">${user.name
+                    .split('.')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ')}</div>
             `;
 				
 				activeUsers.appendChild(userElement);
