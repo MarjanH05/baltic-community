@@ -376,6 +376,10 @@
 			border-bottom: 1px solid #ddd;
 		}
 
+		#post-input::placeholder {
+			color: grey !important;
+		}
+
 		.user-avatar, .author-avatar {
 			width: 40px;
 			height: 40px;
@@ -390,17 +394,8 @@
 			overflow: hidden;
 		}
 
-		.post-input input {
-			flex: 1;
-			padding: 10px 15px;
-			border: 1px solid #ddd;
-			border-radius: 20px;
-			outline: none;
-			cursor: pointer;
-		}
-
 		.post-input #submit-post-btn {
-			height: 36px;
+			height: 50px;
 		}
 
 		.filter-bar {
@@ -466,6 +461,7 @@
 			max-height: 300px;
 			overflow-y: auto;
 			scroll-behavior: smooth;
+			height: 50px !important;
 		}
 
 		.read-more {
