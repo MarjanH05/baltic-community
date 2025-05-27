@@ -458,6 +458,11 @@ function handlePostSubmit() {
     const submitBtn = document.getElementById('submit-post-btn');
     const spinner = submitBtn.querySelector('.spinner');
 
+    // Holding 'enter' doesn't allow mutiple posts to be submitted
+    if (submitBtn.disabled) {
+        return; 
+    }
+
     if (content && content.trim() !== '') {
 
         spinner.classList.remove('hidden');
