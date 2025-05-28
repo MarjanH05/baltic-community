@@ -107,7 +107,7 @@ function initializeNotifications() {
     } catch (e) {
         console.log('SessionStorage not available, using default notifications');
     }
-    
+
     // Use default notifications if no other data
     users.forEach(user => {
         userNotifications[user.id] = [
@@ -215,29 +215,29 @@ if (loginForm) {
         e.preventDefault();
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
-        
+
         // Email regex validation - requires letters before and after @, followed by . and domain extension
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        
+
         // Password regex validation - at least 8 chars, 1 uppercase letter, and 1 number
         const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
-        
+
         // Validation
         let isValid = true;
         let errorMessage = "";
-        
+
         // Make sure email is a string and validate format
         if (!email || typeof email !== 'string' || !emailRegex.test(email.toString())) {
             isValid = false;
             errorMessage += "Invalid email format. Email must have format like 'name@example.com'\n";
         }
-        
+
         // Make sure password is a string and validate format
         if (!password || typeof password !== 'string' || !passwordRegex.test(password.toString())) {
             isValid = false;
             errorMessage += "Password must be at least 8 characters and include at least 1 uppercase letter and 1 number";
         }
-        
+
         if (isValid) {
             const foundUser = users.find(user => user.email === email.toLowerCase() && user.password === password);
             if(foundUser) {
@@ -271,33 +271,33 @@ if (signupForm) {
         const email = document.getElementById('signup-email').value;
         const password = document.getElementById('signup-password').value;
         const profilePictureInput = document.getElementById('profile-picture').files[0];
-        
+
         // Email regex validation - requires letters before and after @, followed by . and domain extension
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        
+
         // Password regex validation - at least 8 chars, 1 uppercase letter and 1 number
         const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
-        
+
         // Validation
         let isValid = true;
         let errorMessage = "";
-        
+
         // Make sure fullName is a string and not empty
         if (!fullName || typeof fullName !== 'string' || fullName.toString().trim() === '') {
             isValid = false;
             errorMessage += "Full name is required\n";
         }
-        
+
         if (!emailRegex.test(email)) {
             isValid = false;
             errorMessage += "Invalid email format. Email must have format like 'name@example.com'\n";
         }
-        
+
         if (!passwordRegex.test(password)) {
             isValid = false;
             errorMessage += "Password must be at least 8 characters and include at least 1 uppercase letter and 1 number";
         }
-        
+
         if (isValid) {
             let avatarUrl = null;
             if (profilePictureInput) {
@@ -310,7 +310,7 @@ if (signupForm) {
                 email: email,
                 avatar: avatarUrl
             };
-            
+
             // Add to users array
             users?.push(newUser);
             saveUsers();
@@ -386,7 +386,7 @@ function renderNotifications() {
             notificationElement.classList.remove('notification-unread');
             const dot = notificationElement.querySelector('.notification-dot');
             if (dot) dot.remove();
-            saveNotifications(); 
+            saveNotifications();
         });
 
         notificationsList.appendChild(notificationElement);
@@ -412,8 +412,8 @@ if (submitPostBtn) {
 if (postInput) {
     // Auto-resizing text area functionality
     function autoResizeTextarea() {
-        postInput.style.height = '36px'; 
-        postInput.style.height = Math.max(36, postInput.scrollHeight) + 'px'; 
+        postInput.style.height = '36px';
+        postInput.style.height = Math.max(36, postInput.scrollHeight) + 'px';
 
         if (postInput.scrollHeight > 300) {
             postInput.style.overflowY = 'auto';
@@ -425,13 +425,13 @@ if (postInput) {
     // Initialize once DOM is fully loaded
     document.addEventListener('DOMContentLoaded', function() {
         if (postInput) {
-            postInput.style.resize = 'none'; 
+            postInput.style.resize = 'none';
             postInput.style.overflow = 'hidden';
             postInput.style.boxSizing = 'border-box';
             postInput.style.minHeight = '36px';
             postInput.style.maxHeight = '300px';
             postInput.style.width = '100%';
-            
+
             postInput.addEventListener('input', autoResizeTextarea);
             postInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -439,13 +439,13 @@ if (postInput) {
                     handlePostSubmit();
                 }
             });
-            
+
             // Handle post input focus
             postInput.addEventListener('click', () => {
                 // Focus on the input field when clicked
                 postInput.focus();
             });
-            
+
             // Initialize
             autoResizeTextarea();
         }
@@ -461,7 +461,7 @@ function handlePostSubmit() {
 
     // Holding 'enter' doesn't allow mutiple posts to be submitted
     if (submitBtn.disabled) {
-        return; 
+        return;
     }
 
     if (content && content.trim() !== '') {
@@ -491,7 +491,7 @@ function handlePostSubmit() {
             }
             spinner.classList.add('hidden');
             submitBtn.disabled = false;
-        }, 500); 
+        }, 500);
     }
 }
 
@@ -510,7 +510,7 @@ function notifyUsersAboutNewPost(postAuthorId, postAuthorName) {
             });
         }
     });
-    saveNotifications(); 
+    saveNotifications();
 }
 
 // Convert image to base64
@@ -579,7 +579,7 @@ if (logoutLink) {
 // Login user function
 function loginUser(user, fromSession = false) {
 		currentUser = user;
-		
+
 		// Add user to active users if not already there
 		if (!users.find(u => u.id === user.id)) {
 				users.push(user);
@@ -597,22 +597,22 @@ function loginUser(user, fromSession = false) {
 		    if (loginPage) loginPage.classList.add('hidden');
 		    if (signupPage) signupPage.classList.add('hidden');
 		    if (mainApp) mainApp.classList.remove('hidden');
-		
+
 		 // Save session if not from session
         if (!fromSession) {
             saveSession(user);
         }
-		
+
 		// Initialize app
         updateCurrentUserAvatar();
 	    initNotifications();
 	    initApp();
 }
-  
+
 // Update user avatar in UI
 function updateCurrentUserAvatar() {
     if (!currentUser) return;
-    
+
     // Profile icon in navbar
     if (profileIcon) {
         if (currentUser.avatar) {
@@ -621,8 +621,8 @@ function updateCurrentUserAvatar() {
             profileIcon.textContent = currentUser.name.charAt(0);
         }
     }
-    
-    // Post input avatar 
+
+    // Post input avatar
     if (postUserAvatar) {
         if (currentUser.avatar) {
             postUserAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="${currentUser.name}" class="avatar-image">`;
@@ -660,7 +660,7 @@ function renderPosts() {
 
 		posts.forEach((post, index) => {
 				const maxLength = 350; // Maximum length for truncation
-				const showReadMore = post.content.length > maxLength; 
+				const showReadMore = post.content.length > maxLength;
 				const truncatedContent = showReadMore
 						? post.content.slice(0, maxLength) + '...'
 						: post.content;
@@ -689,7 +689,7 @@ function renderPosts() {
                     </p>
                 </div>
             `;
-            
+
 				postsContainer.appendChild(postElement);
                 setupPostOptionsMenu();
 		});
@@ -712,7 +712,7 @@ function formatTimeAgo(timestamp) {
     const mins = sec / 60;
     const hrs = mins / 60;
     const days = hrs / 24;
-    
+
     if (days >= 1) return `${Math.floor(days)} day${days >= 2 ? 's' : ''} ago`;
     if (hrs >= 1) return `${Math.floor(hrs)} hour${hrs >= 2 ? 's' : ''} ago`;
     if (mins >= 1) return `${Math.floor(mins)} minute${mins >= 2 ? 's' : ''} ago`;
@@ -722,17 +722,17 @@ function formatTimeAgo(timestamp) {
 // Handle post options menu
 function setupPostOptionsMenu() {
     const postOptions = document.querySelectorAll('.post-options');
-    
+
     postOptions.forEach((optionsButton, index) => {
         optionsButton.addEventListener('click', function(e) {
             e.stopPropagation();
-            
+
             // Remove any existing options menus
             const existingMenus = document.querySelectorAll('.post-options-menu');
             existingMenus.forEach(menu => menu.remove());
-            
+
             const post = posts[index];
-            
+
             // Only show edit/delete for the current user's posts
             if (currentUser && post.authorId === currentUser.id) {
                 const optionsMenu = document.createElement('div');
@@ -741,21 +741,21 @@ function setupPostOptionsMenu() {
                     <div class="option-item edit-post" data-index="${index}"><i class="fa-solid fa-wand-magic-sparkles"></i> Edit post</div>
                     <div class="option-item delete-post" data-index="${index}"><i class="fa-solid fa-trash"></i> Delete post</div>
                 `;
-                
+
                 // Position the menu
                 optionsButton.appendChild(optionsMenu);
-                
+
                 // Add event listeners
                 const editOption = optionsMenu.querySelector('.edit-post');
                 const deleteOption = optionsMenu.querySelector('.delete-post');
-                
+
                 editOption.addEventListener('click', function(e) {
                     e.stopPropagation();
                     const postIndex = this.getAttribute('data-index');
                     optionsMenu.remove();
                     editPost(postIndex);
                 });
-                
+
                 deleteOption.addEventListener('click', function() {
                     const postIndex = this.getAttribute('data-index');
                     deletePost(postIndex).then(x => {x = null});
@@ -764,7 +764,7 @@ function setupPostOptionsMenu() {
             }
         });
     });
-    
+
     // Close menu if user clicks elsewhere
     document.addEventListener('click', function() {
         const existingMenus = document.querySelectorAll('.post-options-menu');
@@ -774,11 +774,11 @@ function setupPostOptionsMenu() {
 
 function editPost(index) {
     if (!postsContainer) return;
-    
+
     const post = posts[index];
     const postContent = document.querySelectorAll('.post-content')[index];
     const originalText = post.content;
-    
+
     postContent.innerHTML = `
         <div class="edit-container">
             <textarea class="edit-textarea">${originalText}</textarea>
@@ -788,24 +788,24 @@ function editPost(index) {
             </div>
         </div>
     `;
-    
+
     const textarea = postContent.querySelector('.edit-textarea');
     textarea.focus();
-    
+
     // Set initial height based on content
     textarea.style.height = 'auto';
     textarea.style.height = Math.min(textarea.scrollHeight, 300) + 'px';
-    
+
     // Add event listener for textarea resizing as user types
     textarea.addEventListener('input', function() {
         this.style.height = 'auto';
         this.style.height = Math.min(this.scrollHeight, 300) + 'px';
     });
-    
+
     // Add event listeners for save and cancel
     const saveButton = postContent.querySelector('.save-edit');
     const cancelButton = postContent.querySelector('.cancel-edit');
-    
+
     saveButton.addEventListener('click', function() {
         const newContent = textarea.value.trim();
         if (newContent) {
@@ -814,7 +814,7 @@ function editPost(index) {
             renderPosts();
         }
     });
-    
+
     cancelButton.addEventListener('click', function() {
         renderPosts();
     });
@@ -850,7 +850,7 @@ function customConfirm(message) {
 		// Add confirm button
 		const confirmButton = document.createElement('button');
 		confirmButton.className = 'custom-popup-button custom-popup-confirm';
-		confirmButton.textContent = 'Delete';
+		confirmButton.textContent = 'Confirm';
 		confirmButton.onclick = () => {
 			document.body.removeChild(overlay);
 			resolve(true);

@@ -260,7 +260,7 @@
 		#nav-logo {
 			display: flex;
 			align-items: center;
-			margin-left: 250px;
+			margin-left: 250px !important;
 		}
 
 		#nav-logo-link:hover {
