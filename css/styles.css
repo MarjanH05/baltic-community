@@ -19,10 +19,19 @@
 	.navbar {
 		background-color: var(--baltic-blue) !important;
 		padding: 10px 40px !important;
+		height: 70px;
 	}
 
 	.navbar-item {
 		color: white !important;
+	}
+
+	.navbar-brand .navbar-item img {
+		height: 60px;
+		width: auto;
+		max-height: 100%;
+		object-fit: contain;
+		padding: 5px 0;
 	}
 
 	.nav-icon:hover {
