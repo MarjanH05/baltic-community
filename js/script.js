@@ -181,6 +181,7 @@ const eventList = document.getElementById('event-list');
 const profileIcon = document.getElementById('profile-icon');
 const postUserAvatar = document.getElementById('post-user-avatar');
 const submitPostBtn = document.getElementById('submit-post-btn');
+const profileAvatar = document.getElementById('profile-avatar');
 // Dropdown elements
 const profileDropdown = document.getElementById('profile-dropdown');
 const dropdownAvatar = document.getElementById('dropdown-avatar');
@@ -627,6 +628,15 @@ function updateCurrentUserAvatar() {
             postUserAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="${currentUser.name}" class="avatar-image">`;
         } else {
             postUserAvatar.textContent = currentUser.name.charAt(0);
+        }
+    }
+
+    // Profile avatar
+    if (profileAvatar) {
+        if (currentUser.avatar) {
+            profileAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="${currentUser.name}" class="avatar-image">`;
+        } else {
+            profileAvatar.textContent = currentUser.name.charAt(0);
         }
     }
 }
