@@ -82,7 +82,7 @@
 }
 
 #linkedin-update {
-    margin-top: -2.5%;
+    margin-top: -80px;
     margin-bottom: 0;
     font-size: 14px;
     background-color: #0077B5;
@@ -92,5 +92,17 @@
     cursor: pointer;
     display: inline-block;
     float: left;
-    margin-left: 15%;
+    margin-left: 125px;
+}
+
+.fa-wrench {
+    color: var(--baltic-blue);
+    margin-left: 95%;
+    position: absolute;
+}
+
+.divider {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
 }

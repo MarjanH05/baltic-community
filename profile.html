@@ -74,7 +74,7 @@
 
 						<div class="dropdown-header">
 
-							<div class="dropdown-avatar" id="dropdown-avatar"></div>
+							<div class="user-avatar" id="post-user-avatar"></div>
 
 							<div class="dropdown-username" id="dropdown-username">User</div>
 
@@ -133,7 +133,7 @@
 
 			<ul class="menu-items">
 				<li>Home</li>
-				<li>Live feed</li>
+				<li><a href="./index.html">Live feed</a></li>
 				<li>Baltic Live Events</li>
 				<li>Groups</li>
 				<li>Resource Hub</li>
@@ -149,9 +149,9 @@
 
 			<div class="columns main-content">
 
-				<div class="column">
+				<div class="column is-14">
 
-					<div class="card header-card connected top">
+					<div class="card header-card connected top" style="padding: 0;">
 
 						<div class="card-image">
 
@@ -169,8 +169,12 @@
 
 							<div class="user-avatar" id="profile-avatar">PH</div>
 
-							<div class="user-name" id="profile-name">Place Holder</div>
-							<button id="linkedin-update"><i class="fab fa-linkedin"></i> Update from LinkedIn</button>
+							<div class="user-name" id="profile-name"><span id="user-name">User</span></div> <!-- Insert users name -->
+							<a href="https://www.linkedin.com/in/" target="_blank"><button id="linkedin-update"><i class="fab fa-linkedin"></i> Update from LinkedIn</button></a>
+
+							<div class="user-summary">
+								<p>Summary</p> <!-- Similar to LinkedIn, let user put >30 character summary (e.g. "Junior Developer for 51toCarbonZero" -->
+							</div>
 
 						</div>
 
@@ -180,6 +184,75 @@
 
 			</div>
 
+			<div class="columns main-content">
+
+				<div class="column is-6">
+
+					<div class="columns is-multiline">
+
+						<div class="column is-12">
+
+							<div class="card">
+
+								<a id="about-config"><i class="fas fa-wrench"></i></a> <!-- Open configure modal for About Me section -->
+								<p class="card-title">About Me</p>
+
+								<div class="divider"></div>
+
+								<p class="card-content-title">Skills:</p>
+
+								<div class="divider"></div>
+
+								<p class="card-content-title">Which animal could you beat in a fight?:</p>
+
+								<div class="divider"></div>
+
+								<p class="card-content-title">What are your hobbies?:</p>
+							</div>
+						</div>
+
+						<div class="column is-12">
+
+							<div class="card">
+
+								<p class="card-title">Contact Details</p>
+
+								<div class="divider"></div>
+
+								<p class="card-content-title">Email:</p>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+				<div class="column is-6">
+
+					<div class="card">
+
+						<a id="details-config"><i class="fas fa-wrench"></i></a> <!-- Open configure modal for Apprenticeship Details section -->
+						<p class="card-title">Apprenticeship Details</p>
+
+						<p class="card-content-title">Programme:</p>
+
+						<div class="divider"></div>
+
+						<p class="card-content-title">Referral:</p>
+
+						<div class="divider"></div>
+
+						<p class="card-content-title">Start Date:</p>
+
+						<div class="divider"></div>
+
+					</div>
+
+				</div>
+
+			</div>
 
 		</div>
 
