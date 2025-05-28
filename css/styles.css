@@ -250,9 +250,14 @@
 		}
 
 	/* "BALTIC" */
-		.logo {
+		#nav-logo {
 			display: flex;
 			align-items: center;
+			margin-left: 250px;
+		}
+
+		#nav-logo-link:hover {
+			cursor: default;
 		}
 
 	/* ICONS */
