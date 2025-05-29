@@ -103,10 +103,52 @@
     margin-top: 10px;
     color: #666;
     font-style: italic;
-    cursor: pointer;
+    cursor: default;
+    padding: 5px;
+    border-radius: 4px;
 }
 
-/* Profile Cards Layout */
+.user-summary .edit-field {
+    margin-bottom: 15px;
+}
+
+.user-summary .edit-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-top: 5px;
+    background-color: white;
+    box-sizing: border-box;
+}
+
+.user-summary .character-count {
+    font-size: 12px;
+    color: #666;
+    text-align: right;
+    margin-top: 3px;
+    font-style: normal;
+}
+
+.user-summary .edit-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+
+.user-summary .edit-buttons .btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    margin: 0;
+    min-width: 70px;
+}
+
 .profile-cards {
     display: flex;
     gap: 20px;
@@ -312,7 +354,7 @@ select.edit-input option {
     }
 }
 
-.user-summary.loading p {
+.user-summary p.loading {
     background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
     background-size: 200% 100%;
     animation: loading 1.5s infinite;
@@ -320,6 +362,7 @@ select.edit-input option {
     height: 1em;
     width: 60%;
     color: transparent;
+    min-height: 1em;
 }
 
 .card-content-value.loading {
@@ -330,4 +373,5 @@ select.edit-input option {
     height: 1em;
     width: 80%;
     color: transparent;
+    min-height: 1em;
 }
