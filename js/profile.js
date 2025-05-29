@@ -245,10 +245,9 @@ function enterEditMode(card) {
     contentTitles.forEach(title => {
         const fieldName = title.textContent.replace(':', '');
         const valueElement = title.nextElementSibling;
-        const currentValue = valueElement && valueElement.classList.contains('card-content-value') && !valueElement.classList.contains('loading')
-            ? valueElement.textContent 
+        currentValues[fieldName] = valueElement && valueElement.classList.contains('card-content-value') && !valueElement.classList.contains('loading')
+            ? valueElement.textContent
             : '';
-        currentValues[fieldName] = currentValue;
     });
     
     // Get card title
@@ -446,7 +445,7 @@ function enterProfileInfoEditMode() {
     };
     
     // Create edit form for summary without the "Summary:" label
-    const editHTML = `
+    summaryElement.innerHTML = `
         <div class="edit-field">
             <input type="text" class="edit-input" data-field="summary" maxlength="40" value="${originalText === 'Summary' ? '' : originalText}" placeholder="Enter a brief summary (40 chars max)">
             <div class="character-count">
@@ -458,8 +457,6 @@ function enterProfileInfoEditMode() {
             <button class="btn btn-primary save-summary-edit">Save</button>
         </div>
     `;
-    
-    summaryElement.innerHTML = editHTML;
     
     // Add character counter functionality
     const input = summaryElement.querySelector('input[data-field="summary"]');
@@ -634,14 +631,13 @@ function enterApprenticeshipEditMode(card) {
     contentTitles.forEach(title => {
         const fieldName = title.textContent.replace(':', '');
         const valueElement = title.nextElementSibling;
-        const currentValue = valueElement && valueElement.classList.contains('card-content-value') && !valueElement.classList.contains('loading')
+        currentValues[fieldName] = valueElement && valueElement.classList.contains('card-content-value') && !valueElement.classList.contains('loading')
             ? valueElement.textContent
             : '';
-        currentValues[fieldName] = currentValue;
     });
 
     // Create edit form
-    let editHTML = `
+    card.innerHTML = `
         <a id="details-config"><i class="fas fa-wrench"></i></a>
         <p class="card-title">Apprenticeship Details</p>
         <div class="divider"></div>
@@ -678,8 +674,6 @@ function enterApprenticeshipEditMode(card) {
             <button class="btn btn-primary save-edit">Save</button>
         </div>
     `;
-
-    card.innerHTML = editHTML;
 
     // Add event listeners for buttons
     const cancelBtn = card.querySelector('.cancel-edit');
@@ -778,7 +772,7 @@ async function saveApprenticeshipChanges(card, overlay) {
         }
 
         // Create updated HTML with saved values
-        let updatedHTML = `
+        card.innerHTML = `
             <a id="details-config"><i class="fas fa-wrench"></i></a>
             <p class="card-title">Apprenticeship Details</p>
             <div class="divider"></div>
@@ -792,8 +786,6 @@ async function saveApprenticeshipChanges(card, overlay) {
             <p class="card-content-value">${updatedData['Start Date'] || ''}</p>
             <div class="divider"></div>
         `;
-
-        card.innerHTML = updatedHTML;
         card.style.position = '';
         card.style.zIndex = '';
         document.body.removeChild(overlay);
