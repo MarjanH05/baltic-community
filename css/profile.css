@@ -2,12 +2,13 @@
     background-color: #f0f2f5;
 }
 
+/* Header Card - Banner */
 .header-card {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    margin-bottom: 20px;
+    margin-bottom: 0;
     height: 200px;
     width: 100%;
 }
@@ -19,7 +20,7 @@
 
 .card-image .image.is-4by3 {
     height: 200px !important;
-    padding-bottom: 0 !important; /* Override Bulma's aspect ratio */
+    padding-bottom: 0 !important;
 }
 
 .card-image .image.is-4by3 img {
@@ -47,30 +48,32 @@
     justify-content: center;
 }
 
+/* Profile Info Card */
+.profile-info-card {
+    background-color: white;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
 #profile-avatar {
     background-color: purple;
     color: white;
     width: 100px;
-    height:100px;
+    height: 100px;
     font-size: 50px;
     border-radius: 50%;
-    margin-top: -5%;
+    margin-top: -50px;
     border: 2px solid white;
     box-shadow: 1px 1px 8px 1px grey;
-}
-
-.connected {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    background-color: white;
-}
-
-.bottom {
-    border-radius: 0 0 8px 8px;
-}
-
-.top {
-    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    position: relative;
+    z-index: 5;
 }
 
 #profile-name {
@@ -88,6 +91,7 @@
     background-color: #0077B5;
     color: white;
     padding: 10px;
+    border: none;
     border-radius: 5px;
     cursor: pointer;
     display: inline-block;
@@ -95,14 +99,235 @@
     margin-left: 125px;
 }
 
+.user-summary {
+    margin-top: 10px;
+    color: #666;
+    font-style: italic;
+    cursor: pointer;
+}
+
+/* Profile Cards Layout */
+.profile-cards {
+    display: flex;
+    gap: 20px;
+}
+
+.profile-cards-left {
+    flex: 1;
+}
+
+.profile-cards-right {
+    flex: 1;
+    max-width: calc(50% - 10px);
+}
+
+/* Individual Cards */
+.card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.card-content-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 8px;
+}
+
 .fa-wrench {
     color: var(--baltic-blue);
-    margin-left: 95%;
     position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+.fa-wrench:hover {
+    color: var(--baltic-hover);
 }
 
 .divider {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #ddd;
+    margin: 15px 0;
+    border: none;
+    border-top: 1px solid #eee;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .profile-cards {
+        flex-direction: column;
+    }
+
+    .profile-cards-right {
+        max-width: 100%;
+    }
+
+    #linkedin-update {
+        float: none;
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}
+.profile-cards-right .card {
+    /* Remove fixed height to allow cards to expand */
+    min-height: 230px; /* Set minimum height instead of fixed height */
+    height: auto; /* Allow height to expand as needed */
+}
+
+.edit-field {
+    margin-bottom: 15px; /* Increase spacing between fields */
+}
+
+.edit-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-top: 5px;
+    background-color: white;
+    box-sizing: border-box; /* Ensure padding is included in width calculation */
+}
+
+.edit-input:focus {
+    border-color: var(--baltic-blue);
+    box-shadow: 0 0 0 0.125em rgba(10, 14, 64, 0.25);
+    outline: none;
+}
+
+select.edit-input {
+    cursor: pointer;
+    height: auto; /* Allow select to size properly */
+    min-height: 38px; /* Ensure consistent minimum height */
+}
+
+select.edit-input option {
+    padding: 8px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background-color: var(--baltic-blue);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--baltic-hover);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.edit-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.edit-buttons .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    margin: 0;
+    min-width: 80px; /* Ensure buttons have consistent width */
+}
+
+.card-content-value {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 5px;
+    min-height: 20px;
+}
+#header-config {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 5;
+    color: var(--baltic-blue);
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+#header-config:hover {
+    color: var(--baltic-hover);
+}
+/* Skeleton loading styles */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 4px;
+    height: 1em;
+    width: 100%;
+}
+
+.skeleton.short {
+    width: 60%;
+}
+
+.skeleton.medium {
+    width: 80%;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.user-summary.loading p {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 4px;
+    height: 1em;
+    width: 60%;
+    color: transparent;
+}
+
+.card-content-value.loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 4px;
+    height: 1em;
+    width: 80%;
+    color: transparent;
 }
