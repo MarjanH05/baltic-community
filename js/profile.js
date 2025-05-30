@@ -291,18 +291,121 @@ const exitGenericEdit = (card, originalContent, overlay, exitFunction) => {
     }
 };
 
-const getEditFunctionForCard = (configIconId) => {
+getEditFunctionForCard = (configIconId) => {
     switch (configIconId) {
         case 'about-config':
             return () => enterEditMode(document.querySelector('#about-config').closest('.card'));
         case 'details-config':
             return () => enterApprenticeshipEditMode(document.querySelector('#details-config').closest('.card'));
         case 'contact-config':
-            return () => enterEditMode(document.querySelector('#contact-config').closest('.card'));
+            return () => enterContactEditMode(document.querySelector('#contact-config').closest('.card'));
         case 'header-config':
             return () => enterProfileInfoEditMode();
         default:
             return null;
+    }
+}
+
+// Custom edit mode for contact details that excludes email field from editing
+const enterContactEditMode = (card) => {
+    const overlay = createOverlay();
+    setCardEditMode(card);
+    
+    const originalContent = card.innerHTML;
+    const currentValues = extractCurrentValues(card);
+    
+    // Get current user email (read-only)
+    const currentUser = JSON.parse(localStorage.getItem('balticUser'));
+    const emailValue = currentUser?.email || 'No email available';
+    
+    // Create custom edit form with email as read-only display
+    card.innerHTML = `
+        <a id="contact-config"><i class="fas fa-wrench"></i></a>
+        <p class="card-title">Contact Details</p>
+        <div class="divider"></div>
+        <p class="card-content-title">Email:</p>
+        <p class="card-content-value">${emailValue}</p>
+        <div class="divider"></div>
+        <div class="edit-field">
+            <p class="card-content-title">Social Links:</p>
+            <input type="text" class="edit-input" data-field="Social Links" value="${currentValues['Social Links'] || ''}" placeholder="Enter your social media links">
+        </div>
+        <div class="edit-buttons">
+            <button class="btn btn-secondary cancel-edit">Cancel</button>
+            <button class="btn btn-primary save-edit">Save</button>
+        </div>
+    `;
+    
+    const cancelBtn = card.querySelector('.cancel-edit');
+    const saveBtn = card.querySelector('.save-edit');
+    
+    cancelBtn.addEventListener('click', () => {
+        exitContactEdit(card, originalContent, overlay);
+    });
+    
+    saveBtn.addEventListener('click', async () => {
+        try {
+            setButtonLoading(saveBtn, true);
+            
+            const socialLinksInput = card.querySelector('input[data-field="Social Links"]');
+            const dataToSave = {
+                'Social Links': socialLinksInput.value
+            };
+            
+            await saveUserProfileData(dataToSave);
+            
+            // Update the display
+            const savedData = await loadUserProfileData();
+            updateContactDetailsDisplay(savedData);
+            
+            removeOverlay(overlay);
+            resetCardMode(card);
+            
+            // Re-attach event listener
+            const contactConfig = document.getElementById('contact-config');
+            if (contactConfig) {
+                contactConfig.addEventListener('click', () => enterContactEditMode(card));
+            }
+            
+        } catch (error) {
+            setButtonLoading(saveBtn, false);
+            alert('Failed to save. Please try again.');
+            console.error('Error saving:', error);
+        }
+    });
+    
+    card.addEventListener('click', e => e.stopPropagation());
+    overlay.addEventListener('click', () => {
+        exitContactEdit(card, originalContent, overlay);
+    });
+};
+
+const exitContactEdit = (card, originalContent, overlay) => {
+    card.innerHTML = originalContent;
+    resetCardMode(card);
+    removeOverlay(overlay);
+    
+    // Re-attach event listener
+    const contactConfig = document.getElementById('contact-config');
+    if (contactConfig) {
+        contactConfig.addEventListener('click', () => enterContactEditMode(card));
+    }
+};
+
+// Function to update contact details display after editing
+const updateContactDetailsDisplay = (data) => {
+    const contactCard = document.querySelector('#contact-config').closest('.card');
+    const contentValues = contactCard.querySelectorAll('.card-content-value');
+    
+    // Email field is READ-ONLY - always show from current user data
+    if (contentValues[0]) {
+        const currentUser = JSON.parse(localStorage.getItem('balticUser'));
+        contentValues[0].textContent = currentUser?.email || 'No email available';
+    }
+    
+    // Update Social Links field with saved data
+    if (contentValues[1]) {
+        contentValues[1].textContent = data['Social Links'] || '';
     }
 };
 
@@ -336,7 +439,7 @@ const updateCardDisplay = (card, data, configIconId) => {
     }
 };
 
-const updateContactDetailsDisplay = () => {
+const updateContactDetailsDisplayOriginal = () => {
     const contactCard = document.querySelector('#contact-config')?.closest('.card');
     if (!contactCard) return;
     
@@ -452,7 +555,7 @@ const loadProfileData = async () => {
                     summaryElement.textContent = 'Summary';
                 }
             }
-            updateContactDetailsDisplay();
+            updateContactDetailsDisplay(profileData);
         }, 1000);
         
     } catch (error) {
@@ -463,7 +566,7 @@ const loadProfileData = async () => {
             if (summaryElement) {
                 summaryElement.textContent = 'Summary';
             }
-            updateContactDetailsDisplay();
+            updateContactDetailsDisplayOriginal();
         }, 1000);
     }
 };
@@ -685,7 +788,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (contactConfigIcon) {
         const contactCard = contactConfigIcon.closest('.card');
         contactConfigIcon.addEventListener('click', function() {
-            enterEditMode(contactCard);
+            enterContactEditMode(contactCard);
         });
     }
     

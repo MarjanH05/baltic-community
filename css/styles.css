@@ -15,6 +15,25 @@
 		color: inherit;
 	}
 
+/* BASE STYLING */
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+		font-family: Arial, sans-serif;
+	}
+
+	/* Ensure html and body cover full height */
+	html, body {
+		height: 100%;
+		background-color: #f0f2f5;
+	}
+
+	#main-app {
+		background-color: #f0f2f5;
+		min-height: 100vh; /* Ensure it covers at least the full viewport height */
+	}
+
 /* Custom styles */
 	.card {
 		background-color: white;
@@ -232,18 +251,6 @@
 
 	.navbar .title {
 		color: white !important;
-	}
-
-/* BASE STYLING */
-	* {
-		margin: 0;
-		padding: 0;
-		box-sizing: border-box;
-		font-family: Arial, sans-serif;
-	}
-
-	#main-app {
-		background-color: #f0f2f5;
 	}
 
 	/* NAVIGATION STYLING */
@@ -1153,42 +1160,3 @@
 			font-weight: bold;
 			transition: background-color 0.2s;
 		}
-
-		.custom-popup-cancel {
-			background-color: #e0e0e0;
-			color: #333;
-		}
-
-		.custom-popup-cancel:hover {
-			background-color: #d0d0d0;
-		}
-
-		.custom-popup-confirm {
-			background-color: #b00020;
-			color: white;
-		}
-
-		.custom-popup-confirm:hover {
-			background-color: #ff3232;
-		}
-
-	#my-profile-link a:hover {
-		color: white;
-	}
-
-	.card-title {
-		font-weight: bold;
-		font-size: 18px;
-		text-decoration: underline;
-		margin-bottom: 10px;
-	}
-
-	.card-content-title {
-		font-weight: bold;
-		font-size: 16px;
-	}
-
-	.is-right {
-		float: right;
-
-	}
