@@ -102,3 +102,60 @@ button {
   box-shadow: 0 0 8px 2px #39ff14, 0 0 2px 1px #0f0;
   vertical-align: middle;
 }
+
+.message-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.chat-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 8px;
+    flex-shrink: 0; 
+}
+
+.chat-avatar-initial {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--baltic-purple);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color: #fff;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.message-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-subtext {
+    font-size: 0.8em;
+    color: #777;
+    margin-top: 2px;
+    margin-bottom: 5px; 
+}
+
+.self-message {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+    .self-message .chat-avatar, .self-message .chat-avatar-initial {
+        order: 2; 
+        margin-left: 8px;
+        margin-right: 0;
+        display: flex;
+    }
+
+    .self-message .message-content {
+        align-items: flex-end; 
+    }
