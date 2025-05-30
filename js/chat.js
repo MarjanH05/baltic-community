@@ -2,11 +2,8 @@ const BACKEND_URL = "https://baltic-community.onrender.com"; // Set your backend
     let socket;
     let username = '';
     const messagesDiv = document.getElementById('messages');
-    const usernameInput = document.getElementById('username');
-    const joinBtn = document.getElementById('join');
     const chatForm = document.getElementById('chat-form');
     const input = document.getElementById('input');
-    const usernameContainer = document.getElementById('username-container');
 
     function appendMessage(msg, isSelf = false) {
         const div = document.createElement('div');
@@ -60,11 +57,8 @@ const BACKEND_URL = "https://baltic-community.onrender.com"; // Set your backend
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
-    joinBtn.onclick = function() {
-        const name = usernameInput.value.trim();
-        if (!name) return;
+    function joinChat(name) {
         username = name;
-        usernameContainer.style.display = 'none';
         chatForm.style.display = '';
         // Show connecting message
         appendMessage({text: 'Connecting to server...', system: true});
@@ -87,7 +81,7 @@ const BACKEND_URL = "https://baltic-community.onrender.com"; // Set your backend
         if (chatRoomTitle && !document.getElementById('chat-status-dot')) {
             const dot = document.createElement('span');
             dot.id = 'chat-status-dot';
-            dot.className = 'chat-status-dot'; // Add class for CSS styling
+            dot.className = 'chat-status-dot';
             chatRoomTitle.appendChild(dot);
         }
     };
@@ -99,3 +93,14 @@ const BACKEND_URL = "https://baltic-community.onrender.com"; // Set your backend
         socket.emit('chat message', {username, text});
         input.value = '';
     };
+
+    // I added a small delay to ensure script.js has loaded and `currentUser` is defined.
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            if (currentUser) {
+                joinChat(currentUser.name);
+            } else {
+                window.location.href = 'index.html';
+            }
+        }, 100);
+    });
