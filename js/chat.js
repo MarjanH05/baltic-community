@@ -1,4 +1,4 @@
-const BACKEND_URL = "https://baltic-community.onrender.com"; 
+const BACKEND_URL = "https://baltic-community-xm74.onrender.com";
     let socket;
     let username = '';
     const messagesDiv = document.getElementById('messages');
