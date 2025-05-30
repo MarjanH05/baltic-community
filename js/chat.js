@@ -1,60 +1,78 @@
-const BACKEND_URL = "https://baltic-community.onrender.com"; // Set your backend URL
+const BACKEND_URL = "https://baltic-community.onrender.com"; 
     let socket;
     let username = '';
     const messagesDiv = document.getElementById('messages');
-    const usernameInput = document.getElementById('username');
-    const joinBtn = document.getElementById('join');
     const chatForm = document.getElementById('chat-form');
     const input = document.getElementById('input');
-    const usernameContainer = document.getElementById('username-container');
 
     function appendMessage(msg, isSelf = false) {
         const div = document.createElement('div');
+        div.classList.add('message-item'); 
+
         if (msg.system) {
             div.textContent = msg.text;
             // Add special styling for system messages
             div.className = 'system-message';
-            
+
             // Special styling for connecting message
             if (msg.text === 'Connecting to server...') {
                 div.className += ' connecting-message';
-                
+
                 div.textContent = '';
                 const container = document.createElement('div');
                 container.className = 'container';
-                
+
                 // Connecting text
                 const textSpan = document.createElement('span');
                 textSpan.textContent = msg.text;
                 container.appendChild(textSpan);
-                
+
                 // Connecting spinner
                 const spinner = document.createElement('div');
                 spinner.className = 'spinner';
                 container.appendChild(spinner);
-                
+
                 div.appendChild(container);
-                
+
                 // Ensure the messages div has position relative for proper absolute positioning
                 messagesDiv.style.position = 'relative';
             }
         } else {
+            const user = users.find(u => u.name === msg.username);
+            if (user && user.avatar) {
+                const avatarImg = document.createElement('img');
+                avatarImg.src = user.avatar;
+                avatarImg.alt = msg.username;
+                avatarImg.classList.add('chat-avatar');
+                div.appendChild(avatarImg);
+            } else {
+                const avatarInitial = document.createElement('span');
+                avatarInitial.textContent = msg.username.charAt(0);
+                avatarInitial.classList.add('chat-avatar-initial');
+                div.appendChild(avatarInitial);
+            }
+
+            const messageContentDiv = document.createElement('div');
+            messageContentDiv.classList.add('message-content');
+
             const usernameSpan = document.createElement('span');
-            usernameSpan.textContent = `${msg.username}: `;
+            usernameSpan.textContent = isSelf ? "You" : msg.username; 
             usernameSpan.className = 'username';
+            messageContentDiv.appendChild(usernameSpan);
 
             // Create a span for the message text
             const messageSpan = document.createElement('span');
             messageSpan.textContent = msg.text;
             messageSpan.className = 'message-text';
+            messageContentDiv.appendChild(messageSpan);
 
-            // Append both spans to the div
-            div.appendChild(usernameSpan);
-            div.appendChild(messageSpan);
+            div.appendChild(messageContentDiv);
+
+
+            if (isSelf) {
+                div.classList.add('self-message');
+            }
         }
-
-        if (isSelf) div.style.fontWeight = 'bold';
-        if (isSelf) div.style.fontStyle = 'italic';
 
         messagesDiv.appendChild(div);
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
