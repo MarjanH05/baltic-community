@@ -60,11 +60,8 @@ const BACKEND_URL = "https://baltic-community.onrender.com"; // Set your backend
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
-    joinBtn.onclick = function() {
-        const name = usernameInput.value.trim();
-        if (!name) return;
+    function joinChat(name) {
         username = name;
-        usernameContainer.style.display = 'none';
         chatForm.style.display = '';
         // Show connecting message
         appendMessage({text: 'Connecting to server...', system: true});
@@ -87,7 +84,7 @@ const BACKEND_URL = "https://baltic-community.onrender.com"; // Set your backend
         if (chatRoomTitle && !document.getElementById('chat-status-dot')) {
             const dot = document.createElement('span');
             dot.id = 'chat-status-dot';
-            dot.className = 'chat-status-dot'; // Add class for CSS styling
+            dot.className = 'chat-status-dot';
             chatRoomTitle.appendChild(dot);
         }
     };
@@ -99,3 +96,14 @@ const BACKEND_URL = "https://baltic-community.onrender.com"; // Set your backend
         socket.emit('chat message', {username, text});
         input.value = '';
     };
+
+    // I added a small delay to ensure script.js has loaded and `currentUser` is defined.
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            if (currentUser) {
+                joinChat(currentUser.name);
+            } else {
+                window.location.href = 'index.html';
+            }
+        }, 100);
+    });
