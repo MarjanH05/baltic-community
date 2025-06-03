@@ -431,8 +431,8 @@ const enterContactEditMode = (card) => {
 // Function to add a new social link input
 const addSocialLink = (type, container) => {
     const index = container.children.length;
-    let placeholder = '';
-    let defaultValue = '';
+    let placeholder;
+    let defaultValue;
 
     if (type === 'linkedin') {
         defaultValue = 'https://www.linkedin.com/in/';
@@ -444,7 +444,7 @@ const addSocialLink = (type, container) => {
 
     const linkItem = document.createElement('div');
     linkItem.className = 'social-link-item';
-    linkItem.setAttribute('data-index', index);
+    linkItem.setAttribute('data-index', index.toString());
     linkItem.innerHTML = `
         <input type="text" class="edit-input social-link-input" value="${defaultValue}" placeholder="${placeholder}">
         <button type="button" class="remove-link-btn" onclick="removeSocialLink(${index})">
@@ -607,21 +607,6 @@ const formatDateForInput = (dateString) => {
 
     return '';
 };
-
-const formatDateForDisplay = (dateString) => {
-    if (!dateString) return '';
-
-    const parts = dateString.split('-');
-    if (parts.length === 3) {
-        const year = parts[0];
-        const month = parts[1];
-        const day = parts[2];
-        return `${day}/${month}/${year}`;
-    }
-
-    return dateString;
-};
-
 // Main Profile Functions
 const loadProfileData = async () => {
     try {
