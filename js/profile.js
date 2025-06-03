@@ -312,7 +312,11 @@ const enterContactEditMode = (card) => {
     const currentUser = JSON.parse(localStorage.getItem('balticUser'));
     const emailValue = currentUser?.email || 'No email available';
     
-    // Create custom edit form with email as read-only display
+    // Parse existing social links
+    const existingSocialLinks = currentValues['Social Links'] || '';
+    const socialLinksArray = existingSocialLinks ? existingSocialLinks.split(', ').filter(link => link.trim()) : [];
+    
+    // Create custom edit form with social links management
     card.innerHTML = `
         <a id="contact-config"><i class="fas fa-wrench"></i></a>
         <p class="card-title">Contact Details</p>
@@ -322,13 +326,62 @@ const enterContactEditMode = (card) => {
         <div class="divider"></div>
         <div class="edit-field">
             <p class="card-content-title">Social Links:</p>
-            <input type="text" class="edit-input" data-field="Social Links" value="${currentValues['Social Links'] || ''}" placeholder="Enter your social media links">
+            <div class="social-links-container" id="social-links-container">
+                ${socialLinksArray.map((link, index) => `
+                    <div class="social-link-item" data-index="${index}">
+                        <input type="text" class="edit-input social-link-input" value="${link}" placeholder="Enter social link">
+                        <button type="button" class="remove-link-btn" onclick="removeSocialLink(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="add-social-link">
+                <button type="button" class="btn btn-secondary add-link-btn" id="add-link-btn">
+                    <i class="fas fa-plus"></i> Add Social Link
+                </button>
+                <div class="social-dropdown hidden" id="social-dropdown">
+                    <div class="dropdown-item" data-type="linkedin">
+                        <i class="fab fa-linkedin"></i> LinkedIn
+                    </div>
+                    <div class="dropdown-item" data-type="other">
+                        <i class="fas fa-link"></i> Other
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="edit-buttons">
             <button class="btn btn-secondary cancel-edit">Cancel</button>
             <button class="btn btn-primary save-edit">Save</button>
         </div>
     `;
+    
+    // Add event listeners for social links functionality
+    const addLinkBtn = card.querySelector('#add-link-btn');
+    const socialDropdown = card.querySelector('#social-dropdown');
+    const socialLinksContainer = card.querySelector('#social-links-container');
+    
+    // Toggle dropdown
+    addLinkBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        socialDropdown.classList.toggle('hidden');
+    });
+    
+    // Handle dropdown selection
+    socialDropdown.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const dropdownItem = e.target.closest('.dropdown-item');
+        if (dropdownItem) {
+            const type = dropdownItem.getAttribute('data-type');
+            addSocialLink(type, socialLinksContainer);
+            socialDropdown.classList.add('hidden');
+        }
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', () => {
+        socialDropdown.classList.add('hidden');
+    });
     
     const cancelBtn = card.querySelector('.cancel-edit');
     const saveBtn = card.querySelector('.save-edit');
@@ -341,9 +394,15 @@ const enterContactEditMode = (card) => {
         try {
             setButtonLoading(saveBtn, true);
             
-            const socialLinksInput = card.querySelector('input[data-field="Social Links"]');
+            // Collect all social link inputs
+            const socialLinkInputs = card.querySelectorAll('.social-link-input');
+            const socialLinks = Array.from(socialLinkInputs)
+                .map(input => input.value.trim())
+                .filter(link => link)
+                .join(', ');
+            
             const dataToSave = {
-                'Social Links': socialLinksInput.value
+                'Social Links': socialLinks
             };
             
             await saveUserProfileData(dataToSave);
@@ -369,11 +428,51 @@ const enterContactEditMode = (card) => {
     });
 };
 
+// Function to add a new social link input
+const addSocialLink = (type, container) => {
+    const index = container.children.length;
+    let placeholder = '';
+    let defaultValue = '';
+
+    if (type === 'linkedin') {
+        defaultValue = 'https://www.linkedin.com/in/';
+        placeholder = 'https://www.linkedin.com/in/your-profile';
+    } else {
+        defaultValue = 'https://';
+        placeholder = 'https://your-website.com';
+    }
+
+    const linkItem = document.createElement('div');
+    linkItem.className = 'social-link-item';
+    linkItem.setAttribute('data-index', index);
+    linkItem.innerHTML = `
+        <input type="text" class="edit-input social-link-input" value="${defaultValue}" placeholder="${placeholder}">
+        <button type="button" class="remove-link-btn" onclick="removeSocialLink(${index})">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+
+    container.appendChild(linkItem);
+
+    // Focus on the new input and position cursor at the end
+    const newInput = linkItem.querySelector('input');
+    newInput.focus();
+    newInput.setSelectionRange(newInput.value.length, newInput.value.length);
+};
+
+// Function to remove a social link
+const removeSocialLink = (index) => {
+    const linkItem = document.querySelector(`[data-index="${index}"]`);
+    if (linkItem) {
+        linkItem.remove();
+    }
+};
+
 const exitContactEdit = (card, originalContent, overlay) => {
     card.innerHTML = originalContent;
     resetCardMode(card);
     removeOverlay(overlay);
-    
+
     // Re-attach event listener
     const contactConfig = document.getElementById('contact-config');
     if (contactConfig) {
@@ -385,7 +484,7 @@ const exitContactEdit = (card, originalContent, overlay) => {
 const updateContactDetailsDisplay = (data) => {
     const contactCard = document.querySelector('#contact-config').closest('.card');
     const currentUser = JSON.parse(localStorage.getItem('balticUser'));
-    
+
     // Rebuild the entire card structure
     contactCard.innerHTML = `
         <a id="contact-config"><i class="fas fa-wrench"></i></a>
@@ -398,7 +497,7 @@ const updateContactDetailsDisplay = (data) => {
         <p class="card-content-value">${data && data['Social Links'] || ''}</p>
         <div class="divider"></div>
     `;
-    
+
     // Re-attach event listener
     const contactConfig = contactCard.querySelector('#contact-config');
     if (contactConfig) {
@@ -409,13 +508,13 @@ const updateContactDetailsDisplay = (data) => {
 // Display Update Functions
 const updateCardDisplay = (card, data, configIconId) => {
     const cardTitle = card.querySelector('.card-title').textContent;
-    
+
     let updatedHTML = `
         <a id="${configIconId}"><i class="fas fa-wrench"></i></a>
         <p class="card-title">${cardTitle}</p>
         <div class="divider"></div>
     `;
-    
+
     Object.keys(data).forEach(fieldName => {
         updatedHTML += `
             <p class="card-content-title">${fieldName}:</p>
@@ -423,9 +522,9 @@ const updateCardDisplay = (card, data, configIconId) => {
             <div class="divider"></div>
         `;
     });
-    
+
     card.innerHTML = updatedHTML;
-    
+
     // Re-attach event listener
     const configIcon = card.querySelector(`#${configIconId}`);
     if (configIcon) {
@@ -439,10 +538,10 @@ const updateCardDisplay = (card, data, configIconId) => {
 const updateContactDetailsDisplayOriginal = () => {
     const contactCard = document.querySelector('#contact-config')?.closest('.card');
     if (!contactCard) return;
-    
+
     const currentUser = JSON.parse(localStorage.getItem('balticUser'));
     if (!currentUser) return;
-    
+
     const emailValueElement = contactCard.querySelector('.card-content-value');
     if (emailValueElement) {
         emailValueElement.textContent = currentUser.email;
@@ -453,25 +552,25 @@ const updateContactDetailsDisplayOriginal = () => {
 const updateProfileDisplay = (profileData) => {
     const aboutCard = document.querySelector('#about-config')?.closest('.card');
     if (!aboutCard) return;
-    
+
     const contentTitles = aboutCard.querySelectorAll('.card-content-title');
     const cardData = {};
-    
+
     contentTitles.forEach(title => {
         const fieldName = title.textContent.replace(':', '');
         cardData[fieldName] = profileData[fieldName] || '';
     });
-    
+
     updateCardDisplay(aboutCard, cardData, 'about-config');
 };
 
 const updateApprenticeshipDetailsDisplay = (profileData) => {
     const detailsCard = document.querySelector('#details-config')?.closest('.card');
     if (!detailsCard) return;
-    
+
     const contentValues = detailsCard.querySelectorAll('.card-content-value');
     const titles = detailsCard.querySelectorAll('.card-content-title');
-    
+
     titles.forEach((title, index) => {
         const fieldName = title.textContent.replace(':', '');
         const value = profileData[fieldName] || '';
@@ -537,9 +636,9 @@ const loadProfileData = async () => {
             }, 1000);
             return;
         }
-        
+
         const profileData = await loadUserProfileData();
-        
+
         setTimeout(() => {
             removeSkeletonLoading();
             if (profileData && Object.keys(profileData).length > 0) {
@@ -554,7 +653,7 @@ const loadProfileData = async () => {
             }
             updateContactDetailsDisplay(profileData);
         }, 1000);
-        
+
     } catch (error) {
         console.log('Could not load profile data:', error);
         setTimeout(() => {
@@ -572,14 +671,14 @@ const loadProfileData = async () => {
 const enterEditMode = (card) => {
     const currentValues = extractCurrentValues(card);
     const contentTitles = card.querySelectorAll('.card-content-title');
-    
+
     const fields = Array.from(contentTitles).map(title => ({
         name: title.textContent.replace(':', ''),
         label: title.textContent.replace(':', ''),
         type: 'text',
         value: currentValues[title.textContent.replace(':', '')]
     }));
-    
+
     handleGenericEdit(card, fields, async (card) => {
         const updatedData = extractInputValues(card);
         await saveUserProfileData(updatedData);
@@ -590,11 +689,11 @@ const enterEditMode = (card) => {
 const enterProfileInfoEditMode = () => {
     const summaryElement = document.querySelector('.user-summary');
     if (!summaryElement) return;
-    
+
     const profileInfoCard = document.querySelector('.profile-info-card');
     const summaryParagraph = summaryElement.querySelector('p');
     const originalText = summaryParagraph.textContent;
-    
+
     // Hide profile elements during edit
     const elementsToHide = [
         profileInfoCard.querySelector('.user-avatar'),
@@ -602,7 +701,7 @@ const enterProfileInfoEditMode = () => {
         profileInfoCard.querySelector('#linkedin-update'),
         profileInfoCard.querySelector('#header-config')
     ];
-    
+
     const fields = [{
         name: 'summary',
         type: 'text-with-counter',
@@ -610,30 +709,30 @@ const enterProfileInfoEditMode = () => {
         placeholder: 'Enter a brief summary (40 chars max)',
         maxLength: 40
     }];
-    
+
     const overlay = createOverlay();
     profileInfoCard.style.position = 'relative';
     profileInfoCard.style.zIndex = '1000';
-    
+
     // Hide elements
     elementsToHide.forEach(el => {
         if (el) el.style.display = 'none';
     });
-    
+
     summaryElement.innerHTML = createEditForm(fields, '', '');
-    
+
     // Add character counter functionality
     const input = summaryElement.querySelector('input[data-field="summary"]');
     const charCount = summaryElement.querySelector('#char-count');
-    
+
     input.addEventListener('input', function() {
         charCount.textContent = input.value.length;
         charCount.style.color = input.value.length >= 35 ? '#ff6b6b' : '#666';
     });
-    
+
     const cancelBtn = summaryElement.querySelector('.cancel-edit');
     const saveBtn = summaryElement.querySelector('.save-edit');
-    
+
     const exitSummaryEdit = () => {
         summaryElement.innerHTML = `<p>${originalText}</p>`;
         elementsToHide.forEach(el => {
@@ -644,51 +743,51 @@ const enterProfileInfoEditMode = () => {
         removeOverlay(overlay);
         summaryElement.style.cursor = 'default';
     };
-    
+
     cancelBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         exitSummaryEdit();
     });
-    
+
     saveBtn.addEventListener('click', async (e) => {
         e.preventDefault();
         e.stopPropagation();
-        
+
         try {
             setButtonLoading(saveBtn, true);
             const summaryText = input.value.trim();
             await saveUserProfileData({ summary: summaryText });
-            
+
             const displayText = summaryText || 'Summary';
             summaryElement.innerHTML = `<p>${displayText}</p>`;
-            
+
             elementsToHide.forEach(el => {
                 if (el) el.style.display = '';
             });
-            
+
             profileInfoCard.style.position = '';
             profileInfoCard.style.zIndex = '';
             removeOverlay(overlay);
             summaryElement.style.cursor = 'default';
-            
+
         } catch (error) {
             setButtonLoading(saveBtn, false);
             alert('Failed to save summary. Please try again.');
             console.error('Error saving summary:', error);
         }
     });
-    
+
     summaryElement.addEventListener('click', e => e.stopPropagation());
     overlay.addEventListener('click', exitSummaryEdit);
-    
+
     input.focus();
     input.setSelectionRange(input.value.length, input.value.length);
 };
 
 const enterApprenticeshipEditMode = (card) => {
     const currentValues = extractCurrentValues(card);
-    
+
     const fields = [
         {
             name: 'Programme',
@@ -721,7 +820,7 @@ const enterApprenticeshipEditMode = (card) => {
             placeholder: 'Enter start date (e.g., 01/09/2024)'
         }
     ];
-    
+
     handleGenericEdit(card, fields, async (card) => {
         const updatedData = extractInputValues(card);
         await saveUserProfileData(updatedData);
@@ -735,37 +834,37 @@ document.addEventListener('DOMContentLoaded', function() {
     const headerConfigIcon = document.getElementById('header-config');
     const detailsConfigIcon = document.getElementById('details-config');
     const contactConfigIcon = document.getElementById('contact-config');
-    
+
     initializeSkeletonLoading();
     loadProfileData().then(_r => {});
-    
+
     if (aboutConfigIcon) {
         const aboutCard = aboutConfigIcon.closest('.card');
         aboutConfigIcon.addEventListener('click', function() {
             enterEditMode(aboutCard);
         });
     }
-    
+
     if (headerConfigIcon) {
         headerConfigIcon.addEventListener('click', function() {
             enterProfileInfoEditMode();
         });
     }
-    
+
     if (detailsConfigIcon) {
         const detailsCard = detailsConfigIcon.closest('.card');
         detailsConfigIcon.addEventListener('click', function() {
             enterApprenticeshipEditMode(detailsCard);
         });
     }
-    
+
     if (contactConfigIcon) {
         const contactCard = contactConfigIcon.closest('.card');
         contactConfigIcon.addEventListener('click', function() {
             enterContactEditMode(contactCard);
         });
     }
-    
+
     // Remove any hover styling from summary
     const summaryElement = document.querySelector('.user-summary');
     if (summaryElement) {
