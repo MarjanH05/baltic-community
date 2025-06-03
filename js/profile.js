@@ -65,13 +65,7 @@ const extractInputValues = (card) => {
     
     inputs.forEach(input => {
         const fieldName = input.getAttribute('data-field');
-        let value = input.value;
-        
-        if (fieldName === 'Start Date' && value) {
-            value = formatDateForDisplay(value);
-        }
-        
-        values[fieldName] = value;
+        values[fieldName] = input.value;
     });
     
     return values;
@@ -719,39 +713,16 @@ const enterApprenticeshipEditMode = (card) => {
         {
             name: 'Start Date',
             label: 'Start Date',
-            type: 'date',
+            type: 'text',
             value: currentValues['Start Date'],
-            placeholder: 'Select start date'
+            placeholder: 'Enter start date (e.g., 01/09/2024)'
         }
     ];
     
     handleGenericEdit(card, fields, async (card) => {
         const updatedData = extractInputValues(card);
         await saveUserProfileData(updatedData);
-
-        // Create updated HTML specifically for apprenticeship details
-        card.innerHTML = `
-            <a id="details-config"><i class="fas fa-wrench"></i></a>
-            <p class="card-title">Apprenticeship Details</p>
-            <div class="divider"></div>
-            <p class="card-content-title">Programme:</p>
-            <p class="card-content-value">${updatedData['Programme'] || ''}</p>
-            <div class="divider"></div>
-            <p class="card-content-title">Referral:</p>
-            <p class="card-content-value">${updatedData['Referral'] || ''}</p>
-            <div class="divider"></div>
-            <p class="card-content-title">Start Date:</p>
-            <p class="card-content-value">${updatedData['Start Date'] || ''}</p>
-            <div class="divider"></div>
-        `;
-
-        // Re-attach event listener
-        const detailsConfigIcon = card.querySelector('#details-config');
-        if (detailsConfigIcon) {
-            detailsConfigIcon.addEventListener('click', function () {
-                enterApprenticeshipEditMode(card);
-            });
-        }
+        updateCardDisplay(card, updatedData, 'details-config');
     }).then(_r => {});
 };
 
