@@ -348,18 +348,13 @@ const enterContactEditMode = (card) => {
             
             await saveUserProfileData(dataToSave);
             
-            // Update the display
-            const savedData = await loadUserProfileData();
-            updateContactDetailsDisplay(savedData);
-            
+            // Remove overlay and reset card mode BEFORE updating display
             removeOverlay(overlay);
             resetCardMode(card);
             
-            // Re-attach event listener
-            const contactConfig = document.getElementById('contact-config');
-            if (contactConfig) {
-                contactConfig.addEventListener('click', () => enterContactEditMode(card));
-            }
+            // Update the display
+            const savedData = await loadUserProfileData();
+            updateContactDetailsDisplay(savedData);
             
         } catch (error) {
             setButtonLoading(saveBtn, false);
@@ -389,17 +384,25 @@ const exitContactEdit = (card, originalContent, overlay) => {
 // Function to update contact details display after editing
 const updateContactDetailsDisplay = (data) => {
     const contactCard = document.querySelector('#contact-config').closest('.card');
-    const contentValues = contactCard.querySelectorAll('.card-content-value');
+    const currentUser = JSON.parse(localStorage.getItem('balticUser'));
     
-    // Email field is READ-ONLY - always show from current user data
-    if (contentValues[0]) {
-        const currentUser = JSON.parse(localStorage.getItem('balticUser'));
-        contentValues[0].textContent = currentUser?.email || 'No email available';
-    }
+    // Rebuild the entire card structure
+    contactCard.innerHTML = `
+        <a id="contact-config"><i class="fas fa-wrench"></i></a>
+        <p class="card-title">Contact Details</p>
+        <div class="divider"></div>
+        <p class="card-content-title">Email:</p>
+        <p class="card-content-value">${currentUser?.email || 'No email available'}</p>
+        <div class="divider"></div>
+        <p class="card-content-title">Social Links:</p>
+        <p class="card-content-value">${data && data['Social Links'] || ''}</p>
+        <div class="divider"></div>
+    `;
     
-    // Update Social Links field with saved data
-    if (contentValues[1]) {
-        contentValues[1].textContent = data['Social Links'] || '';
+    // Re-attach event listener
+    const contactConfig = contactCard.querySelector('#contact-config');
+    if (contactConfig) {
+        contactConfig.addEventListener('click', () => enterContactEditMode(contactCard));
     }
 };
 
