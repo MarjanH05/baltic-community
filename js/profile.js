@@ -1,3 +1,4 @@
+// Configuration
 const BACKEND_URL = "https://baltic-community-xm74.onrender.com";
 
 // Utility Functions
@@ -72,25 +73,22 @@ const extractInputValues = (card) => {
 };
 
 // Data Management
+
 const loadUserProfileData = async () => {
     const currentUser = JSON.parse(localStorage.getItem('balticUser'));
     if (!currentUser) return null;
 
-    // Try backend first
     try {
         const response = await fetch(`${BACKEND_URL}/api/profile/${currentUser.id}`);
         if (response.ok) {
             return await response.json();
         } else {
-            // Backend responded but with error status
             console.log('Stored in localStorage - 404 is due to fallback...');
         }
     } catch (error) {
-        // Network or other error
         console.log('Stored in localStorage - Network or other error...');
     }
 
-    // Fall back to localStorage
     const localData = localStorage.getItem(`profileData_${currentUser.id}`);
     return localData ? JSON.parse(localData) : {};
 };
@@ -101,14 +99,11 @@ const saveUserProfileData = async (updatedData) => {
         throw new Error('Please log in to save profile data');
     }
 
-    // Get existing data and merge
     const existingData = await loadUserProfileData() || {};
     const mergedData = { ...existingData, ...updatedData };
 
-    // Save to localStorage as backup
     localStorage.setItem(`profileData_${currentUser.id}`, JSON.stringify(mergedData));
 
-    // Try to save to backend
     try {
         await fetch(`${BACKEND_URL}/api/profile/${currentUser.id}`, {
             method: 'POST',
@@ -122,16 +117,59 @@ const saveUserProfileData = async (updatedData) => {
     return mergedData;
 };
 
+const loadProfileData = async () => {
+    try {
+        const currentUser = JSON.parse(localStorage.getItem('balticUser'));
+        if (!currentUser) {
+            setTimeout(() => {
+                removeSkeletonLoading();
+                const summaryElement = document.querySelector('.user-summary p');
+                if (summaryElement) {
+                    summaryElement.textContent = 'Summary';
+                }
+            }, 1000);
+            return;
+        }
+
+        const profileData = await loadUserProfileData();
+
+        setTimeout(() => {
+            removeSkeletonLoading();
+            if (profileData && Object.keys(profileData).length > 0) {
+                updateProfileDisplay(profileData);
+                updateProfileInfoDisplay(profileData);
+                updateApprenticeshipDetailsDisplay(profileData);
+            } else {
+                const summaryElement = document.querySelector('.user-summary p');
+                if (summaryElement) {
+                    summaryElement.textContent = 'Summary';
+                }
+            }
+            updateContactDetailsDisplay(profileData);
+        }, 1000);
+
+    } catch (error) {
+        console.log('Could not load profile data:', error);
+        setTimeout(() => {
+            removeSkeletonLoading();
+            const summaryElement = document.querySelector('.user-summary p');
+            if (summaryElement) {
+                summaryElement.textContent = 'Summary';
+            }
+            updateContactDetailsDisplayOriginal();
+        }, 1000);
+    }
+};
+
 // Skeleton Loading
+
 const initializeSkeletonLoading = () => {
-    // Add skeleton loading to summary
     const summaryElement = document.querySelector('.user-summary p');
     if (summaryElement) {
         summaryElement.classList.add('loading');
         summaryElement.textContent = '';
     }
     
-    // Add skeleton loading to all card-content-value elements
     const contentValues = document.querySelectorAll('.card-content-value');
     contentValues.forEach(element => {
         element.classList.add('loading');
@@ -140,13 +178,11 @@ const initializeSkeletonLoading = () => {
 };
 
 const removeSkeletonLoading = () => {
-    // Remove skeleton loading from summary
     const summaryElement = document.querySelector('.user-summary p');
     if (summaryElement) {
         summaryElement.classList.remove('loading');
     }
     
-    // Remove skeleton loading from all card-content-value elements
     const contentValues = document.querySelectorAll('.card-content-value');
     contentValues.forEach(element => {
         element.classList.remove('loading');
@@ -154,6 +190,7 @@ const removeSkeletonLoading = () => {
 };
 
 // Edit Form Creation
+
 const createEditForm = (fields, cardTitle, configIconId) => {
     let editHTML = `
         <a id="${configIconId}"><i class="fas fa-wrench"></i></a>
@@ -214,6 +251,7 @@ const createEditForm = (fields, cardTitle, configIconId) => {
 };
 
 // Generic Edit Handler
+
 const handleGenericEdit = async (card, fields, onSave, exitFunction) => {
     const overlay = createOverlay();
     setCardEditMode(card);
@@ -224,18 +262,16 @@ const handleGenericEdit = async (card, fields, onSave, exitFunction) => {
     
     card.innerHTML = createEditForm(fields, cardTitle, configIconId);
     
-    // Add character counter if needed
     const textWithCounterField = fields.find(f => f.type === 'text-with-counter');
     if (textWithCounterField) {
         const input = card.querySelector(`input[data-field="${textWithCounterField.name}"]`);
         const charCount = card.querySelector('#char-count');
         
-        input.addEventListener('input', function() {
+        input.addEventListener('input', () => {
             charCount.textContent = input.value.length;
             charCount.style.color = input.value.length >= (textWithCounterField.maxLength - 5) ? '#ff6b6b' : '#666';
         });
         
-        // Focus and position cursor at end
         input.focus();
         input.setSelectionRange(input.value.length, input.value.length);
     }
@@ -274,7 +310,6 @@ const exitGenericEdit = (card, originalContent, overlay, exitFunction) => {
     if (exitFunction) {
         exitFunction();
     } else {
-        // Re-attach default event listener
         const configIcon = card.querySelector('a[id$="-config"]');
         if (configIcon) {
             const editFunction = getEditFunctionForCard(configIcon.id);
@@ -285,7 +320,7 @@ const exitGenericEdit = (card, originalContent, overlay, exitFunction) => {
     }
 };
 
-getEditFunctionForCard = (configIconId) => {
+const getEditFunctionForCard = (configIconId) => {
     switch (configIconId) {
         case 'about-config':
             return () => enterEditMode(document.querySelector('#about-config').closest('.card'));
@@ -298,9 +333,10 @@ getEditFunctionForCard = (configIconId) => {
         default:
             return null;
     }
-}
+};
 
-// Custom edit mode for contact details that excludes email field from editing
+// Contact Edit Mode
+
 const enterContactEditMode = (card) => {
     const overlay = createOverlay();
     setCardEditMode(card);
@@ -308,15 +344,12 @@ const enterContactEditMode = (card) => {
     const originalContent = card.innerHTML;
     const currentValues = extractCurrentValues(card);
     
-    // Get current user email (read-only)
     const currentUser = JSON.parse(localStorage.getItem('balticUser'));
     const emailValue = currentUser?.email || 'No email available';
     
-    // Parse existing social links
     const existingSocialLinks = currentValues['Social Links'] || '';
     const socialLinksArray = existingSocialLinks ? existingSocialLinks.split(', ').filter(link => link.trim()) : [];
     
-    // Create custom edit form with social links management
     card.innerHTML = `
         <a id="contact-config"><i class="fas fa-wrench"></i></a>
         <p class="card-title">Contact Details</p>
@@ -356,18 +389,15 @@ const enterContactEditMode = (card) => {
         </div>
     `;
     
-    // Add event listeners for social links functionality
     const addLinkBtn = card.querySelector('#add-link-btn');
     const socialDropdown = card.querySelector('#social-dropdown');
     const socialLinksContainer = card.querySelector('#social-links-container');
     
-    // Toggle dropdown
     addLinkBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         socialDropdown.classList.toggle('hidden');
     });
     
-    // Handle dropdown selection
     socialDropdown.addEventListener('click', (e) => {
         e.stopPropagation();
         const dropdownItem = e.target.closest('.dropdown-item');
@@ -378,7 +408,6 @@ const enterContactEditMode = (card) => {
         }
     });
     
-    // Close dropdown when clicking outside
     document.addEventListener('click', () => {
         socialDropdown.classList.add('hidden');
     });
@@ -394,7 +423,6 @@ const enterContactEditMode = (card) => {
         try {
             setButtonLoading(saveBtn, true);
             
-            // Collect all social link inputs
             const socialLinkInputs = card.querySelectorAll('.social-link-input');
             const socialLinks = Array.from(socialLinkInputs)
                 .map(input => input.value.trim())
@@ -407,11 +435,9 @@ const enterContactEditMode = (card) => {
             
             await saveUserProfileData(dataToSave);
             
-            // Remove overlay and reset card mode BEFORE updating display
             removeOverlay(overlay);
             resetCardMode(card);
             
-            // Update the display
             const savedData = await loadUserProfileData();
             updateContactDetailsDisplay(savedData);
             
@@ -428,7 +454,8 @@ const enterContactEditMode = (card) => {
     });
 };
 
-// Function to add a new social link input
+// Social Link Management
+
 const addSocialLink = (type, container) => {
     const index = container.children.length;
     let placeholder;
@@ -454,13 +481,11 @@ const addSocialLink = (type, container) => {
 
     container.appendChild(linkItem);
 
-    // Focus on the new input and position cursor at the end
     const newInput = linkItem.querySelector('input');
     newInput.focus();
     newInput.setSelectionRange(newInput.value.length, newInput.value.length);
 };
 
-// Function to remove a social link
 const removeSocialLink = (index) => {
     const linkItem = document.querySelector(`[data-index="${index}"]`);
     if (linkItem) {
@@ -473,14 +498,11 @@ const exitContactEdit = (card, originalContent, overlay) => {
     resetCardMode(card);
     removeOverlay(overlay);
 
-    // Re-attach event listener
-    const contactConfig = document.getElementById('contact-config');
+    const contactConfig = card.querySelector('#contact-config');
     if (contactConfig) {
         contactConfig.addEventListener('click', () => enterContactEditMode(card));
     }
 };
-
-// Function to update contact details display after editing
 const updateContactDetailsDisplay = (data) => {
     const contactCard = document.querySelector('#contact-config').closest('.card');
     const currentUser = JSON.parse(localStorage.getItem('balticUser'));
@@ -608,49 +630,6 @@ const formatDateForInput = (dateString) => {
     return '';
 };
 // Main Profile Functions
-const loadProfileData = async () => {
-    try {
-        const currentUser = JSON.parse(localStorage.getItem('balticUser'));
-        if (!currentUser) {
-            setTimeout(() => {
-                removeSkeletonLoading();
-                const summaryElement = document.querySelector('.user-summary p');
-                if (summaryElement) {
-                    summaryElement.textContent = 'Summary';
-                }
-            }, 1000);
-            return;
-        }
-
-        const profileData = await loadUserProfileData();
-
-        setTimeout(() => {
-            removeSkeletonLoading();
-            if (profileData && Object.keys(profileData).length > 0) {
-                updateProfileDisplay(profileData);
-                updateProfileInfoDisplay(profileData);
-                updateApprenticeshipDetailsDisplay(profileData);
-            } else {
-                const summaryElement = document.querySelector('.user-summary p');
-                if (summaryElement) {
-                    summaryElement.textContent = 'Summary';
-                }
-            }
-            updateContactDetailsDisplay(profileData);
-        }, 1000);
-
-    } catch (error) {
-        console.log('Could not load profile data:', error);
-        setTimeout(() => {
-            removeSkeletonLoading();
-            const summaryElement = document.querySelector('.user-summary p');
-            if (summaryElement) {
-                summaryElement.textContent = 'Summary';
-            }
-            updateContactDetailsDisplayOriginal();
-        }, 1000);
-    }
-};
 
 // Specific Edit Mode Functions
 const enterEditMode = (card) => {
