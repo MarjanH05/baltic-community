@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Baltic Community - Home</title>
+	<link rel="icon" type="image/x-icon" href="./images/square-logo.jpg">
+	<link rel="stylesheet" href="css/styles.css" />
+	<link rel="stylesheet" href="css/home.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+<div id="main-app">
+
+	<nav class="navbar">
+		<div class="navbar-brand">
+			<a class="navbar-item" id="nav-logo-link">
+				<img id="nav-logo" src="images/baltic-logo.png" alt="Baltic">
+			</a>
+		</div>
+		<div class="navbar-end">
+			<div class="navbar-item nav-icons">
+				<i class="fas fa-search fa-s nav-icon"></i>
+				<i class="fa-regular fa-square-plus nav-icon"></i>
+				<span class="icon">
+                        <i class="fa-solid fa-bell" id="notifications-icon"></i>
+                    </span>
+				<div class="notifications-dropdown hidden" id="notifications-dropdown">
+					<div class="notifications-header">
+						<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: -7.5%;">
+							<h3 class="subtitle">Notifications</h3>
+							<a href="#" id="clear-notifications" style="color: var(--baltic-blue); font-size: 14px; margin-top: -7.5%;">Clear all</a>
+						</div>
+					</div>
+					<div class="notifications-list" id="notifications-list">
+					</div>
+				</div>
+				<a href="chat.html" style="color: white;"><i class="fa-solid fa-comments nav-icon"></i></a>
+				<div class="user-icon" id="profile-icon" style="background-image: url('https://via.placeholder.com/150');"></div>
+			</div>
+		</div>
+
+		<div class="dropdown profile-dropdown hidden" id="profile-dropdown">
+			<div class="dropdown-menu" role="menu">
+				<div class="dropdown-content">
+					<div class="dropdown-header">
+						<div class="dropdown-avatar" id="dropdown-avatar" style="background-image: url('https://via.placeholder.com/150');"></div>
+						<div class="dropdown-username" id="dropdown-username">User</div>
+					</div>
+					<button class="dropdown-btn active" id="my-profile-link"><a href="profile.html">My Profile</a></button>
+					<hr class="dropdown-divider">
+					<div class="dropdown-links">
+						<a class="dropdown-item dropdown-link"><i class="fa-solid fa-pen-to-square"></i> My Recent Posts</a>
+						<a class="dropdown-item dropdown-link"><i class="fa-solid fa-heart-circle-check"></i> Favourite users</a>
+						<a class="dropdown-item dropdown-link"><i class="fa-solid fa-calendar-check"></i> My Events</a>
+						<a class="dropdown-item dropdown-link"><i class="fa-solid fa-user-group"></i> Refer a contact</a>
+					</div>
+					<hr class="dropdown-divider">
+					<div id="inner-dropdown">
+						<div class="nested-dropdown">
+							<a class="dropdown-item dropdown-link dropdown-settings" id="settings-trigger">
+								<i class="fa-solid fa-gears"></i> My settings <span style="float:right">▾</span>
+							</a>
+							<div class="nested-menu" style="margin-left: 16px; display: none;">
+								<a class="dropdown-item dropdown-link">
+									<i class="fa-solid fa-key"></i> Password
+								</a>
+								<a class="dropdown-item dropdown-link">
+									<i class="fa-solid fa-lock"></i> Privacy
+								</a>
+								<a class="dropdown-item dropdown-link">
+									<i class="fa-solid fa-bell"></i> Notifications
+								</a>
+							</div>
+						</div>
+					</div>
+					<a class="dropdown-item dropdown-link dropdown-settings" onclick="window.location.href='mailto:community@balticapprenticeships.com'">
+						<i class="fa-solid fa-envelope-open-text"></i> Contact us
+					</a>
+					<hr class="dropdown-divider">
+					<a class="dropdown-item dropdown-link logout-link" id="logout-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<div class="menu">
+		<ul class="menu-items">
+			<li class="active">Home</li>
+			<li><a href="./index.html">Live feed</a></li> <li>Baltic Live Events</li>
+			<li>Groups</li>
+			<li>Resource Hub</li>
+			<li>Connect</li>
+			<li>Your EPA Guidance</li>
+		</ul>
+	</div>
+
+	<div class="home-container container">
+		<div class="home-header">
+			<div class="home-avatar user-avatar" id="profile-avatar">
+			</div>
+			<div class="home-info">
+				<h1>Welcome back Ace Cochez - Baltic Champion <span class="champion-emoji">👋</span></h1>
+				<p class="profile-completion">Profile completion 74%</p>
+			</div>
+		</div>
+
+		<div class="home-tabs">
+			<a href="index.html">
+				<button class="button home-tab-button is-active">
+					<i class="fa-solid fa-pen-to-square"></i> My recent posts
+				</button>
+			</a>
+			<button class="button home-tab-button">
+				<i class="fa-solid fa-calendar-check"></i> My events
+			</button>
+			<button class="button home-tab-button">
+				<i class="fa-solid fa-briefcase"></i> My portfolio
+			</button>
+			<a href="profile.html">
+				<button class="button home-tab-button">
+					<i class="fa-solid fa-user"></i> My account
+				</button>
+			</a>
+		</div>
+
+		<div class="welcome-section">
+			<div class="welcome-text">
+				<h2>WELCOME TO THE BALTIC COMMUNITY!</h2>
+				<p>Take a video tour here... <span class="hand-emoji">👉</span></p>
+			</div>
+			<div class="welcome-video">
+				<iframe src="https://player.vimeo.com/video/YOUR_VIMEO_VIDEO_ID?title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="js/script.js"></script>
+
+</body>
+
+</html>
