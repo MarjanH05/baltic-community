@@ -578,7 +578,7 @@ const formatSocialLinksForDisplay = (socialLinksString) => {
         if (trimmedLink.startsWith('https://')) {
             const platformIcon = getPlatformIcon(trimmedLink);
             if (platformIcon) {
-                return `<a href="${trimmedLink}" target="_blank" rel="noopener noreferrer" title="${trimmedLink}"><i class="${platformIcon.icon}" style="color: ${platformIcon.color}; font-size: 1.2em;"></i></a>`;
+                return `<a href="${trimmedLink}" target="_blank" rel="noopener noreferrer" title="${trimmedLink}"><i class="${platformIcon.icon}" style="color: ${platformIcon.color}; font-size: 2em;"></i></a>`;
             } else {
                 // For unknown HTTPS URLs, show the full URL without protocol
                 const displayText = trimmedLink.replace('https://', '');
@@ -586,7 +586,7 @@ const formatSocialLinksForDisplay = (socialLinksString) => {
             }
         } else {
             // If it's not a proper HTTPS URL, display with warning icon and tooltip
-            const warningIcon = '<i class="fas fa-exclamation-triangle" style="color: #f39c12;"></i>';
+            const warningIcon = '<p></p><i class="fas fa-exclamation-triangle" style="color: #f39c12;"></i>';
             return `<span class="insecure-link" title="Unsecure URL - be cautious">${warningIcon} ${trimmedLink}</span>`;
         }
     }).join(' ');
@@ -606,7 +606,6 @@ const updateContactDetailsDisplay = (data) => {
     const contactCard = document.querySelector('#contact-config').closest('.card');
     const currentUser = JSON.parse(localStorage.getItem('balticUser'));
 
-    // Rebuild the entire card structure
     contactCard.innerHTML = `
         <a id="contact-config"><i class="fas fa-wrench"></i></a>
         <p class="card-title">Contact Details</p>
@@ -619,7 +618,6 @@ const updateContactDetailsDisplay = (data) => {
         <div class="divider"></div>
     `;
 
-    // Re-attach event listener
     const contactConfig = contactCard.querySelector('#contact-config');
     if (contactConfig) {
         contactConfig.addEventListener('click', () => enterContactEditMode(contactCard));
@@ -646,7 +644,6 @@ const updateCardDisplay = (card, data, configIconId) => {
 
     card.innerHTML = updatedHTML;
 
-    // Re-attach event listener
     const configIcon = card.querySelector(`#${configIconId}`);
     if (configIcon) {
         const editFunction = getEditFunctionForCard(configIconId);
@@ -727,8 +724,7 @@ const formatDateForInput = (dateString) => {
     }
 
     return '';
-};
-// Main Profile Functions
+}
 
 // Specific Edit Mode Functions
 const enterEditMode = (card) => {
@@ -777,14 +773,13 @@ const enterProfileInfoEditMode = () => {
     profileInfoCard.style.position = 'relative';
     profileInfoCard.style.zIndex = '1000';
 
-    // Hide elements
     elementsToHide.forEach(el => {
         if (el) el.style.display = 'none';
     });
 
     summaryElement.innerHTML = createEditForm(fields, '', '');
 
-    // Add character counter functionality
+    // character counter functionality
     const input = summaryElement.querySelector('input[data-field="summary"]');
     const charCount = summaryElement.querySelector('#char-count');
 
