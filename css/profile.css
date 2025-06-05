@@ -88,7 +88,7 @@
     margin-top: -80px;
     margin-bottom: 0;
     font-size: 14px;
-    background-color: #0077B5;
+    background-color: var(--baltic-linkedin-blue);
     color: white;
     padding: 10px;
     border: none;

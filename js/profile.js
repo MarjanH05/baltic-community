@@ -472,7 +472,7 @@ const addSocialLink = (type, container) => {
         placeholder = 'https://www.linkedin.com/in/your-profile';
     } else {
         defaultValue = 'https://';
-        placeholder = 'https://your-website.com';
+        placeholder = 'https://youtube.com/';
     }
 
     const linkItem = document.createElement('div');
@@ -504,7 +504,7 @@ const getPlatformIcon = (url) => {
 
     // Social Media Platform icons
     if (lowerUrl.includes('linkedin.com')) {
-        return { icon: 'fab fa-linkedin', color: '#0077b5' };
+        return { icon: 'fab fa-linkedin', color: 'var(--baltic-linkedin-blue)' };
     }
     if (lowerUrl.includes('facebook.com')) {
         return { icon: 'fab fa-facebook', color: '#1877f2' };
@@ -582,7 +582,7 @@ const formatSocialLinksForDisplay = (socialLinksString) => {
             } else {
                 // For unknown HTTPS URLs, show the full URL without protocol
                 const displayText = trimmedLink.replace('https://', '');
-                return `<a href="${trimmedLink}" target="_blank" rel="noopener noreferrer">${displayText}</a>`;
+                return `<p></p><a href="${trimmedLink}" target="_blank" rel="noopener noreferrer" style="color: var(--baltic-linkedin-blue)">${displayText}</a>`;
             }
         } else {
             // If it's not a proper HTTPS URL, display with warning icon and tooltip
