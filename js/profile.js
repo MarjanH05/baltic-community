@@ -169,7 +169,7 @@ const initializeSkeletonLoading = () => {
         summaryElement.classList.add('loading');
         summaryElement.textContent = '';
     }
-    
+
     const contentValues = document.querySelectorAll('.card-content-value');
     contentValues.forEach(element => {
         element.classList.add('loading');
@@ -182,7 +182,7 @@ const removeSkeletonLoading = () => {
     if (summaryElement) {
         summaryElement.classList.remove('loading');
     }
-    
+
     const contentValues = document.querySelectorAll('.card-content-value');
     contentValues.forEach(element => {
         element.classList.remove('loading');
@@ -340,117 +340,123 @@ const getEditFunctionForCard = (configIconId) => {
 const enterContactEditMode = (card) => {
     const overlay = createOverlay();
     setCardEditMode(card);
-    
+
     const originalContent = card.innerHTML;
-    const currentValues = extractCurrentValues(card);
-    
+
     const currentUser = JSON.parse(localStorage.getItem('balticUser'));
     const emailValue = currentUser?.email || 'No email available';
-    
-    const existingSocialLinks = currentValues['Social Links'] || '';
-    const socialLinksArray = existingSocialLinks ? existingSocialLinks.split(', ').filter(link => link.trim()) : [];
-    
-    card.innerHTML = `
-        <a id="contact-config"><i class="fas fa-wrench"></i></a>
-        <p class="card-title">Contact Details</p>
-        <div class="divider"></div>
-        <p class="card-content-title">Email:</p>
-        <p class="card-content-value">${emailValue}</p>
-        <div class="divider"></div>
-        <div class="edit-field">
-            <p class="card-content-title">Social Links:</p>
-            <div class="social-links-container" id="social-links-container">
-                ${socialLinksArray.map((link, index) => `
-                    <div class="social-link-item" data-index="${index}">
-                        <input type="text" class="edit-input social-link-input" value="${link}" placeholder="Enter social link">
-                        <button type="button" class="remove-link-btn" onclick="removeSocialLink(${index})">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                `).join('')}
-            </div>
-            <div class="add-social-link">
-                <button type="button" class="btn btn-secondary add-link-btn" id="add-link-btn">
-                    <i class="fas fa-plus"></i> Add Social Link
-                </button>
-                <div class="social-dropdown hidden" id="social-dropdown">
-                    <div class="dropdown-item" data-type="linkedin">
-                        <i class="fab fa-linkedin"></i> LinkedIn
-                    </div>
-                    <div class="dropdown-item" data-type="other">
-                        <i class="fas fa-link"></i> Other
+
+    // Get social links from stored data instead of display text
+    const getCurrentSocialLinks = async () => {
+        const profileData = await loadUserProfileData();
+        return profileData?.['Social Links'] || '';
+    };
+
+    getCurrentSocialLinks().then(socialLinksString => {
+        const socialLinksArray = socialLinksString ? socialLinksString.split(', ').filter(link => link.trim()) : [];
+
+        card.innerHTML = `
+            <a id="contact-config"><i class="fas fa-wrench"></i></a>
+            <p class="card-title">Contact Details</p>
+            <div class="divider"></div>
+            <p class="card-content-title">Email:</p>
+            <p class="card-content-value">${emailValue}</p>
+            <div class="divider"></div>
+            <div class="edit-field">
+                <p class="card-content-title">Social Links:</p>
+                <div class="social-links-container" id="social-links-container">
+                    ${socialLinksArray.map((link, index) => `
+                        <div class="social-link-item" data-index="${index}">
+                            <input type="text" class="edit-input social-link-input" value="${link}" placeholder="Enter social link">
+                            <button type="button" class="remove-link-btn" onclick="removeSocialLink(${index})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="add-social-link">
+                    <button type="button" class="btn btn-secondary add-link-btn" id="add-link-btn">
+                        <i class="fas fa-plus"></i> Add Social Link
+                    </button>
+                    <div class="social-dropdown hidden" id="social-dropdown">
+                        <div class="dropdown-item" data-type="linkedin">
+                            <i class="fab fa-linkedin"></i> LinkedIn
+                        </div>
+                        <div class="dropdown-item" data-type="other">
+                            <i class="fas fa-link"></i> Other
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="edit-buttons">
-            <button class="btn btn-secondary cancel-edit">Cancel</button>
-            <button class="btn btn-primary save-edit">Save</button>
-        </div>
-    `;
-    
-    const addLinkBtn = card.querySelector('#add-link-btn');
-    const socialDropdown = card.querySelector('#social-dropdown');
-    const socialLinksContainer = card.querySelector('#social-links-container');
-    
-    addLinkBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        socialDropdown.classList.toggle('hidden');
-    });
-    
-    socialDropdown.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const dropdownItem = e.target.closest('.dropdown-item');
-        if (dropdownItem) {
-            const type = dropdownItem.getAttribute('data-type');
-            addSocialLink(type, socialLinksContainer);
+            <div class="edit-buttons">
+                <button class="btn btn-secondary cancel-edit">Cancel</button>
+                <button class="btn btn-primary save-edit">Save</button>
+            </div>
+        `;
+
+        const addLinkBtn = card.querySelector('#add-link-btn');
+        const socialDropdown = card.querySelector('#social-dropdown');
+        const socialLinksContainer = card.querySelector('#social-links-container');
+
+        addLinkBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            socialDropdown.classList.toggle('hidden');
+        });
+
+        socialDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const dropdownItem = e.target.closest('.dropdown-item');
+            if (dropdownItem) {
+                const type = dropdownItem.getAttribute('data-type');
+                addSocialLink(type, socialLinksContainer);
+                socialDropdown.classList.add('hidden');
+            }
+        });
+
+        document.addEventListener('click', () => {
             socialDropdown.classList.add('hidden');
-        }
-    });
-    
-    document.addEventListener('click', () => {
-        socialDropdown.classList.add('hidden');
-    });
-    
-    const cancelBtn = card.querySelector('.cancel-edit');
-    const saveBtn = card.querySelector('.save-edit');
-    
-    cancelBtn.addEventListener('click', () => {
-        exitContactEdit(card, originalContent, overlay);
-    });
-    
-    saveBtn.addEventListener('click', async () => {
-        try {
-            setButtonLoading(saveBtn, true);
-            
-            const socialLinkInputs = card.querySelectorAll('.social-link-input');
-            const socialLinks = Array.from(socialLinkInputs)
+        });
+
+        const cancelBtn = card.querySelector('.cancel-edit');
+        const saveBtn = card.querySelector('.save-edit');
+
+        cancelBtn.addEventListener('click', () => {
+            exitContactEdit(card, originalContent, overlay);
+        });
+
+        saveBtn.addEventListener('click', async () => {
+            try {
+                setButtonLoading(saveBtn, true);
+
+                const socialLinkInputs = card.querySelectorAll('.social-link-input');
+                const socialLinks = Array.from(socialLinkInputs)
                 .map(input => input.value.trim())
                 .filter(link => link)
                 .join(', ');
-            
-            const dataToSave = {
-                'Social Links': socialLinks
-            };
-            
-            await saveUserProfileData(dataToSave);
-            
-            removeOverlay(overlay);
-            resetCardMode(card);
-            
-            const savedData = await loadUserProfileData();
-            updateContactDetailsDisplay(savedData);
-            
-        } catch (error) {
-            setButtonLoading(saveBtn, false);
-            alert('Failed to save. Please try again.');
-            console.error('Error saving:', error);
-        }
-    });
-    
-    card.addEventListener('click', e => e.stopPropagation());
-    overlay.addEventListener('click', () => {
-        exitContactEdit(card, originalContent, overlay);
+
+                const dataToSave = {
+                    'Social Links': socialLinks
+                };
+
+                await saveUserProfileData(dataToSave);
+
+                removeOverlay(overlay);
+                resetCardMode(card);
+
+                const savedData = await loadUserProfileData();
+                updateContactDetailsDisplay(savedData);
+
+            } catch (error) {
+                setButtonLoading(saveBtn, false);
+                alert('Failed to save. Please try again.');
+                console.error('Error saving:', error);
+            }
+        });
+
+        card.addEventListener('click', e => e.stopPropagation());
+        overlay.addEventListener('click', () => {
+            exitContactEdit(card, originalContent, overlay);
+        });
     });
 };
 
@@ -493,6 +499,99 @@ const removeSocialLink = (index) => {
     }
 };
 
+const getPlatformIcon = (url) => {
+    const lowerUrl = url.toLowerCase();
+
+    // Social Media Platform icons
+    if (lowerUrl.includes('linkedin.com')) {
+        return { icon: 'fab fa-linkedin', color: '#0077b5' };
+    }
+    if (lowerUrl.includes('facebook.com')) {
+        return { icon: 'fab fa-facebook', color: '#1877f2' };
+    }
+    if (lowerUrl.includes('instagram.com')) {
+        return { icon: 'fab fa-instagram', color: '#e4405f' };
+    }
+    if (lowerUrl.includes('youtube.com')) {
+        return { icon: 'fab fa-youtube', color: '#ff0000' };
+    }
+    if (lowerUrl.includes('pinterest.com')) {
+        return { icon: 'fab fa-pinterest', color: '#bd081c' };
+    }
+    if (lowerUrl.includes('whatsapp.com')) {
+        return { icon: 'fab fa-whatsapp', color: '#25d366' };
+    }
+
+    // Tech/Code Platforms
+    if (lowerUrl.includes('github.com')) {
+        return { icon: 'fab fa-github', color: '#333333' };
+    }
+    if (lowerUrl.includes('gitlab.com')) {
+        return { icon: 'fab fa-gitlab', color: '#fc6d26' };
+    }
+    if (lowerUrl.includes('stackoverflow.com')) {
+        return { icon: 'fab fa-stack-overflow', color: '#f58025' };
+    }
+    if (lowerUrl.includes('codepen.io')) {
+        return { icon: 'fab fa-codepen', color: '#000000' };
+    }
+    if (lowerUrl.includes('figma.com')) {
+        return { icon: 'fab fa-figma', color: '#f24e1e' };
+    }
+    if (lowerUrl.includes('discord.com') || lowerUrl.includes('discord.gg')) {
+        return { icon: 'fab fa-discord', color: '#5865f2' };
+    }
+    if (lowerUrl.includes('tumblr.com')) {
+        return { icon: 'fab fa-tumblr', color: '#001935' };
+    }
+
+    // Other Platforms
+    if (lowerUrl.includes('google.com')) {
+        return { icon: 'fab fa-google', color: '#4285f4' };
+    }
+    if (lowerUrl.includes('apple.com')) {
+        return { icon: 'fab fa-apple', color: '#000000' };
+    }
+    if (lowerUrl.includes('microsoft.com')) {
+        return { icon: 'fab fa-microsoft', color: '#00a1f1' };
+    }
+    if (lowerUrl.includes('spotify.com')) {
+        return { icon: 'fab fa-spotify', color: '#1db954' };
+    }
+    if (lowerUrl.includes('twitch.tv')) {
+        return { icon: 'fab fa-twitch', color: '#9146ff' };
+    }
+
+    // Default for unknown platforms
+    return null;
+};
+
+const formatSocialLinksForDisplay = (socialLinksString) => {
+    if (!socialLinksString || socialLinksString.trim() === '') {
+        return '';
+    }
+
+    const links = socialLinksString.split(', ').filter(link => link.trim());
+
+    return links.map(link => {
+        const trimmedLink = link.trim();
+        if (trimmedLink.startsWith('https://')) {
+            const platformIcon = getPlatformIcon(trimmedLink);
+            if (platformIcon) {
+                return `<a href="${trimmedLink}" target="_blank" rel="noopener noreferrer" title="${trimmedLink}"><i class="${platformIcon.icon}" style="color: ${platformIcon.color}; font-size: 1.2em;"></i></a>`;
+            } else {
+                // For unknown HTTPS URLs, show the full URL without protocol
+                const displayText = trimmedLink.replace('https://', '');
+                return `<a href="${trimmedLink}" target="_blank" rel="noopener noreferrer">${displayText}</a>`;
+            }
+        } else {
+            // If it's not a proper HTTPS URL, display with warning icon and tooltip
+            const warningIcon = '<i class="fas fa-exclamation-triangle" style="color: #f39c12;"></i>';
+            return `<span class="insecure-link" title="Unsecure URL - be cautious">${warningIcon} ${trimmedLink}</span>`;
+        }
+    }).join(' ');
+};
+
 const exitContactEdit = (card, originalContent, overlay) => {
     card.innerHTML = originalContent;
     resetCardMode(card);
@@ -516,7 +615,7 @@ const updateContactDetailsDisplay = (data) => {
         <p class="card-content-value">${currentUser?.email || 'No email available'}</p>
         <div class="divider"></div>
         <p class="card-content-title">Social Links:</p>
-        <p class="card-content-value">${data && data['Social Links'] || ''}</p>
+        <div class="card-content-value">${formatSocialLinksForDisplay(data && data['Social Links'] || '')}</div>
         <div class="divider"></div>
     `;
 
