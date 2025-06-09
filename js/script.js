@@ -159,11 +159,6 @@ const dropdownUsername = document.getElementById('dropdown-username');
 const logoutLink = document.getElementById('logout-link');
 const settingsTrigger = document.getElementById('settings-trigger');
 
-// Show login page by default, but only if loginPage exists
-if (loginPage) {
-    loginPage.classList.remove('hidden');
-}
-
 // Handle signup button click
 if (signupBtn) {
     signupBtn.addEventListener('click', () => {
