@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Baltic Community - Home</title>
-	<link rel="icon" type="image/x-icon" href="./images/square-logo.jpg">
+
 	<link rel="stylesheet" href="css/styles.css" />
 	<link rel="stylesheet" href="css/home.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -16,47 +16,77 @@
 <div id="main-app">
 
 	<nav class="navbar">
+
 		<div class="navbar-brand">
+
 			<a class="navbar-item" id="nav-logo-link">
 				<img id="nav-logo" src="images/baltic-logo.png" alt="Baltic">
 			</a>
+
 		</div>
+
 		<div class="navbar-end">
+
 			<div class="navbar-item nav-icons">
+
 				<i class="fas fa-search fa-s nav-icon"></i>
 				<i class="fa-regular fa-square-plus nav-icon"></i>
+
 				<span class="icon">
                         <i class="fa-solid fa-bell" id="notifications-icon"></i>
                     </span>
+
 				<div class="notifications-dropdown hidden" id="notifications-dropdown">
+
 					<div class="notifications-header">
+
 						<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: -7.5%;">
+
 							<h3 class="subtitle">Notifications</h3>
 							<a href="#" id="clear-notifications" style="color: var(--baltic-blue); font-size: 14px; margin-top: -7.5%;">Clear all</a>
+
 						</div>
+
 					</div>
+
 					<div class="notifications-list" id="notifications-list">
+
 					</div>
+
 				</div>
+
 				<a href="chat.html" style="color: white;"><i class="fa-solid fa-comments nav-icon"></i></a>
+
 				<div class="user-icon" id="profile-icon" style="background-image: url('https://via.placeholder.com/150');"></div>
+
 			</div>
+
 		</div>
 
 		<div class="dropdown profile-dropdown hidden" id="profile-dropdown">
+
 			<div class="dropdown-menu" role="menu">
+
 				<div class="dropdown-content">
+
 					<div class="dropdown-header">
-						<div class="dropdown-avatar" id="dropdown-avatar" style="background-image: url('https://via.placeholder.com/150');"></div>
-						<div class="dropdown-username" id="dropdown-username">User</div>
+
+						<div class="dropdown-avatar" id="dropdown-avatar"></div>
+
+						<div class="dropdown-username" id="dropdown-username"></div>
+
 					</div>
+
 					<button class="dropdown-btn active" id="my-profile-link"><a href="profile.html">My Profile</a></button>
 					<hr class="dropdown-divider">
+
 					<div class="dropdown-links">
+
 						<a class="dropdown-item dropdown-link"><i class="fa-solid fa-pen-to-square"></i> My Recent Posts</a>
 						<a class="dropdown-item dropdown-link"><i class="fa-solid fa-heart-circle-check"></i> Favourite users</a>
 						<a class="dropdown-item dropdown-link"><i class="fa-solid fa-calendar-check"></i> My Events</a>
 						<a class="dropdown-item dropdown-link"><i class="fa-solid fa-user-group"></i> Refer a contact</a>
+
 					</div>
 					<hr class="dropdown-divider">
 					<div id="inner-dropdown">
@@ -103,8 +133,7 @@
 			<div class="home-avatar user-avatar" id="profile-avatar">
 			</div>
 			<div class="home-info">
-				<h1>Welcome back Ace Cochez - Baltic Champion <span class="champion-emoji">👋</span></h1>
-				<p class="profile-completion">Profile completion 74%</p>
+				<h1>Welcome back Ace Cochez - Baltic Champion <span class="champion-emoji" style="display: inline-flex; align-items: center;"><i class="fa-solid fa-home" style="font-size: 0.7em !important;"></i></span></h1>
 			</div>
 		</div>
 
@@ -130,16 +159,16 @@
 		<div class="welcome-section">
 			<div class="welcome-text">
 				<h2>WELCOME TO THE BALTIC COMMUNITY!</h2>
-				<p>Take a video tour here... <span class="hand-emoji">👉</span></p>
-			</div>
+				<p>Take a video tour! <span class="hand-emoji"><i class="fa-solid fa-arrow-right"></i></span></p>			</div>
 			<div class="welcome-video">
-				<iframe src="https://player.vimeo.com/video/YOUR_VIMEO_VIDEO_ID?title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+				<iframe title="vimeo-player" src="https://player.vimeo.com/video/791119784?h=8879fdbec5" allowfullscreen></iframe>
 			</div>
 		</div>
 	</div>
 </div>
 
 <script src="js/script.js"></script>
+<script src="js/home.js"></script>
 
 </body>
 

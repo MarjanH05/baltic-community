@@ -124,7 +124,8 @@
     border-radius: 8px;
     overflow: hidden;
     position: relative;
-    padding-top: 31.5%;
+    padding: 15%;
+    margin-top: -20px;
 }
 
 .welcome-video iframe {
@@ -169,7 +170,6 @@
     .welcome-video {
         width: 100%;
         max-width: none;
-        padding-top: 56.25%;
     }
 
     .navbar {
