@@ -1,3 +1,7 @@
+const SUPABASE_URL = 'https://luxzttwcxkcyigpuiqod.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1eHp0dHdjeGtjeWlncHVpcW9kIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0OTI1MzE3MiwiZXhwIjoyMDY0ODI5MTcyfQ.0Z885unjGf5cHFuWU7fAbEO21IzzPxkbQb34HxwjLyo';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 // Store users data
 let users = [];
 let posts = [];
@@ -5,97 +9,61 @@ let events = [];
 
 // Notifications System
 let userNotifications = {};
-function saveUsers() {
-    sessionStorage.setItem('balticUsers', JSON.stringify(users));
-}
 
-function loadUsers() {
-    const savedUsers = sessionStorage.getItem('balticUsers');
-    if (savedUsers) {
-        users = JSON.parse(savedUsers);
-    } else {
-        users = [
-            { id: 1, name: "Danny Broome", email: "danny@baltic.com", password: "!Password1", avatar: "https://media.giphy.com/media/84CRvhy2DJlwA/giphy.gif" },
-            { id: 2, name: "Ace Cochez", email: "ace@baltic.com", password: "!Password2", avatar: "https://t3.ftcdn.net/jpg/01/18/50/58/360_F_118505846_PZCicmZZdCNIHS7HUrkUqiUpJMaoJZFZ.jpg" },
-            { id: 3, name: "The Baltic Community", email: "baltic@baltic.com", password: "!Password3", avatar: "https://cdn.brandfetch.io/idf8ZReMDl/w/400/h/400/theme/dark/icon.jpeg?c=1dxbfHSJFAPEGdCLU4o5B" },
-            { id: 4, name: "Marjan Hussain", email: "marjan@baltic.com", password: "!Password4", avatar: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOG9wbjMwMHdtMHN2dWg4eXVzc2h2eWF3ZTRqc251bG5pNmxpemJpayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VBZ6EWbfnLXKoRoSDv/giphy.gif" },
-            { id: 5, name: "Ruairi Orr", email: "ruairi@baltic.com", password: "!Password5", avatar: "https://t4.ftcdn.net/jpg/13/76/74/77/240_F_1376747702_xFXUDsz4hnes0pIZgxjPBLMVB6cytJQx.jpg" },
-            { id: 6, name: "Bailey S", email: "bailey@baltic.com", password: "!Password6", avatar: "https://randomuser.me/api/portraits/men/1.jpg" }
-        ];
-        saveUsers();
+async function loadUsers() {
+    const { data, error } = await db.from('users').select('*');
+
+    if (error) {
+        return console.error('DB error:', error);
     }
-}
-
-function savePosts() {
-    sessionStorage.setItem('balticPosts', JSON.stringify(posts));
-}
-
-function loadPosts() {
-    const savedPosts = sessionStorage.getItem('balticPosts');
-    if (savedPosts) {
-        posts = JSON.parse(savedPosts);
-    } else {
-        posts = [
-		{
-				id: users[0].id,
-				authorId: users[0].id,
-				authorName: users[0].name,
-                avatar: users[0].avatar,
-				content: "Happy Friday! How are you? How has your week been? Up to anything this weekend? As per usual, I'll leave mine in the comments. Happy days!",
-                timestamp: Date.now() - (300000) // 5 mins
-		},
-		{
-				id: users[3].id,
-				authorId: users[3].id,
-				authorName: users[3].name,
-                avatar: users[3].avatar,
-				content: "Did you know I have a BMW??",
-                timestamp: Date.now() - (600000) // 10 mins
-		}
-        ];
-        savePosts();
+    if (!data || data.length === 0) {
+        return console.log('No users found.');
     }
+
+    users = data;
 }
 
-function saveEvents() {
-    sessionStorage.setItem('balticEvents', JSON.stringify(events));
-}
+async function loadPosts() {
+    const { data, error } = await db
+        .from('posts')
+        .select('*, users!posts_author_id_fkey(name, avatar)')
+        .order('created_at', { ascending: false });
 
-function loadEvents() {
-    const savedEvents = sessionStorage.getItem('balticEvents');
-    if (savedEvents) {
-        events = JSON.parse(savedEvents);
-    } else {
-        events = [
-		{
-				id: 1,
-				title: "Creating Replicas: How to re-imagine a website",
-				month: "JUNE",
-				day: "15",
-				image: null
-		},
-		{
-				id: 2,
-				title: "How to upgrade the UI/UX of a community platform",
-				month: "JULY",
-				day: "27",
-				image: null
-		},
-		{
-				id: 3,
-				title: "The Dangers of Bad UI",
-				month: "AUGUST",
-				day: "30",
-				image: null
-		}
-        ];
-        saveEvents();
+    if (error) {
+        return console.error('Error fetching posts from DB:', error);
     }
+
+    if (!data || data.length === 0) {
+        return console.log('No posts found in database.');
+    }
+
+    posts = data.map(dbPost => ({
+        id: dbPost.id,
+        authorId: dbPost.author_id,
+        authorName: dbPost.users ? dbPost.users.name : 'Unknown',
+        avatar: dbPost.users ? dbPost.users.avatar : null,
+        content: dbPost.content,
+        timestamp: new Date(dbPost.created_at).getTime()
+    }));
 }
 
-loadUsers();
-loadPosts();
-loadEvents();
+async function loadEvents() {
+    const { data, error } = await db
+        .from('events')
+        .select('*');
+
+    if (error) return console.error('Error fetching events from DB:', error);
+    if (!data || data.length === 0) return;
+
+    events = data;
+}
+
+// Initialize all data from the database
+async function initializeData() {
+    await loadUsers();
+    await loadPosts();
+    await loadEvents();
+}
 
 function initializeNotifications() {
     try {
@@ -182,16 +150,14 @@ const profileIcon = document.getElementById('profile-icon');
 const postUserAvatar = document.getElementById('post-user-avatar');
 const submitPostBtn = document.getElementById('submit-post-btn');
 const profileAvatar = document.getElementById('profile-avatar');
+const notificationsIcon = document.getElementById('notifications-icon');
+const notificationsDropdown = document.getElementById('notifications-dropdown');
 // Dropdown elements
 const profileDropdown = document.getElementById('profile-dropdown');
 const dropdownAvatar = document.getElementById('dropdown-avatar');
 const dropdownUsername = document.getElementById('dropdown-username');
 const logoutLink = document.getElementById('logout-link');
-
-// Show login page by default, but only if loginPage exists
-if (loginPage) {
-    loginPage.classList.remove('hidden');
-}
+const settingsTrigger = document.getElementById('settings-trigger');
 
 // Handle signup button click
 if (signupBtn) {
@@ -211,54 +177,51 @@ if (backToLoginBtn) {
 
 // Handle login form submission
 if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const email = document.getElementById('email').value;
+
+        const email = document.getElementById('email').value.trim().toLowerCase();
         const password = document.getElementById('password').value;
 
-        // Email regex validation - requires letters before and after @, followed by . and domain extension
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-        // Password regex validation - at least 8 chars, 1 uppercase letter, and 1 number
         const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
-        // Validation
-        let isValid = true;
         let errorMessage = "";
-
-        // Make sure email is a string and validate format
-        if (!email || typeof email !== 'string' || !emailRegex.test(email.toString())) {
-            isValid = false;
+        if (!emailRegex.test(email)) {
             errorMessage += "Invalid email format. Email must have format like 'name@example.com'\n";
         }
-
-        // Make sure password is a string and validate format
-        if (!password || typeof password !== 'string' || !passwordRegex.test(password.toString())) {
-            isValid = false;
+        if (!passwordRegex.test(password)) {
             errorMessage += "Password must be at least 8 characters and include at least 1 uppercase letter and 1 number";
         }
 
-        if (isValid) {
-            const foundUser = users.find(user => user.email === email.toLowerCase() && user.password === password);
-            if(foundUser) {
-                loginUser({
-                    id: foundUser.id,
-                    avatar: foundUser.avatar,
-                    name: foundUser.name,
-                    email: foundUser.email
-                });
-            }
-            else {
-                loginUser({
-                    id: users.length + 1,
-                    name: email.split('@')[0],
-                    avatar: null,
-                    email: email
-                });
-            }
-        } else {
-            // Display error message
+        if (errorMessage) {
             alert(errorMessage);
+            return;
+        }
+
+        try {
+            const { data, error } = await db
+                .from('users')
+                .select('*')
+                .eq('email', email)
+                .eq('password', password)
+                .single();
+
+            // PGRST116 is basically the error code for not found in Supabase
+            if (error?.code === 'PGRST116' || !data) {
+                alert('Invalid email or password.');
+                return;
+            }
+
+            loginUser({
+                id: data.id,
+                avatar: data.avatar,
+                name: data.name,
+                email: data.email
+            });
+        } catch (error) {
+            console.error('Login failed:', error);
+            alert('An error occurred during login. Please try again.');
         }
     });
 }
@@ -267,58 +230,57 @@ if (loginForm) {
 if (signupForm) {
     signupForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const fullName = document.getElementById('full-name').value;
-        const email = document.getElementById('signup-email').value;
+
+        const fullName = document.getElementById('full-name').value.trim();
+        const email = document.getElementById('signup-email').value.trim().toLowerCase();
         const password = document.getElementById('signup-password').value;
-        const profilePictureInput = document.getElementById('profile-picture').files[0];
+        const profilePicture = document.getElementById('profile-picture').files[0];
 
-        // Email regex validation - requires letters before and after @, followed by . and domain extension
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-        // Password regex validation - at least 8 chars, 1 uppercase letter and 1 number
         const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
-        // Validation
-        let isValid = true;
         let errorMessage = "";
+        if (!fullName) errorMessage += "Full name is required\n";
+        if (!emailRegex.test(email)) errorMessage += "Invalid email format\n";
+        if (!passwordRegex.test(password)) errorMessage += "Password must be at least 8 characters and include at least 1 uppercase letter and 1 number";
 
-        // Make sure fullName is a string and not empty
-        if (!fullName || typeof fullName !== 'string' || fullName.toString().trim() === '') {
-            isValid = false;
-            errorMessage += "Full name is required\n";
+        if (errorMessage) {
+            alert(errorMessage);
+            return;
         }
 
-        if (!emailRegex.test(email)) {
-            isValid = false;
-            errorMessage += "Invalid email format. Email must have format like 'name@example.com'\n";
-        }
-
-        if (!passwordRegex.test(password)) {
-            isValid = false;
-            errorMessage += "Password must be at least 8 characters and include at least 1 uppercase letter and 1 number";
-        }
-
-        if (isValid) {
-            let avatarUrl = null;
-            if (profilePictureInput) {
-                avatarUrl = await convertImageToBase64(profilePictureInput);
+        try {
+            let avatar = null;
+            if (profilePicture) {
+                avatar = await convertImageToBase64(profilePicture);
             }
-            // Create new user
+
             const newUser = {
-                id: users.length + 1,
                 name: fullName,
-                email: email,
-                avatar: avatarUrl
+                email,
+                password,
+                avatar
             };
 
-            // Add to users array
-            users?.push(newUser);
-            saveUsers();
-            // Log in the new user
-            loginUser(newUser);
-        } else {
-            // Display error message
-            alert(errorMessage);
+            const { data, error } = await db
+                .from('users')
+                .insert([newUser])
+                .select();
+
+            if (error) {
+                console.error('Supabase signup error:', error);
+                alert('Signup failed: ' + error.message);
+                return;
+            }
+
+            const createdUser = data[0];
+            console.log('User created successfully:', createdUser);
+
+            await loadUsers(); // Refresh users array
+            loginUser(createdUser);
+        } catch (error) {
+            console.error('Signup failed:', error);
+            alert('Signup failed. Please try again.');
         }
     });
 }
@@ -327,9 +289,6 @@ if (signupForm) {
 let notificationsInitialized = false;
 
 function initNotifications() {
-	const notificationsIcon = document.getElementById('notifications-icon');
-    const notificationsDropdown = document.getElementById('notifications-dropdown');
-
     // Check if notifications are already initialized
     if (notificationsInitialized || !notificationsIcon || !notificationsDropdown)
         return;
@@ -366,31 +325,31 @@ function renderNotifications() {
 
     if (currentNotifications.length === 0) {
         notificationsList.innerHTML = '<div class="notification-item">No notifications</div>';
-        return;
     }
+    else {
+        currentNotifications.forEach((notification, index) => {
+            const notificationElement = document.createElement('div');
+            notificationElement.className = `notification-item${notification.unread ? ' notification-unread' : ''}`;
+            notificationElement.innerHTML = `
+                <div class="notification-content">
+                    <div class="notification-title">${notification.title}</div>
+                    <div class="notification-time">${formatTimeAgo(notification.time)}</div>
+                </div>
+                ${notification.unread ? '<div class="notification-dot"></div>' : ''}
+            `;
 
-    currentNotifications.forEach((notification, index) => {
-        const notificationElement = document.createElement('div');
-        notificationElement.className = `notification-item${notification.unread ? ' notification-unread' : ''}`;
-        notificationElement.innerHTML = `
-            <div class="notification-content">
-                <div class="notification-title">${notification.title}</div>
-                <div class="notification-time">${formatTimeAgo(notification.time)}</div>
-            </div>
-            ${notification.unread ? '<div class="notification-dot"></div>' : ''}
-        `;
+            // Mark as read on click
+            notificationElement.addEventListener('click', () => {
+                currentNotifications[index].unread = false;
+                notificationElement.classList.remove('notification-unread');
+                const dot = notificationElement.querySelector('.notification-dot');
+                if (dot) dot.remove();
+                saveNotifications();
+            });
 
-        // Mark as read on click
-        notificationElement.addEventListener('click', () => {
-            currentNotifications[index].unread = false;
-            notificationElement.classList.remove('notification-unread');
-            const dot = notificationElement.querySelector('.notification-dot');
-            if (dot) dot.remove();
-            saveNotifications();
+            notificationsList.appendChild(notificationElement);
         });
-
-        notificationsList.appendChild(notificationElement);
-    });
+    }
 
     if (clearBtn) {
         clearBtn.onclick = function(e) {
@@ -452,7 +411,7 @@ if (postInput) {
     });
 }
 
-function handlePostSubmit() {
+async function handlePostSubmit() {
     if (!postInput) return;
 
     const content = postInput.value;
@@ -460,39 +419,45 @@ function handlePostSubmit() {
     const spinner = submitBtn.querySelector('.spinner');
 
     // Holding 'enter' doesn't allow mutiple posts to be submitted
-    if (submitBtn.disabled) {
+    if (submitBtn.disabled || !content) {
         return;
     }
 
-    if (content && content.trim() !== '') {
+    if (spinner) spinner.classList.remove('hidden');
+    if (submitBtn) submitBtn.disabled = true;
 
-        spinner.classList.remove('hidden');
-        submitBtn.disabled = true;
+    const postToInsert = {
+        author_id: currentUser.id,
+        content: content,
+    };
 
-        const newPost = {
-            id: Date.now(),
-            authorId: currentUser.id,
-            authorName: currentUser.name,
-            avatar: currentUser.avatar,
-            content: content,
-            timestamp: Date.now()
-        };
+    const { data, error } = await db
+        .from('posts')
+        .insert([postToInsert])
+        .select('*, users!posts_author_id_fkey(name, avatar)');
 
-        // Simulate wait so spinner appears
-        setTimeout(() => {
-            posts.unshift(newPost);
-            renderPosts();
-            savePosts();
-            notifyUsersAboutNewPost(currentUser.id, currentUser.name);
+    if (error) throw error;
 
-            postInput.value = '';
-            if (typeof autoResizeTextarea === 'function') {
-                autoResizeTextarea();
-            }
-            spinner.classList.add('hidden');
-            submitBtn.disabled = false;
-        }, 500);
+    const insertedPost = data[0];
+    const newPost = {
+        id: insertedPost.id,
+        authorId: insertedPost.author_id,
+        authorName: insertedPost.users.name,
+        avatar: insertedPost.users ? insertedPost.users.avatar : null,
+        content: insertedPost.content,
+        timestamp: new Date(insertedPost.created_at).getTime()
+    };
+
+    posts.unshift(newPost);
+    renderPosts();
+    notifyUsersAboutNewPost(currentUser.id, currentUser.name);
+
+    postInput.value = '';
+    if (typeof autoResizeTextarea === 'function') {
+        autoResizeTextarea();
     }
+    spinner.classList.add('hidden');
+    submitBtn.disabled = false;
 }
 
 function notifyUsersAboutNewPost(postAuthorId, postAuthorName) {
@@ -528,11 +493,11 @@ if (profileIcon) {
     profileIcon.addEventListener('click', function(e) {
         e.stopPropagation();
         if (profileDropdown && profileDropdown.classList.contains('hidden')) {
-            updateDropdownProfile();
-            profileDropdown.classList.remove('hidden');
+                updateDropdownProfile();
+                profileDropdown.classList.remove('hidden');
         } else if (profileDropdown) {
-            profileDropdown.classList.add('hidden');
-        }
+                profileDropdown.classList.add('hidden');
+            }
     });
 }
 
@@ -548,7 +513,7 @@ function updateDropdownProfile() {
     if (!currentUser || !dropdownUsername || !dropdownAvatar) return;
     dropdownUsername.textContent = currentUser.name;
     if (currentUser.avatar) {
-        dropdownAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="${currentUser.name}">`;
+        dropdownAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="${currentUser.name}" class="avatar-image">`;
     } else {
         dropdownAvatar.innerHTML = `<span class="avatar-initial">${currentUser.name.charAt(0)}</span>`;
     }
@@ -586,101 +551,91 @@ function loginUser(user, fromSession = false) {
 		}
 
 		// Update UI only if elements exist
-		if (userNameSpan) {
-            userNameSpan.textContent = user.name
-                .split(' ')
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(' ');
-		}
+    if (userNameSpan) {
+        userNameSpan.textContent = user.name
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    }
+    updateCurrentUserAvatar();
 
-	    // Hide login/signup pages, show main app (only on index page)
-		    if (loginPage) loginPage.classList.add('hidden');
-		    if (signupPage) signupPage.classList.add('hidden');
-		    if (mainApp) mainApp.classList.remove('hidden');
+    // Hide login/signup pages, show main app (only on index page) 
+    if (loginPage) loginPage.classList.add('hidden');
+    if (signupPage) signupPage.classList.add('hidden');
+    if (mainApp) mainApp.classList.remove('hidden');
 
-		 // Save session if not from session
-        if (!fromSession) {
-            saveSession(user);
-        }
+    if (!fromSession) {
+        saveSession(user);
+    }
 
-		// Initialize app
-        updateCurrentUserAvatar();
-	    initNotifications();
-	    initApp();
+    initNotifications();
+    initApp();
 }
 
 // Update user avatar in UI
 function updateCurrentUserAvatar() {
     if (!currentUser) return;
 
+    const avatarHtml = (user) => user.avatar
+        ? `<img src="${user.avatar}" alt="${user.name}" class="avatar-image">`
+        : `<span class="avatar-initial">${user.name.charAt(0)}</span>`;
+
     // Profile icon in navbar
     if (profileIcon) {
-        if (currentUser.avatar) {
-            profileIcon.innerHTML = `<img src="${currentUser.avatar}" alt="${currentUser.name}" class="avatar-image">`;
-        } else {
-            profileIcon.textContent = currentUser.name.charAt(0);
-        }
+        profileIcon.innerHTML = avatarHtml(currentUser);
     }
 
     // Post input avatar
     if (postUserAvatar) {
-        if (currentUser.avatar) {
-            postUserAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="${currentUser.name}" class="avatar-image">`;
-        } else {
-            postUserAvatar.textContent = currentUser.name.charAt(0);
-        }
+        postUserAvatar.innerHTML = avatarHtml(currentUser);
     }
 
-    // Profile avatar
+    // Profile avatar (assuming this is for a profile page)
     if (profileAvatar) {
-        if (currentUser.avatar) {
-            profileAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="${currentUser.name}" class="avatar-image">`;
-        } else {
-            profileAvatar.textContent = currentUser.name.charAt(0);
-        }
+        profileAvatar.innerHTML = avatarHtml(currentUser);
     }
 }
 
 // Initialize app
 function initApp() {
-		renderPosts();
-		renderActiveUsers();
-		renderEvents();
+    renderPosts();
+    renderActiveUsers();
+    renderEvents();
 }
 
 // Render posts
 function renderPosts() {
-        if (!postsContainer) return;
-		postsContainer.innerHTML = '';
+    if (!postsContainer) return;
+    postsContainer.innerHTML = '';
 
-		if (posts.length === 0) {
-				postsContainer.innerHTML = '<div class="post"><p>No posts yet. Be the first to post!</p></div>';
-				return;
-		}
+    if (posts.length === 0) {
+        postsContainer.innerHTML = '<div class="post"><p>No posts yet. Be the first to post!</p></div>';
+        return;
+    }
 
-		posts.forEach((post, index) => {
-				const maxLength = 350; // Maximum length for truncation
-				const showReadMore = post.content.length > maxLength;
-				const truncatedContent = showReadMore
-						? post.content.slice(0, maxLength) + '...'
-						: post.content;
+    posts.forEach((post, index) => {
+        const maxLength = 350; // Maximum length for truncation
+        const showReadMore = post.content.length > maxLength;
+        const truncatedContent = showReadMore
+            ? post.content.slice(0, maxLength) + '...'
+            : post.content;
 
-				const postElement = document.createElement('div');
-				postElement.className = 'post';
-				postElement.innerHTML = `
+        const postElement = document.createElement('div');
+        postElement.className = 'post';
+        postElement.innerHTML = `
                 <div class="post-header">
                     <div class="post-author">
                         <div class="author-avatar">
                             ${post.avatar
                 ? `<img src="${post.avatar}" alt="${post.authorName}" class="avatar-image">`
-                : post.authorName.charAt(0)}
+                : `<span class="avatar-initial">${post.authorName.charAt(0)}</span>`}
                         </div>
                         <div class="author-info">
                             <h4 class="subtitle" style="padding-bottom: 0; margin-bottom: 0;">${post.authorName}</h4>
                             <span class="post-time">${formatTimeAgo(post.timestamp || Date.now())}</span>
                         </div>
                     </div>
-                    <div class="post-options"><i class="fa-solid fa-ellipsis-vertical"></i></div>
+                    <div class="post-options" data-post-index="${index}"><i class="fa-solid fa-ellipsis-vertical"></i></div>
                 </div>
                 <div class="post-content">
                     <p>
@@ -690,21 +645,23 @@ function renderPosts() {
                 </div>
             `;
 
-				postsContainer.appendChild(postElement);
-                setupPostOptionsMenu();
-		});
+        postsContainer.appendChild(postElement);
+    });
+    setupPostOptionsMenu();
 
-		// Add event listeners for "Read more" links
-		const readMoreLinks = postsContainer.querySelectorAll('.read-more');
-		readMoreLinks.forEach(link => {
-				link.addEventListener('click', function(e) {
-						e.preventDefault();
-						const idx = this.getAttribute('data-index');
-						const postText = this.parentElement.querySelector('.post-text');
-						postText.textContent = posts[idx].content;
-						this.style.display = 'none';
-				});
-		});
+    // Add event listeners for "Read more" links
+    const readMoreLinks = postsContainer.querySelectorAll('.read-more');
+    readMoreLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const idx = parseInt(this.getAttribute('data-index'));
+            if (posts[idx]) {
+                const postText = this.parentElement.querySelector('.post-text');
+                postText.textContent = posts[idx].content;
+                this.style.display = 'none';
+            }
+        });
+    });
 }
 
 function formatTimeAgo(timestamp) {
@@ -756,10 +713,11 @@ function setupPostOptionsMenu() {
                     editPost(postIndex);
                 });
 
-                deleteOption.addEventListener('click', function() {
+                deleteOption.addEventListener('click', async function(e) {
+                    e.stopPropagation();
                     const postIndex = this.getAttribute('data-index');
-                    deletePost(postIndex).then(x => {x = null});
                     optionsMenu.remove();
+                    await deletePost(postIndex);
                 });
             }
         });
@@ -773,10 +731,14 @@ function setupPostOptionsMenu() {
 }
 
 function editPost(index) {
-    if (!postsContainer) return;
+    if (!postsContainer || !posts[index]) return;
 
     const post = posts[index];
-    const postContent = document.querySelectorAll('.post-content')[index];
+    const postContentElements = document.querySelectorAll('.post-content');
+    const postContent = postContentElements[index];
+
+    if (!postContent) return;
+
     const originalText = post.content;
 
     postContent.innerHTML = `
@@ -790,6 +752,7 @@ function editPost(index) {
     `;
 
     const textarea = postContent.querySelector('.edit-textarea');
+
     textarea.focus();
 
     // Set initial height based on content
@@ -797,7 +760,7 @@ function editPost(index) {
     textarea.style.height = Math.min(textarea.scrollHeight, 300) + 'px';
 
     // Add event listener for textarea resizing as user types
-    textarea.addEventListener('input', function() {
+    textarea.addEventListener('input', function () {
         this.style.height = 'auto';
         this.style.height = Math.min(this.scrollHeight, 300) + 'px';
     });
@@ -806,11 +769,24 @@ function editPost(index) {
     const saveButton = postContent.querySelector('.save-edit');
     const cancelButton = postContent.querySelector('.cancel-edit');
 
-    saveButton.addEventListener('click', function() {
+    saveButton.addEventListener('click', async function() {
         const newContent = textarea.value.trim();
-        if (newContent) {
-            post.content = newContent;
-            savePosts();
+        if (newContent && newContent !== originalText) {
+            try {
+                const { error } = await db
+                    .from('posts')
+                    .update({ content: newContent })
+                    .eq('id', post.id);
+
+                if (error) throw error;
+
+                post.content = newContent; 
+                renderPosts();
+            } catch (error) {
+                console.error('Error updating post:', error);
+                alert('Failed to update post. Please try again.');
+            }
+        } else {
             renderPosts();
         }
     });
@@ -818,101 +794,118 @@ function editPost(index) {
     cancelButton.addEventListener('click', function() {
         renderPosts();
     });
+
 }
 
 function customConfirm(message) {
-	return new Promise((resolve) => {
-		const overlay = document.createElement('div');
-		overlay.className = 'custom-popup-overlay';
+    return new Promise((resolve) => {
+        const overlay = document.createElement('div');
+        overlay.className = 'custom-popup-overlay';
 
 		// Create popup content
-		const popup = document.createElement('div');
-		popup.className = 'custom-popup';
+        const popup = document.createElement('div');
+        popup.className = 'custom-popup';
 
 		// Add message
-		const title = document.createElement('h3');
-		title.textContent = message;
-		popup.appendChild(title);
+        const title = document.createElement('h3');
+        title.textContent = message;
+        popup.appendChild(title);
 
 		// Add buttons container
-		const buttonsContainer = document.createElement('div');
-		buttonsContainer.className = 'custom-popup-buttons';
+        const buttonsContainer = document.createElement('div');
+        buttonsContainer.className = 'custom-popup-buttons';
 
 		// Add cancel button
-		const cancelButton = document.createElement('button');
-		cancelButton.className = 'custom-popup-button custom-popup-cancel';
-		cancelButton.textContent = 'Cancel';
-		cancelButton.onclick = () => {
-			document.body.removeChild(overlay);
-			resolve(false);
-		};
+        const cancelButton = document.createElement('button');
+        cancelButton.className = 'custom-popup-button custom-popup-cancel';
+        cancelButton.textContent = 'Cancel';
+        cancelButton.onclick = () => {
+            document.body.removeChild(overlay);
+            resolve(false);
+        };
 
 		// Add confirm button
-		const confirmButton = document.createElement('button');
-		confirmButton.className = 'custom-popup-button custom-popup-confirm';
-		confirmButton.textContent = 'Confirm';
-		confirmButton.onclick = () => {
-			document.body.removeChild(overlay);
-			resolve(true);
-		};
+        const confirmButton = document.createElement('button');
+        confirmButton.className = 'custom-popup-button custom-popup-confirm';
+        confirmButton.textContent = 'Confirm';
+        confirmButton.onclick = () => {
+            document.body.removeChild(overlay);
+            resolve(true);
+        };
 
 		// Assemble the popup
-		buttonsContainer.appendChild(cancelButton);
-		buttonsContainer.appendChild(confirmButton);
-		popup.appendChild(buttonsContainer);
-		overlay.appendChild(popup);
+        buttonsContainer.appendChild(cancelButton);
+        buttonsContainer.appendChild(confirmButton);
+        popup.appendChild(buttonsContainer);
+        overlay.appendChild(popup);
 
-		document.body.appendChild(overlay);
-	});
+        document.body.appendChild(overlay);
+    });
 }
 
 async function deletePost(index) {
-	const confirmed = await customConfirm('Are you sure you want to delete this post?');
-	if (confirmed) {
-        posts.splice(index, 1);
-        savePosts();
-		renderPosts();
-	}
+    if (!posts[index]) return;
+
+    const confirmed = await customConfirm('Are you sure you want to delete this post?');
+    if (confirmed) {
+        const postIdToDelete = posts[index].id;
+        try {
+            // Delete from database
+            const { error } = await db
+                .from('posts')
+                .delete()
+                .eq('id', postIdToDelete);
+
+            if (error) throw error;
+
+            // Remove from local array
+            posts.splice(index, 1);
+            renderPosts(); 
+        } catch (error) {
+            console.error('Error deleting post:', error);
+            alert('Failed to delete post. Please try again.');
+        }
+    }
 }
 
 // Render active users
 function renderActiveUsers() {
-        if (!activeUsers) return;
+    if (!activeUsers) return;
 
-		activeUsers.innerHTML = '';
-		users.forEach(user => {
+    activeUsers.innerHTML = '';
+    users.forEach(user => {
         const userElement = document.createElement('div');
         userElement.className = 'user-item';
         userElement.innerHTML = `
                 <div class="user-avatar-small">
                     ${user.avatar
                 ? `<img src="${user.avatar}" alt="${user.name}" class="avatar-image">`
-                : user.name.charAt(0)}
+                : `<span class="avatar-initial">${user.name.charAt(0)}</span>`}
                 </div>
                 <div class="user-name">${user.name
-                    .split('.')
-                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(' ')}</div>
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ')}</div>
             `;
-				
-				activeUsers.appendChild(userElement);
-		});
+
+        activeUsers.appendChild(userElement);
+    });
 }
 
 // Render events
 function renderEvents() {
-    if (!eventList) return; 
-		eventList.innerHTML = '';
-		
-		if (events.length === 0) {
-				eventList.innerHTML = '<p>No upcoming events</p>';
-				return;
-		}
-		
-		events.forEach(event => {
-				const eventElement = document.createElement('div');
-				eventElement.className = 'event-item';
-				eventElement.innerHTML = `
+    if (!eventList) return;
+    eventList.innerHTML = '';
+
+    if (events.length === 0) {
+        eventList.innerHTML = '<p>No upcoming events</p>';
+        return;
+    }
+
+    events.forEach(event => {
+        const eventElement = document.createElement('div');
+        eventElement.className = 'event-item';
+        eventElement.innerHTML = `
 						<div class="event-date" style="
 						    display: flex;
 						    flex-direction: column;
@@ -924,44 +917,49 @@ function renderEvents() {
 						    overflow: hidden;
 						    height: 60px;
 						    color: grey;">
-						    
+
 								<div id="top" style="margin: -1px -1px 0 -1px;
 								    padding: 5px;
 								    background-color: var(--baltic-blue);
 								    color: white;"></div>
-								    
+
 								<div class="event-month">${event.month.substring(0, 3)}</div>
-								
+
 								<div class="event-day">${event.day}</div>
-								
+
 						</div>
-						
+
 						<div class="event-info">
-						
+
 								<div class="event-title">${event.title}</div>
-								
+
 								<a href="#" class="event-link" style="color: cornflowerblue;">Find out more</a>
-							
+
             </div>
         `;
         eventList.appendChild(eventElement);
     });
 }
 
-const settingsTrigger = document.getElementById('settings-trigger'); 
-	settingsTrigger.addEventListener('click', function(e) {
-		e.preventDefault();
+if (settingsTrigger) {
+    settingsTrigger.addEventListener('click', function(e) {
+        e.preventDefault();
         e.stopPropagation();
-		const nestedMenu = this.nextElementSibling;
-		if (nestedMenu) { 
-		    nestedMenu.style.display = nestedMenu.style.display === 'none' || nestedMenu.style.display === '' ? 'block' : 'none';
+        const nestedMenu = this.nextElementSibling;
+        if (nestedMenu) {
+            nestedMenu.style.display = nestedMenu.style.display === 'none' || nestedMenu.style.display === '' ? 'block' : 'none';
         }
-	});
+    });
+}
 
-window.onload = function() {
-		checkSession(); // Try to restore session
-		// If no session, show login page
-		if (!currentUser) {
-				loginPage.classList.remove('hidden');
-				}
+window.onload = async function() {
+    await initializeData();
+
+    checkSession();
+
+    if (!currentUser) {
+        if (loginPage) {
+            loginPage.classList.remove('hidden');
+        }
+    }
 };

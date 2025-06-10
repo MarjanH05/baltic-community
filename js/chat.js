@@ -129,5 +129,5 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             window.location.href = 'index.html';
         }
-    }, 100);
+    }, 1000);
 });

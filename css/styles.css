@@ -302,6 +302,10 @@
 			overflow: hidden;
 		}
 
+		.user-icon img {
+			max-height: none;
+		}
+		
 	/* MENU UNDER NAV */
 		.menu {
 			display: flex;
