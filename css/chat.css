@@ -116,6 +116,7 @@ button {
     object-fit: cover;
     margin-right: 8px;
     flex-shrink: 0; 
+    box-shadow: 0 2px 4px rgba(128, 128, 128, 0.3);
 }
 
 .chat-avatar-initial {
@@ -130,6 +131,7 @@ button {
     color: #fff;
     margin-right: 8px;
     flex-shrink: 0;
+    box-shadow: 0 2px 4px rgba(128, 128, 128, 0.3);
 }
 
 .message-content {
