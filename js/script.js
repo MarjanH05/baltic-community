@@ -11,7 +11,10 @@ let events = [];
 let userNotifications = {};
 
 async function loadUsers() {
-    const { data, error } = await db.from('users').select('*');
+    const { data, error } = await db
+        .from('users')
+        .select('*')
+        .order('last_active', { ascending: false });
 
     if (error) {
         return console.error('DB error:', error);
@@ -542,15 +545,13 @@ if (logoutLink) {
 }
 
 // Login user function
-function loginUser(user, fromSession = false) {
-		currentUser = user;
-
-		// Add user to active users if not already there
-		if (!users.find(u => u.id === user.id)) {
-				users.push(user);
-		}
-
-		// Update UI only if elements exist
+async function loginUser(user, fromSession = false) {
+    currentUser = user;
+    const { error } = await db
+        .from('users')
+        .update({ last_active: new Date().toISOString() })
+        .eq('id', user.id);
+    // Update UI only if elements exist
     if (userNameSpan) {
         userNameSpan.textContent = user.name
             .split(' ')
@@ -869,11 +870,12 @@ async function deletePost(index) {
 }
 
 // Render active users
-function renderActiveUsers() {
+async function renderActiveUsers() {
     if (!activeUsers) return;
+    await loadUsers();
 
     activeUsers.innerHTML = '';
-    users.forEach(user => {
+    users.slice(0, 9).forEach(user => {
         const userElement = document.createElement('div');
         userElement.className = 'user-item';
         userElement.innerHTML = `
