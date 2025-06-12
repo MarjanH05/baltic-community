@@ -255,6 +255,11 @@ if (signupForm) {
         }
 
         try {
+            const { data: authData, error: authError } = await db.auth.signUp({
+                email: email,
+                password: password
+            });
+
             let avatar = null;
             if (profilePicture) {
                 avatar = await convertImageToBase64(profilePicture);
@@ -262,13 +267,11 @@ if (signupForm) {
 
             const newUser = {
                 name: fullName,
-                email,
-                password,
                 avatar
             };
 
             const { data, error } = await db
-                .from('users')
+                .from('profiles')
                 .insert([newUser])
                 .select();
 
