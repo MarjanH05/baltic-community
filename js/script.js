@@ -53,7 +53,9 @@ async function loadPosts() {
 async function loadEvents() {
     const { data, error } = await db
         .from('events')
-        .select('*');
+        .select('*')
+        .order('month', { ascending: false }) 
+        .order('day', { ascending: true });
 
     if (error) return console.error('Error fetching events from DB:', error);
     if (!data || data.length === 0) return;

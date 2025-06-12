@@ -1,3 +1,6 @@
+const viewAllUsersLink = document.getElementById('view-all-users');
+const viewAllEventsLink = document.getElementById('view-all-events');
+
 // Get current user from localStorage
 const getCurrentUser = () => {
 	try {
@@ -84,6 +87,11 @@ const initializeHomeProfile = () => {
 		updateNavbarProfile(currentUser);
 		updateHomeProfileAvatar(currentUser);
 
+		const userNameElement = document.getElementById('user-name');
+		if (userNameElement) {
+			userNameElement.textContent = currentUser.name || 'User';
+		}
+
 		console.log('Home profile initialized for user:', currentUser.name);
 	} else {
 		console.log('No user found in localStorage');
@@ -100,40 +108,167 @@ window.addEventListener('storage', (e) => {
 	}
 });
 
-const initializeProfileDropdown = () => {
-	const profileIcon = document.getElementById('profile-icon');
-	const profileDropdown = document.getElementById('profile-dropdown');
-	const logoutLink = document.getElementById('logout-link');
+const renderRecentUsers = async () => {
+	const recentUsersList = document.getElementById('recent-users-list');
+	await loadUsers();
 
-	if (profileIcon && profileDropdown) {
-		// Toggle dropdown on profile icon click
-		profileIcon.addEventListener('click', (e) => {
-			e.stopPropagation();
-			profileDropdown.classList.toggle('hidden');
-		});
+	recentUsersList.innerHTML = '';
 
-		// Close dropdown when clicking outside
-		document.addEventListener('click', (e) => {
-			if (!profileDropdown.contains(e.target) && !profileIcon.contains(e.target)) {
-				profileDropdown.classList.add('hidden');
-			}
-		});
-	}
+	// Populate the list with user data
+	users.slice(0, 8).forEach(user => {
+		const userElement = document.createElement('div');
+		userElement.className = 'user-item';
 
-	// Handle logout
-	if (logoutLink) {
-		logoutLink.addEventListener('click', (e) => {
-			e.preventDefault();
-			localStorage.removeItem('balticUser');
-			window.location.href = 'index.html'; // or login page
-		});
-	}
+		userElement.innerHTML = `
+            <div class="user-avatar-small">
+                ${user.avatar
+				? `<img src="${user.avatar}" alt="${user.name}" class="avatar-image">`
+				: `<span class="avatar-initial">${user.name.charAt(0).toUpperCase()}</span>`}
+            </div>
+            <div class="user-name">${user.name}</div>
+        `;
+
+		recentUsersList.appendChild(userElement);
+	});
+};
+
+const renderAllUsers = async () => {
+	const recentUsersList = document.getElementById('recent-users-list');
+	await loadUsers();
+
+	recentUsersList.innerHTML = '';
+
+	// Populate the list with user data
+	users.forEach(user => {
+		const userElement = document.createElement('div');
+		userElement.className = 'user-item';
+
+		userElement.innerHTML = `
+            <div class="user-avatar-small">
+                ${user.avatar
+				? `<img src="${user.avatar}" alt="${user.name}" class="avatar-image">`
+				: `<span class="avatar-initial">${user.name.charAt(0).toUpperCase()}</span>`}
+            </div>
+            <div class="user-name">${user.name}</div>
+        `;
+
+		recentUsersList.appendChild(userElement);
+	});
+};
+
+if (viewAllUsersLink) {
+    viewAllUsersLink.addEventListener('click', async (event) => {
+        event.preventDefault();
+        await renderAllUsers();
+    });
+};
+
+const renderUpcomingEvents = async () => {
+	const eventsList = document.getElementById('upcoming-events-list');
+	await loadEvents();
+
+	eventsList.innerHTML = '';
+
+	// Populate the list with all event data
+	events.slice(0, 4).forEach(event => {
+		const eventElement = document.createElement('div');
+		eventElement.className = 'event-item';
+
+		eventElement.innerHTML = `
+						<div class="event-date" style="
+						    display: flex;
+						    flex-direction: column;
+						    background-color: #f0f2f5;
+						    border-radius: 4px;
+						    text-align: center;
+						    min-width: 50px;
+						    padding: 0;
+						    overflow: hidden;
+						    height: 60px;
+						    color: grey;">
+
+								<div id="top" style="margin: -1px -1px 0 -1px;
+								    padding: 5px;
+								    background-color: var(--baltic-blue);
+								    color: white;"></div>
+
+								<div class="event-month">${event.month.substring(0, 3)}</div>
+
+								<div class="event-day">${event.day}</div>
+
+						</div>
+
+						<div class="event-info">
+
+								<div class="event-title">${event.title}</div>
+
+								<a href="#" class="event-link" style="color: cornflowerblue;">Find out more</a>
+
+            </div>
+        `;
+
+		eventsList.appendChild(eventElement);
+	});
+};
+
+const renderAllEvents = async () => {
+	const eventsList = document.getElementById('upcoming-events-list');
+	await loadEvents();
+
+    eventsList.innerHTML = '';
+
+	events.forEach(event => {
+		const eventElement = document.createElement('div');
+		eventElement.className = 'event-item';
+
+		eventElement.innerHTML = `
+						<div class="event-date" style="
+						    display: flex;
+						    flex-direction: column;
+						    background-color: #f0f2f5;
+						    border-radius: 4px;
+						    text-align: center;
+						    min-width: 50px;
+						    padding: 0;
+						    overflow: hidden;
+						    height: 60px;
+						    color: grey;">
+
+								<div id="top" style="margin: -1px -1px 0 -1px;
+								    padding: 5px;
+								    background-color: var(--baltic-blue);
+								    color: white;"></div>
+
+								<div class="event-month">${event.month.substring(0, 3)}</div>
+
+								<div class="event-day">${event.day}</div>
+
+						</div>
+
+						<div class="event-info">
+
+								<div class="event-title">${event.title}</div>
+
+								<a href="#" class="event-link" style="color: cornflowerblue;">Find out more</a>
+
+            </div>
+        `;
+		eventsList.appendChild(eventElement);
+	});
+};
+
+if (viewAllEventsLink) {
+	viewAllEventsLink.addEventListener('click', async (event) => {
+		event.preventDefault();
+		await renderAllEvents();
+	});
 };
 
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
 	initializeHomeProfile();
-	initializeProfileDropdown();
+	renderRecentUsers();
+	renderUpcomingEvents();
 });
 
 // Export functions if needed by other scripts
